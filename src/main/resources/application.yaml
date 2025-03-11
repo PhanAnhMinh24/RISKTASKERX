@@ -1,0 +1,32 @@
+spring:
+  application:
+    name: wbsrisktaskerx
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/webbanxeoto
+    username: root
+    password: Minh
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    database-platform: org.hibernate.dialect.MySQLDialect
+    open-in-view: false
+
+  flyway:
+    enabled: true
+    validate-on-migrate: true
+    baseline-on-migrate: true
+    baseline-version: 0
+    locations: classpath:db/migration  # Chỉ định thư mục chứa file migration
+
+  server:
+    port: 8080
+
+  logging:
+    level:
+      root: INFO
+      org.hibernate: ERROR
+
+  app:
+    jwtSecret: bXlTZXJldEtleUxvbmclw6qI8TKZ9WXzH+OaD4jRge7xVtkA7tSy75cFDi5Jw==
+    jwtExpirationMs: 604800000
