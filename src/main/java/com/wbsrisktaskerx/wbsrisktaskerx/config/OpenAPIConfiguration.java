@@ -16,7 +16,7 @@ public class OpenAPIConfiguration {
         return new OpenAPI()
                 .info(new Info().title("WBS Risk TaskerX API")
                         .description("API documentation for WBS Risk TaskerX")
-                        .version("1.0"))
+                        .version("3.0"))
                 .addServersItem(new Server().url("/"))
                 .addSecurityItem(new SecurityRequirement()
                         .addList("bearer-token"))

@@ -43,10 +43,6 @@ dependencies {
 	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.2'
 	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.2'
 
-	// Thêm Flyway cho việc quản lý database migrations
-	implementation 'org.flywaydb:flyway-core:9.22.3'
-	implementation 'org.flywaydb:flyway-mysql:9.22.3'
-
 	//Swagger UI
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0'
 
