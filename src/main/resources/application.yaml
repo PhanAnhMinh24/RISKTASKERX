@@ -11,6 +11,8 @@ spring:
   jpa:
     database-platform: org.hibernate.dialect.MySQLDialect
     open-in-view: false
+    hibernate:
+      ddl-auto: none
 
   flyway:
     enabled: true
