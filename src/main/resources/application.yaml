@@ -32,3 +32,19 @@ spring:
   app:
     jwtSecret: bXlTZXJldEtleUxvbmclw6qI8TKZ9WXzH+OaD4jRge7xVtkA7tSy75cFDi5Jw==
     jwtExpirationMs: 604800000
+
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: xuanngoczxc@gmail.com
+    password: aeli xdsg cmii bqvx
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
