@@ -1,6 +1,7 @@
 package com.wbsrisktaskerx.wbsrisktaskerx.controller;
 
 import com.wbsrisktaskerx.wbsrisktaskerx.common.contants.EmailContant;
+import com.wbsrisktaskerx.wbsrisktaskerx.common.contants.EndpointUtil;
 import com.wbsrisktaskerx.wbsrisktaskerx.service.EmailService;
 import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,13 +14,13 @@ import java.io.IOException;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/email")
+@RequestMapping(EndpointUtil.EMAIL)
 public class EmailController {
 
     @Autowired
     private EmailService emailService;
 
-    @PostMapping("/send")
+    @PostMapping(EndpointUtil.SEND)
     public void sendEmail(@RequestParam String to, @RequestParam String subject, @RequestParam String content) throws MessagingException, IOException {
         Map<String, String> placeholders = Map.of(
                 EmailContant.PLACEHOLDER_CONTENT, content,
