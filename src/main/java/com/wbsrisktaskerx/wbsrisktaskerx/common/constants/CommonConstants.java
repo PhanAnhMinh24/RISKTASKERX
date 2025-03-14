@@ -9,4 +9,8 @@ public class CommonConstants {
     public static final String STATUS = "status";
     public static final String CONTENT_TYPE = "Content-Type";
     public static final String APPLICATION_JSON_UTF8 = "application/json;charset=UTF-8";
+
+
+    public static  final  String AUTHORIZATION = "Authorization";
+
 }
