@@ -6,6 +6,7 @@ import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.JwtResponse;
 import com.wbsrisktaskerx.wbsrisktaskerx.repository.AdminRepository;
 import com.wbsrisktaskerx.wbsrisktaskerx.utils.JwtUtils;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -20,15 +21,16 @@ public class AuthService implements IAuthService {
         Admin admin = adminRepository.findByEmail(loginRequest.getEmail())
                 .orElseThrow(() -> new RuntimeException("Invalid email or password"));
 
-
         if (!loginRequest.getPassword().equals(admin.getPassword())) {
             throw new RuntimeException("Invalid email or password");
         }
 
-
         String token = jwtUtils.generateToken(admin.getEmail());
 
-
-        return new JwtResponse(token, admin.getId() != null ? admin.getId().longValue() : null, admin.getFullName());
+        return new JwtResponse(
+                token,
+                ObjectUtils.isEmpty(admin.getId()) ? null : admin.getId().longValue(),
+                admin.getFullName()
+        );
     }
 }

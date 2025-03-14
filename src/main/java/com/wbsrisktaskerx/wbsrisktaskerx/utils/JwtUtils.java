@@ -29,11 +29,11 @@ public class JwtUtils {
 
     public String generateToken(Map<String, Object> claims, String username) {
         return Jwts.builder()
-                .setClaims(claims) // Thêm thông tin vào JWT
-                .setSubject(username) // Đặt username làm subject
-                .setIssuedAt(new Date()) // Thời gian phát hành token
-                .setExpiration(new Date(System.currentTimeMillis() + jwtExpirationMs)) // Thời gian hết hạn
-                .signWith(getSigningKey(), SignatureAlgorithm.HS256) // Ký token bằng thuật toán HS256
+                .setClaims(claims)
+                .setSubject(username)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + jwtExpirationMs))
+                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
 
