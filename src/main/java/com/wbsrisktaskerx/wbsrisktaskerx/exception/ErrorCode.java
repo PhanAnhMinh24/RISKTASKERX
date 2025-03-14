@@ -29,13 +29,13 @@ public enum  ErrorCode {
     INVALID_REQUEST("invalid-request", HttpStatus.BAD_REQUEST),
     REQUEST_NOT_FOUND("request-not-found", HttpStatus.BAD_REQUEST),
 
-    // Yêu cầu không hợp lệ
+
 
     /*
      * Error Authentication
      */
-    ERROR_JWT_IS_NOT_VALID("error-jwt-is-not-valid", HttpStatus.UNAUTHORIZED), // JWT không hợp lệ
-    ERROR_ANONYMOUS_AUTHENTICATION_TOKEN("error-anonymous-authentication-token", HttpStatus.UNAUTHORIZED); // Token anonymous không hợp lệ
+    ERROR_JWT_IS_NOT_VALID("error-jwt-is-not-valid", HttpStatus.UNAUTHORIZED),
+    ERROR_ANONYMOUS_AUTHENTICATION_TOKEN("error-anonymous-authentication-token", HttpStatus.UNAUTHORIZED);
 
     private final String message;
     private final HttpStatus status;

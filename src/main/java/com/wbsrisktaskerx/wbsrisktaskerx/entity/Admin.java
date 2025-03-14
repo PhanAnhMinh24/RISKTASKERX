@@ -1,5 +1,6 @@
 package com.wbsrisktaskerx.wbsrisktaskerx.entity;
 
+import com.wbsrisktaskerx.wbsrisktaskerx.common.constants.EntityConstant;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -11,7 +12,7 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Table(name = "admin")
+@Table(name = EntityConstant.ADMIN_TABLE)
 public class Admin {
 
     @Id

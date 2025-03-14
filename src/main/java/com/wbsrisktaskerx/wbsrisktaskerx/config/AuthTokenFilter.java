@@ -59,7 +59,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
         } catch (AppException e) {
             log.error("Cannot set user authentication: {}", e.getMessage());
             setErrorMessage(response, e);
-        } catch (Exception ex) {  // Bắt lỗi chung
+        } catch (Exception ex) {
             log.error("Unexpected error in authentication filter: {}", ex.getMessage());
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Internal Server Error");
         }

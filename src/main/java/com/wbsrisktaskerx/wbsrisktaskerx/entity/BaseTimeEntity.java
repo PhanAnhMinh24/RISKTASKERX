@@ -2,6 +2,7 @@ package com.wbsrisktaskerx.wbsrisktaskerx.entity;
 
 import com.wbsrisktaskerx.wbsrisktaskerx.utils.DateTimeUtils;
 import jakarta.persistence.Column;
+import jakarta.persistence.MappedSuperclass;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import lombok.*;
@@ -13,6 +14,7 @@ import java.time.OffsetDateTime;
 @Getter
 @Setter
 @AllArgsConstructor
+@MappedSuperclass
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class BaseTimeEntity {
