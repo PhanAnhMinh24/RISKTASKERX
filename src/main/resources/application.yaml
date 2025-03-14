@@ -5,7 +5,7 @@ spring:
   datasource:
     url: jdbc:mysql://localhost:3306/webbanxeoto
     username: root
-    password: 123456
+    password: Minh
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
@@ -29,10 +29,6 @@ spring:
       root: INFO
       org.hibernate: ERROR
 
-  app:
-    jwtSecret: bXlTZXJldEtleUxvbmclw6qI8TKZ9WXzH+OaD4jRge7xVtkA7tSy75cFDi5Jw==
-    jwtExpirationMs: 604800000
-
   thymeleaf:
     prefix: classpath:/templates/
     suffix: .html
@@ -41,10 +37,14 @@ spring:
     host: smtp.gmail.com
     port: 587
     username: xuanngoczxc@gmail.com
-    password: aeli xdsg cmii bqvx
+    password: "aeli xdsg cmii bqvx"
     properties:
       mail:
         smtp:
           auth: true
           starttls:
             enable: true
+
+app:
+  jwtSecret: "bXlTZXJldEtleUxvbmclw6qI8TKZ9WXzH+OaD4jRge7xVtkA7tSy75cFDi5Jw=="
+  jwtExpirationMs: 604800000

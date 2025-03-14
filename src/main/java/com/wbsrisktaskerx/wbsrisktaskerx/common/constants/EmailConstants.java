@@ -1,6 +1,6 @@
-package com.wbsrisktaskerx.wbsrisktaskerx.common.contants;
+package com.wbsrisktaskerx.wbsrisktaskerx.common.constants;
 
-public class EmailContant {
+public class EmailConstants {
 
     public static final String PLACEHOLDER_CONTENT = "{{content}}";
     public static final String PLACEHOLDER_SUBJECT = "{{subject}}";

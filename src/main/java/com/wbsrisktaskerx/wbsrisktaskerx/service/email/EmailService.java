@@ -1,4 +1,4 @@
-package com.wbsrisktaskerx.wbsrisktaskerx.service;
+package com.wbsrisktaskerx.wbsrisktaskerx.service.email;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
