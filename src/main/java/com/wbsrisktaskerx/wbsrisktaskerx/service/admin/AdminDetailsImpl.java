@@ -15,7 +15,6 @@ public class AdminDetailsImpl implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        // Nếu cần mở rộng, bạn có thể trả về danh sách các quyền (roles) của admin tại đây
         return Collections.emptyList();
     }
 
@@ -26,26 +25,26 @@ public class AdminDetailsImpl implements UserDetails {
 
     @Override
     public String getUsername() {
-        return admin.getEmail(); // Sử dụng email làm username
+        return admin.getEmail();
     }
 
     @Override
     public boolean isAccountNonExpired() {
-        return true; // Giả định tài khoản luôn không hết hạn
+        return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return true; // Giả định tài khoản luôn không bị khóa
+        return true;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return true; // Giả định mật khẩu không bao giờ hết hạn
+        return true;
     }
 
     @Override
     public boolean isEnabled() {
-        return admin.getIsActive(); // Kiểm tra trạng thái hoạt động của admin
+        return admin.getIsActive();
     }
 }

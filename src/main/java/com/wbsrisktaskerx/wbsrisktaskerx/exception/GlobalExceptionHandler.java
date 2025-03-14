@@ -11,14 +11,14 @@ import java.nio.file.AccessDeniedException;
 @RestControllerAdvice
 @Log4j2
 public class GlobalExceptionHandler {
-    //Bắt lỗi 500
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorCode> handleUnwantedException(Exception e) {
         log.info("Exception Request: {}", e.getMessage());
         return ResponseEntity.status(500).body(ErrorCode.SYSTEM_ERROR);
     }
 
-    // Bắt lỗi 400
+
     @ExceptionHandler(BadRequestException.class)
     public ResponseEntity<ErrorResponse> handleBadRequestException(BadRequestException e) {
         log.info("Bad Request Exception: {}", e.getMessage());

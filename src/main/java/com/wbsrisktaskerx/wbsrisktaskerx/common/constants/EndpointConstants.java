@@ -17,15 +17,5 @@ public class EndpointConstants {
     public static final String SIGN_IN = "/sign-in";
     public static final String SIGN_UP = "/sign-up";
 
-    // 🔹 OTP Endpoints
-    public static final String OTP = "/otp";
-    public static final String OTP_SEND = "/send-code";
-    public static final String OTP_VERIFY = "/verify-otp";// Xác minh OTP
-    public static final String OTP_RESET_PASSWORD = "/reset-password";// Xác minh OTP
-
-    //Profile Endpoints
-    public static final String PROFILE = "/profile";
-    public static final String PROFILE_GET = "/{userId}";  // Lấy thông tin hồ sơ
-    public static final String PROFILE_EDIT = "/{userId}"; // Cập nhật hồ sơ
 
 }

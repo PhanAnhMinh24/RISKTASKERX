@@ -26,13 +26,7 @@ public class JwtUtils {
     @Value("${app.jwtExpirationMs}")
     private int jwtExpirationMs;
 
-    /**
-     * Tạo token có chứa thêm thông tin (claims).
-     *
-     * @param claims   Map chứa các thông tin claims cần thêm vào JWT.
-     * @param username Tên đăng nhập (sử dụng làm subject).
-     * @return Chuỗi JWT được tạo ra.
-     */
+
     public String generateToken(Map<String, Object> claims, String username) {
         return Jwts.builder()
                 .setClaims(claims) // Thêm thông tin vào JWT
@@ -43,22 +37,12 @@ public class JwtUtils {
                 .compact();
     }
 
-    /**
-     * Tạo token đơn giản chỉ từ username.
-     *
-     * @param username Tên đăng nhập.
-     * @return Chuỗi JWT được tạo ra.
-     */
+
     public String generateToken(String username) {
         return generateToken(Map.of(), username);
     }
 
-    /**
-     * Trích xuất tất cả các claims từ token.
-     *
-     * @param token Chuỗi JWT.
-     * @return Claims chứa các thông tin được lưu trong token.
-     */
+
     private Claims extractAllClaims(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(getSigningKey())
@@ -67,22 +51,12 @@ public class JwtUtils {
                 .getBody();
     }
 
-    /**
-     * Lấy username từ JWT token.
-     *
-     * @param token Chuỗi JWT.
-     * @return Username được lưu trong token.
-     */
+
     public String getUserNameFromJwtToken(String token) {
         return extractAllClaims(token).getSubject();
     }
 
-    /**
-     * Xác minh JWT token có hợp lệ hay không.
-     *
-     * @param token Chuỗi JWT.
-     * @return true nếu token hợp lệ, ngược lại false.
-     */
+
     public boolean validateJwtToken(String token) {
         try {
             Jwts.parserBuilder()
@@ -96,11 +70,7 @@ public class JwtUtils {
         return false;
     }
 
-    /**
-     * Tạo key bí mật dựa trên jwtSecret được mã hóa Base64.
-     *
-     * @return Key để ký và xác minh JWT.
-     */
+
     private Key getSigningKey() {
         return Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtSecret));
     }

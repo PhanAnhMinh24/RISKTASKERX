@@ -37,7 +37,6 @@ public class AuthTokenFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
         try {
-//            if (!shouldSkipFilter(request)) { // Đổi tên cho dễ hiểu
             String jwt = parseJwt(request);
             if (StringUtils.isBlank(jwt)) {
                 setErrorMessage(response, new AppException(ErrorCode.UNAUTHORIZED));
@@ -56,7 +55,6 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
-//            }
             filterChain.doFilter(request, response);
         } catch (AppException e) {
             log.error("Cannot set user authentication: {}", e.getMessage());
@@ -91,9 +89,6 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 
         return path.equals(EndpointConstants.AUTH + EndpointConstants.SIGN_IN) ||
                 path.equals(EndpointConstants.AUTH + EndpointConstants.SIGN_UP) ||
-                path.equals( EndpointConstants.OTP +EndpointConstants.OTP_SEND) ||
-                path.equals( EndpointConstants.OTP + EndpointConstants.OTP_VERIFY) ||
-                path.equals( EndpointConstants.OTP + EndpointConstants.OTP_RESET_PASSWORD) ||
                 path.startsWith(EndpointConstants.ACTUATOR) ||
                 path.startsWith(EndpointConstants.SWAGGER_ICO) ||
                 (path.startsWith(EndpointConstants.SWAGGER_UI) && HttpMethod.GET.matches(method)) ||

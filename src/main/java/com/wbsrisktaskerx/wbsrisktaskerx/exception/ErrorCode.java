@@ -20,10 +20,10 @@ public enum  ErrorCode {
     EMAIL_EXIST("email-exist", HttpStatus.BAD_REQUEST),
     USERNAME_EXIST("username-exist", HttpStatus.BAD_REQUEST),
     INVALID_IMAGE_FORMAT("invalid-image-format", HttpStatus.BAD_REQUEST),
-    INVALID_OTP("invalid-otp", HttpStatus.BAD_REQUEST), // Lỗi OTP không hợp lệ
-    USER_NOT_FOUND("user-not-found", HttpStatus.BAD_REQUEST), // Lỗi khi không tìm thấy người dùng
-    NOT_FOUND("not-found", HttpStatus.BAD_REQUEST), // Lỗi không tìm thấy dữ liệu
-    ACCOUNT_NOT_ACTIVE("account-not-active", HttpStatus.FORBIDDEN), // Lỗi tài khoản chưa kích hoạt
+    INVALID_OTP("invalid-otp", HttpStatus.BAD_REQUEST),
+    USER_NOT_FOUND("user-not-found", HttpStatus.BAD_REQUEST),
+    NOT_FOUND("not-found", HttpStatus.BAD_REQUEST),
+    ACCOUNT_NOT_ACTIVE("account-not-active", HttpStatus.FORBIDDEN),
 
 
     INVALID_REQUEST("invalid-request", HttpStatus.BAD_REQUEST),
