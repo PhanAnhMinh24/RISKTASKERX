@@ -2,5 +2,7 @@ package com.wbsrisktaskerx.wbsrisktaskerx.common.constants;
 
 public class EmailConstant {
     public static final String PLACEHOLDER_TEMPLATES_EMAIL = "templates/email-template.html";
-    public static final String PLACEHOLDER_SUBJECT = "OTP Verification";
+    public static final String PLACEHOLDER_SUBJECT_OTP_CODE = "{{OTP_CODE}}";
+    public static final String PLACEHOLDER_SUBJECT_EMAIL_SUBJECT = "{{EMAIL_SUBJECT}}";
+    public static final String PLACEHOLDER_SUBJECT_SEND_OTP = "OTP Verification";
 }

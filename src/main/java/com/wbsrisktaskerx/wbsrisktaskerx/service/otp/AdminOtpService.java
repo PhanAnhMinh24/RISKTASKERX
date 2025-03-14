@@ -37,19 +37,25 @@ public class AdminOtpService implements OtpService {
         this.adminOtpJpaQueryRepository = adminOtpJpaQueryRepository;
     }
 
-    public void sendEmail(String to, String templatePath, Map<String, String> placeholders)
-            throws MessagingException, IOException {
-
+    public void sendOtpEmail(String to) throws MessagingException, IOException {
         if (!adminOtpJpaQueryRepository.existsByEmail(to)) {
             throw new AppException(ErrorCode.EMAIL_NOT_FOUND);
         }
 
+        Map<String, String> placeholders = new HashMap<>();
+        String templatePath = EmailConstant.PLACEHOLDER_TEMPLATES_EMAIL;
+
+        sendEmail(to, templatePath, placeholders);
+    }
+
+    public void sendEmail(String to, String templatePath, Map<String, String> placeholders)
+            throws MessagingException, IOException {
+
         String otpCode = String.format("%04d", new Random().nextInt(10000));
-        String subject = EmailConstant.PLACEHOLDER_SUBJECT;
 
         placeholders = new HashMap<>(placeholders);
-        placeholders.put("{{OTP_CODE}}", otpCode);
-        placeholders.put("{{EMAIL_SUBJECT}}", subject);
+        placeholders.put(EmailConstant.PLACEHOLDER_SUBJECT_OTP_CODE, otpCode);
+        placeholders.put(EmailConstant.PLACEHOLDER_SUBJECT_EMAIL_SUBJECT, EmailConstant.PLACEHOLDER_SUBJECT_SEND_OTP);
 
         String htmlTemplate = new String(Files.readAllBytes(Paths.get(new ClassPathResource(templatePath).getURI())));
 
@@ -61,7 +67,7 @@ public class AdminOtpService implements OtpService {
         MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(message, true, "UTF-8");
 
         mimeMessageHelper.setTo(to);
-        mimeMessageHelper.setSubject(subject);
+        mimeMessageHelper.setSubject(EmailConstant.PLACEHOLDER_SUBJECT_SEND_OTP);
         mimeMessageHelper.setFrom(fromEmail);
         mimeMessageHelper.setText(htmlTemplate, true);
 

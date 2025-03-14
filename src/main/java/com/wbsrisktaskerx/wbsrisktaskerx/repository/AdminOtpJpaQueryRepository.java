@@ -4,6 +4,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.wbsrisktaskerx.wbsrisktaskerx.entity.Admin;
 import com.wbsrisktaskerx.wbsrisktaskerx.entity.QAdmin;
 import lombok.AllArgsConstructor;
+import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -19,10 +20,11 @@ public class AdminOtpJpaQueryRepository {
     }
 
     public boolean existsByEmail(String email) {
-        return jpaQueryFactory
-                .selectOne()
-                .from(qAdmin)
+        Admin admin = jpaQueryFactory
+                .selectFrom(qAdmin)
                 .where(qAdmin.email.eq(email))
-                .fetchFirst() != null;
+                .fetchFirst();
+
+        return ObjectUtils.isNotEmpty(admin);
     }
 }
