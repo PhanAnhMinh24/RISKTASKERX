@@ -1,39 +1,39 @@
 package com.wbsrisktaskerx.wbsrisktaskerx.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 @Entity
-@Table(name = "admin")
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @Setter
-public class Admin extends BaseTimeEntity {
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+@FieldDefaults(level = AccessLevel.PRIVATE)
+@Table(name = "admin")
+public class Admin {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    Integer id;
 
     @Column(name = "full_name", length = 50, nullable = false)
-    private String fullName;
+    String fullName;
 
     @Column(name = "email", length = 100, nullable = false, unique = true)
-    private String email;
+    String email;
 
     @Column(name = "phone_number", length = 15, nullable = false)
-    private String phoneNumber;
+    String phoneNumber;
 
     @Column(name = "password", length = 255, nullable = false)
-    private String password;
+    String password;
 
     @Column(name = "profile_img", length = 255)
-    private String profileImg;
+    String profileImg;
 
     @Column(name = "is_active", nullable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")
-    private Boolean isActive = true;
+    Boolean isActive = true;
 
 }

@@ -1,34 +1,36 @@
 package com.wbsrisktaskerx.wbsrisktaskerx.entity;
 
-import com.wbsrisktaskerx.wbsrisktaskerx.utils.DateTimeUtil;
+import com.wbsrisktaskerx.wbsrisktaskerx.utils.DateTimeUtils;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
+
 
 @Getter
 @Setter
-@MappedSuperclass
-@EntityListeners(AuditingEntityListener.class)
+@AllArgsConstructor
+@NoArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class BaseTimeEntity {
+    @Column(name = "created_at")
+    LocalDateTime createdAt;
 
-    @Column(name = "created_at", nullable = false, updatable = false)
-    private OffsetDateTime createAt;
-
-    @Column(name = "updated_at", nullable = false)
-    private OffsetDateTime updateAt;
-
-    @PrePersist
-    public void onCreate() {
-        this.setCreateAt(DateTimeUtil.getDateTimeNow());
-        this.setUpdateAt(DateTimeUtil.getDateTimeNow());
-    }
+    @Column(name = "updated_at")
+    LocalDateTime updatedAt;
 
     @PreUpdate
-    public void onUpdate() {
-        this.setUpdateAt(DateTimeUtil.getDateTimeNow());
+    public void updateInit() {
+        this.updatedAt = DateTimeUtils.getDateTimeNow();
+    }
+
+    @PrePersist
+    public void createInit() {
+        this.createdAt = DateTimeUtils.getDateTimeNow();
+        this.updatedAt = DateTimeUtils.getDateTimeNow();
     }
 }
 
