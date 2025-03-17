@@ -16,14 +16,17 @@ import java.util.Random;
 
 @Service
 public class AdminEmailServiceImpl implements AdminEmailService {
-    @Autowired
-    private EmailService emailService;
 
-    @Autowired
-    private AdminOtpJpaQueryRepository adminOtpJpaQueryRepository;
+    private final EmailService emailService;
+    private final AdminOtpJpaQueryRepository adminOtpJpaQueryRepository;
 
     @Value("${spring.mail.username}")
     private String fromEmail;
+
+    public AdminEmailServiceImpl(EmailService emailService, AdminOtpJpaQueryRepository adminOtpJpaQueryRepository) {
+        this.emailService = emailService;
+        this.adminOtpJpaQueryRepository = adminOtpJpaQueryRepository;
+    }
 
     @Override
     public void sendOtpEmail(String to) throws MessagingException, IOException {

@@ -3,12 +3,13 @@ package com.wbsrisktaskerx.wbsrisktaskerx.repository;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.wbsrisktaskerx.wbsrisktaskerx.entity.Admin;
 import com.wbsrisktaskerx.wbsrisktaskerx.entity.QAdmin;
+import com.wbsrisktaskerx.wbsrisktaskerx.exception.AppException;
+import com.wbsrisktaskerx.wbsrisktaskerx.exception.ErrorCode;
 import lombok.AllArgsConstructor;
-import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-
+import java.util.Optional;
 @Component
 @AllArgsConstructor
 public class AdminOtpJpaQueryRepository {
@@ -20,11 +21,15 @@ public class AdminOtpJpaQueryRepository {
     }
 
     public boolean existsByEmail(String email) {
-        Admin admin = jpaQueryFactory
-                .selectFrom(qAdmin)
-                .where(qAdmin.email.eq(email))
-                .fetchFirst();
+        try {
+            return Optional.ofNullable(
+                    jpaQueryFactory.selectFrom(qAdmin)
+                            .where(qAdmin.email.eq(email))
+                            .fetchOne()
+            ).isPresent();
+        } catch (Exception e) {
+            throw new AppException(ErrorCode.DATABASE_ERROR);
+        }
 
-        return ObjectUtils.isNotEmpty(admin);
     }
 }

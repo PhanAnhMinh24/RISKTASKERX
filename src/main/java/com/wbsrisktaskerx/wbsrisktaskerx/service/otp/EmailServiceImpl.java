@@ -3,7 +3,6 @@ package com.wbsrisktaskerx.wbsrisktaskerx.service.otp;
 import com.wbsrisktaskerx.wbsrisktaskerx.common.constants.EmailConstant;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -18,11 +17,14 @@ import java.util.Map;
 @Service
 public class EmailServiceImpl implements EmailService {
 
-    @Autowired
-    private JavaMailSender javaMailSender;
+    private final JavaMailSender javaMailSender;
 
     @Value("${spring.mail.username}")
     private String fromEmail;
+
+    public EmailServiceImpl(JavaMailSender javaMailSender) {
+        this.javaMailSender = javaMailSender;
+    }
 
     @Override
     public void sendEmail(String to, String templatePath, Map<String, String> placeholders) throws MessagingException, IOException {
