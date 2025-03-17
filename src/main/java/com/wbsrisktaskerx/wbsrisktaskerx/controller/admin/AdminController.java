@@ -20,7 +20,7 @@ public class AdminController {
         this.adminEmailService = adminEmailService;
     }
 
-    @PostMapping(EndpointUtil.SEND)
+    @PostMapping(EndpointUtil.EMAIL + EndpointUtil.SEND)
     public void sendOtpEmail(@RequestParam String to) throws MessagingException, IOException {
         adminEmailService.sendOtpEmail(to);
     }
