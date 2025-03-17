@@ -1,19 +1,23 @@
 package com.wbsrisktaskerx.wbsrisktaskerx.entity;
 
-import com.wbsrisktaskerx.wbsrisktaskerx.utils.DateTimeUtil;
-import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import com.wbsrisktaskerx.wbsrisktaskerx.utils.DateTimeUtils;
+import jakarta.persistence.Column;
+import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 import java.time.OffsetDateTime;
 
+
 @Getter
 @Setter
+@AllArgsConstructor
 @MappedSuperclass
-@EntityListeners(AuditingEntityListener.class)
+@NoArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class BaseTimeEntity {
-
     @Column(name = "created_at", nullable = false, updatable = false)
     private OffsetDateTime createAt;
 
@@ -22,13 +26,13 @@ public class BaseTimeEntity {
 
     @PrePersist
     public void onCreate() {
-        this.setCreateAt(DateTimeUtil.getDateTimeNow());
-        this.setUpdateAt(DateTimeUtil.getDateTimeNow());
+        this.setCreateAt(DateTimeUtils.getDateTimeNow());
+        this.setUpdateAt(DateTimeUtils.getDateTimeNow());
     }
 
     @PreUpdate
     public void onUpdate() {
-        this.setUpdateAt(DateTimeUtil.getDateTimeNow());
+        this.setUpdateAt(DateTimeUtils.getDateTimeNow());
     }
 }
 

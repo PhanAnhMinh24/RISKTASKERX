@@ -1,11 +1,12 @@
 package com.wbsrisktaskerx.wbsrisktaskerx.utils;
 
+import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 
-public class DateTimeUtil {
+public class DateTimeUtils {
     private static final ZoneId DEFAULT_ZONE = ZoneOffset.UTC;
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss Z");
 
