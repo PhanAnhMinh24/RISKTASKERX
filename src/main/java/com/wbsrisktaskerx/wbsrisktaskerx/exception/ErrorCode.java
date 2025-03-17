@@ -7,7 +7,6 @@ import org.springframework.http.HttpStatus;
 public enum ErrorCode {
 
     EMAIL_NOT_FOUND("email-not-found", HttpStatus.FORBIDDEN),;
-//    SYSTEM_ERROR("system-error", HttpStatus.BAD_REQUEST);
 
     private final String message;
     private final HttpStatus status;

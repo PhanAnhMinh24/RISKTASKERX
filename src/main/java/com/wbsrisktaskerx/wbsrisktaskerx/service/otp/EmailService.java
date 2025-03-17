@@ -5,6 +5,6 @@ import jakarta.mail.MessagingException;
 import java.io.IOException;
 import java.util.Map;
 
-public interface OtpService {
+public interface EmailService {
     void sendEmail(String to, String templatePath, Map<String, String> placeholders) throws MessagingException, IOException;
 }

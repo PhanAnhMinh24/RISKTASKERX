@@ -1,7 +1,7 @@
 package com.wbsrisktaskerx.wbsrisktaskerx.controller.admin;
 
 import com.wbsrisktaskerx.wbsrisktaskerx.common.constants.EndpointUtil;
-import com.wbsrisktaskerx.wbsrisktaskerx.service.otp.AdminOtpService;
+import com.wbsrisktaskerx.wbsrisktaskerx.service.otp.AdminEmailService;
 import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,10 +16,10 @@ import java.io.IOException;
 public class AdminController {
 
     @Autowired
-    private AdminOtpService adminOtpService;
+    private AdminEmailService adminEmailService;
 
     @PostMapping(EndpointUtil.SEND)
-    public void sendEmail(@RequestParam String to) throws MessagingException, IOException {
-        adminOtpService.sendOtpEmail(to);
+    public void sendOtpEmail(@RequestParam String to) throws MessagingException, IOException {
+        adminEmailService.requestOtpEmail(to);
     }
 }
