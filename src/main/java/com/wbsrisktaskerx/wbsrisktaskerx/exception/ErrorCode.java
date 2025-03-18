@@ -12,6 +12,12 @@ public enum  ErrorCode {
     UNAUTHORIZED("unauthorized", HttpStatus.UNAUTHORIZED),
 
     /*
+     * Error send email
+     */
+    EMAIL_NOT_FOUND("email-not-found", HttpStatus.FORBIDDEN),
+    DATABASE_ERROR("database-error", HttpStatus.INTERNAL_SERVER_ERROR),
+
+    /*
      * Error User
      */
     INVALID_USERNAME_OR_PASSWORD("invalid-username-or-password", HttpStatus.BAD_REQUEST),

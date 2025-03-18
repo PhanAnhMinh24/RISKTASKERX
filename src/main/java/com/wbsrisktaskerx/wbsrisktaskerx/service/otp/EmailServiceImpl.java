@@ -1,8 +1,8 @@
-package com.wbsrisktaskerx.wbsrisktaskerx.service.email;
+package com.wbsrisktaskerx.wbsrisktaskerx.service.otp;
 
+import com.wbsrisktaskerx.wbsrisktaskerx.common.constants.EmailConstants;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -15,22 +15,19 @@ import java.nio.file.Paths;
 import java.util.Map;
 
 @Service
-public class EmailService {
+public class EmailServiceImpl implements EmailService {
 
-    @Autowired
-    private JavaMailSender javaMailSender;
+    private final JavaMailSender javaMailSender;
 
     @Value("${spring.mail.username}")
     private String fromEmail;
 
-    public void sendEmail(String to, String subject, String templatePath, Map<String, String> placeholders)
-            throws MessagingException, IOException {
-        MimeMessage message = javaMailSender.createMimeMessage();
-        MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(message, true, "UTF-8");
+    public EmailServiceImpl(JavaMailSender javaMailSender) {
+        this.javaMailSender = javaMailSender;
+    }
 
-        mimeMessageHelper.setTo(to);
-        mimeMessageHelper.setSubject(subject);
-        mimeMessageHelper.setFrom(fromEmail);
+    @Override
+    public void sendEmail(String to, String templatePath, Map<String, String> placeholders) throws MessagingException, IOException {
 
         String htmlTemplate = new String(Files.readAllBytes(Paths.get(new ClassPathResource(templatePath).getURI())));
 
@@ -38,7 +35,14 @@ public class EmailService {
             htmlTemplate = htmlTemplate.replace(entry.getKey(), entry.getValue());
         }
 
+        MimeMessage message = javaMailSender.createMimeMessage();
+        MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(message, true, "UTF-8");
+
+        mimeMessageHelper.setTo(to);
+        mimeMessageHelper.setSubject(EmailConstants.PLACEHOLDER_SUBJECT_SEND_OTP);
+        mimeMessageHelper.setFrom(fromEmail);
         mimeMessageHelper.setText(htmlTemplate, true);
+
         javaMailSender.send(message);
     }
 }
