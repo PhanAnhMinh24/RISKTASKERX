@@ -7,6 +7,7 @@ import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import lombok.experimental.SuperBuilder;
 
 import java.time.OffsetDateTime;
 
@@ -24,10 +25,14 @@ public class BaseTimeEntity {
     @Column(name = "updated_at", nullable = false)
     private OffsetDateTime updateAt;
 
+    @Column(name = "expires_at", nullable = false)
+    private OffsetDateTime expiresAt;
+
     @PrePersist
     public void onCreate() {
         this.setCreateAt(DateTimeUtils.getDateTimeNow());
         this.setUpdateAt(DateTimeUtils.getDateTimeNow());
+        this.setExpiresAt(DateTimeUtils.getDateTimeNow());
     }
 
     @PreUpdate
