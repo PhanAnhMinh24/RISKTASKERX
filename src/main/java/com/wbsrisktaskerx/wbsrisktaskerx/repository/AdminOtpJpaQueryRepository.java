@@ -4,38 +4,35 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.wbsrisktaskerx.wbsrisktaskerx.entity.Admin;
 import com.wbsrisktaskerx.wbsrisktaskerx.entity.AdminOtp;
-import com.wbsrisktaskerx.wbsrisktaskerx.entity.QAdmin;
-import com.wbsrisktaskerx.wbsrisktaskerx.entity.QAdminOtp;
 import com.wbsrisktaskerx.wbsrisktaskerx.exception.AppException;
 import com.wbsrisktaskerx.wbsrisktaskerx.exception.ErrorCode;
 import com.wbsrisktaskerx.wbsrisktaskerx.utils.DateTimeUtils;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Optional;
 
+import static com.wbsrisktaskerx.wbsrisktaskerx.entity.QAdmin.admin;
+import static com.wbsrisktaskerx.wbsrisktaskerx.entity.QAdminOtp.adminOtp;
+
 @Component
 @AllArgsConstructor
 public class AdminOtpJpaQueryRepository {
     private final JPAQueryFactory jpaQueryFactory;
-    @PersistenceContext
-    private final EntityManager entityManager;
-    private final QAdminOtp qAdminOtp = QAdminOtp.adminOtp;
-    private final QAdmin qAdmin = QAdmin.admin;
+    private final AdminOtpRepository adminOtpRepository;
 
     public List<Admin> getAll() {
-        return jpaQueryFactory.selectFrom(qAdmin).fetch();
+        return jpaQueryFactory.selectFrom(admin).fetch();
     }
 
     public boolean existsByEmail(String email) {
         try {
             return Optional.ofNullable(
-                    jpaQueryFactory.selectFrom(qAdmin)
-                            .where(qAdmin.email.eq(email))
+                    jpaQueryFactory.selectFrom(admin)
+                            .where(admin.email.eq(email))
                             .fetchOne()
             ).isPresent();
         } catch (Exception e) {
@@ -46,8 +43,8 @@ public class AdminOtpJpaQueryRepository {
     public Optional<Admin> findAdminByEmail(String email) {
         try {
             return Optional.ofNullable(
-                    jpaQueryFactory.selectFrom(qAdmin)
-                            .where(qAdmin.email.eq(email))
+                    jpaQueryFactory.selectFrom(admin)
+                            .where(admin.email.eq(email))
                             .fetchOne()
             );
         } catch (Exception e) {
@@ -56,25 +53,22 @@ public class AdminOtpJpaQueryRepository {
     }
 
     @Transactional
-    public void saveOtp(AdminOtp adminOtp) {
-        jpaQueryFactory.delete(qAdminOtp)
-                        .where(qAdminOtp.admin.eq(adminOtp.getAdmin()))
-                                .execute();
-        entityManager.persist(adminOtp);
-        entityManager.flush();
+    public void saveOtp(AdminOtp otp) {
+        adminOtpRepository.deleteByAdmin(otp.getAdmin());
+        adminOtpRepository.save(otp);
     }
 
     public Optional<AdminOtp> findValidOtpByEmail(String email, String otp) {
         try {
-            BooleanExpression condition = qAdminOtp.admin.email.eq(email)
-                    .and(qAdminOtp.expiresAt.after(DateTimeUtils.getDateTimeNow()));
+            BooleanExpression condition = adminOtp.admin.email.eq(email)
+                    .and(adminOtp.expiresAt.after(DateTimeUtils.getDateTimeNow()));
 
-            if (otp != null) {
-                condition = condition.and(qAdminOtp.verificationCode.eq(otp));
+            if (org.apache.commons.lang3.StringUtils.isNotBlank(otp)) {
+                condition = condition.and(adminOtp.verificationCode.eq(otp));
             }
 
             return Optional.ofNullable(
-                    jpaQueryFactory.selectFrom(qAdminOtp)
+                    jpaQueryFactory.selectFrom(adminOtp)
                             .where(condition)
                             .fetchOne()
             );
@@ -85,9 +79,9 @@ public class AdminOtpJpaQueryRepository {
 
     @Transactional
     public void deleteOtpByEmailAndCode(String email, String otp) {
-        jpaQueryFactory.delete(qAdminOtp)
-                .where(qAdminOtp.admin.email.eq(email)
-                        .and(qAdminOtp.verificationCode.eq(otp)))
+        jpaQueryFactory.delete(adminOtp)
+                .where(adminOtp.admin.email.eq(email)
+                        .and(adminOtp.verificationCode.eq(otp)))
                 .execute();
     }
 }

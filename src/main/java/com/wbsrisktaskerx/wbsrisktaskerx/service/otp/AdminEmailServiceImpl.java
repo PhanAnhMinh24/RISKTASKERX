@@ -14,7 +14,6 @@ import jakarta.mail.MessagingException;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -45,7 +44,7 @@ public class AdminEmailServiceImpl implements AdminEmailService {
     }
 
     @Override
-    public ResponseEntity<String> sendOtpEmail(String to) throws MessagingException, IOException {
+    public boolean sendOtpEmail(String to) throws MessagingException, IOException {
         if (!adminOtpJpaQueryRepository.existsByEmail(to)) {
             throw new AppException(ErrorCode.EMAIL_NOT_FOUND);
         }
@@ -70,28 +69,25 @@ public class AdminEmailServiceImpl implements AdminEmailService {
         placeholders.put(EmailConstants.PLACEHOLDER_SUBJECT_EMAIL_SUBJECT, EmailConstants.PLACEHOLDER_SUBJECT_SEND_OTP);
 
         emailService.sendEmail(to, templatePath, placeholders);
-
-        return ResponseEntity.ok(EmailConstants.PLACEHOLDER_OTP_SENT_SUCCESSFULLY);
+        return true;
     }
 
     @Override
     @Transactional
-    public ResponseEntity<String> verifyOtp(ForgotPasswordRequest request) {
+    public boolean verifyOtp(ForgotPasswordRequest request) {
         Optional<AdminOtp> adminOtpOpt = adminOtpJpaQueryRepository
                 .findValidOtpByEmail(request.getEmail(), request.getOtp());
 
-        if (adminOtpOpt.isEmpty()) {
-            throw new AppException(ErrorCode.INVALID_OTP);
+        if (adminOtpOpt.isPresent()) {
+            adminOtpJpaQueryRepository.deleteOtpByEmailAndCode(request.getEmail(), request.getOtp());
+            return true;
         }
-
-        // Xóa OTP sau khi xác thực thành công
-        adminOtpJpaQueryRepository.deleteOtpByEmailAndCode(request.getEmail(), request.getOtp());
-        return ResponseEntity.ok(EmailConstants.PLACEHOLDER_OTP_VERIFIED_SECCESSFULLY);
+        return false;
     }
 
     @Override
     @Transactional
-    public ResponseEntity<String> resetPassword(ResetPasswordRequest request) {
+    public boolean resetPassword(ResetPasswordRequest request) {
 
         Optional<AdminOtp> recentOtp = adminOtpJpaQueryRepository.findValidOtpByEmail(request.getEmail(), null);
         if (recentOtp.isPresent()) {
@@ -106,7 +102,6 @@ public class AdminEmailServiceImpl implements AdminEmailService {
         admin.setPassword(passwordEncoder.encode(request.getNewPassword()));
         entityManager.merge(admin);
         entityManager.flush();
-
-        return ResponseEntity.ok(EmailConstants.PLACEHOLDER_SUCCESSFULLY_CHANGE_PASSWORD);
+        return true;
     }
 }

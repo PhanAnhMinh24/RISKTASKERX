@@ -3,6 +3,7 @@ package com.wbsrisktaskerx.wbsrisktaskerx.config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wbsrisktaskerx.wbsrisktaskerx.common.constants.CommonConstants;
 import com.wbsrisktaskerx.wbsrisktaskerx.common.constants.EndpointConstants;
+import com.wbsrisktaskerx.wbsrisktaskerx.common.constants.EndpointUtil;
 import com.wbsrisktaskerx.wbsrisktaskerx.exception.AppException;
 import com.wbsrisktaskerx.wbsrisktaskerx.exception.ErrorCode;
 import com.wbsrisktaskerx.wbsrisktaskerx.service.admin.AdminDetailsServiceImpl;
@@ -89,6 +90,10 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 
         return path.equals(EndpointConstants.AUTH + EndpointConstants.SIGN_IN) ||
                 path.equals(EndpointConstants.AUTH + EndpointConstants.SIGN_UP) ||
+                path.startsWith(EndpointUtil.OTP_API + EndpointUtil.EMAIL) ||
+                path.startsWith(EndpointUtil.OTP_API + EndpointUtil.VERIFY_OTP) ||
+                path.startsWith(EndpointUtil.OTP_API + EndpointUtil.FORGOT_PASSWORD) ||
+                path.equals(EndpointUtil.OTP_API) ||
                 path.startsWith(EndpointConstants.ACTUATOR) ||
                 path.startsWith(EndpointConstants.SWAGGER_ICO) ||
                 (path.startsWith(EndpointConstants.SWAGGER_UI) && HttpMethod.GET.matches(method)) ||
