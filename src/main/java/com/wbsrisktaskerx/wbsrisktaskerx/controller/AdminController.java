@@ -3,6 +3,7 @@ package com.wbsrisktaskerx.wbsrisktaskerx.controller;
 import com.wbsrisktaskerx.wbsrisktaskerx.common.constants.EndpointUtil;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.ForgotPasswordRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.ResetPasswordRequest;
+import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.VerifyOtpResponse;
 import com.wbsrisktaskerx.wbsrisktaskerx.service.otp.AdminEmailService;
 import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
@@ -26,7 +27,7 @@ public class AdminController {
     }
 
     @PostMapping(EndpointUtil.EMAIL + EndpointUtil.VERIFY_OTP)
-    public String verifyOtp(@RequestBody @Valid ForgotPasswordRequest request) {
+    public VerifyOtpResponse verifyOtp(@RequestBody @Valid ForgotPasswordRequest request) {
         return adminEmailService.verifyOtp(request);
     }
 

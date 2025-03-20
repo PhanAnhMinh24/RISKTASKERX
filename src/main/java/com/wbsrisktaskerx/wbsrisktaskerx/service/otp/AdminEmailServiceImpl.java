@@ -8,6 +8,7 @@ import com.wbsrisktaskerx.wbsrisktaskerx.exception.AppException;
 import com.wbsrisktaskerx.wbsrisktaskerx.exception.ErrorCode;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.ForgotPasswordRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.ResetPasswordRequest;
+import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.VerifyOtpResponse;
 import com.wbsrisktaskerx.wbsrisktaskerx.repository.AdminOtpJpaQueryRepository;
 import com.wbsrisktaskerx.wbsrisktaskerx.utils.DateTimeUtils;
 import jakarta.mail.MessagingException;
@@ -74,15 +75,15 @@ public class AdminEmailServiceImpl implements AdminEmailService {
 
     @Override
     @Transactional
-    public String verifyOtp(ForgotPasswordRequest request) {
+    public VerifyOtpResponse verifyOtp(ForgotPasswordRequest request) {
         Optional<AdminOtp> adminOtpOpt = adminOtpJpaQueryRepository
                 .findValidOtpByEmail(request.getEmail(), request.getOtp());
 
         if (adminOtpOpt.isPresent()) {
             adminOtpJpaQueryRepository.deleteOtpByEmailAndCode(request.getEmail(), request.getOtp());
-            return request.getEmail();
+            return new VerifyOtpResponse(true, request.getEmail());
         }
-        throw new AppException(ErrorCode.INVALID_OTP);
+        return new VerifyOtpResponse(false, null);
     }
 
     @Override
