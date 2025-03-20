@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.util.List;
+
 @Entity
 @Getter
 @Setter
@@ -41,5 +43,8 @@ public class Admin extends BaseTimeEntity  {
     @Column(name = "role_id", nullable = false)
     Integer roleId;
 
+
+    @OneToMany(mappedBy = "admin", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<AdminOtp> otp;
 
 }

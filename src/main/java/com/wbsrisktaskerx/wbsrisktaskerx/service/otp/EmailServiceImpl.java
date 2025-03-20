@@ -27,7 +27,7 @@ public class EmailServiceImpl implements EmailService {
     }
 
     @Override
-    public void sendEmail(String to, String templatePath, Map<String, String> placeholders) throws MessagingException, IOException {
+    public boolean sendEmail(String to, String templatePath, Map<String, String> placeholders) throws MessagingException, IOException {
 
         String htmlTemplate = new String(Files.readAllBytes(Paths.get(new ClassPathResource(templatePath).getURI())));
 
@@ -44,5 +44,6 @@ public class EmailServiceImpl implements EmailService {
         mimeMessageHelper.setText(htmlTemplate, true);
 
         javaMailSender.send(message);
+        return true;
     }
 }

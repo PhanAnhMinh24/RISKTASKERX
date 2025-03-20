@@ -6,6 +6,6 @@ import java.io.IOException;
 import java.util.Map;
 
 public interface EmailService {
-    void sendEmail(String to, String templatePath, Map<String, String> placeholders) throws MessagingException, IOException;
+    boolean sendEmail(String to, String templatePath, Map<String, String> placeholders) throws MessagingException, IOException;
 }
 
