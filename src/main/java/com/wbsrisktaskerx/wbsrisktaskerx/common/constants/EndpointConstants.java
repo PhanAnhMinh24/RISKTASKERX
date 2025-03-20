@@ -16,6 +16,11 @@ public class EndpointConstants {
     public static final String AUTH = "/auth";
     public static final String SIGN_IN = "/sign-in";
     public static final String SIGN_UP = "/sign-up";
+    public static final String CHANGE_PASSWORD = "/change-password";
 
+
+    // Profile
+
+    public static final String PROFILE = "/api/profile";
 
 }

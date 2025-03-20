@@ -15,7 +15,7 @@ import java.util.List;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Table(name = EntityConstant.ADMIN_TABLE)
-public class Admin {
+public class Admin extends BaseTimeEntity  {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,8 +36,13 @@ public class Admin {
     @Column(name = "profile_img", length = 255)
     String profileImg;
 
+    @Builder.Default
     @Column(name = "is_active", nullable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")
     Boolean isActive = true;
+
+    @Column(name = "role_id", nullable = false)
+    Integer roleId;
+
 
     @OneToMany(mappedBy = "admin", cascade = CascadeType.ALL, orphanRemoval = true)
     List<AdminOtp> otp;
