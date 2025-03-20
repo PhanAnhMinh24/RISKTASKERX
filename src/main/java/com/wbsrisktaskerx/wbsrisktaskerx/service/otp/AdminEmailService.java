@@ -7,7 +7,7 @@ import jakarta.mail.MessagingException;
 import java.io.IOException;
 
 public interface AdminEmailService {
-    String sendOtpEmail(String to) throws MessagingException, IOException;
-    boolean verifyOtp(ForgotPasswordRequest request);
+    boolean sendOtpEmail(String to) throws MessagingException, IOException;
+    String verifyOtp(ForgotPasswordRequest request);
     boolean resetPassword(ResetPasswordRequest request);
 }

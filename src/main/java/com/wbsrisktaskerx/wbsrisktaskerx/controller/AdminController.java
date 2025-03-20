@@ -21,12 +21,12 @@ public class AdminController {
     }
 
     @GetMapping(EndpointUtil.EMAIL + EndpointUtil.SEND_OTP)
-    public String sendOtpEmail(@RequestParam String to) throws MessagingException, IOException {
+    public boolean sendOtpEmail(@RequestParam String to) throws MessagingException, IOException {
         return adminEmailService.sendOtpEmail(to);
     }
 
     @PostMapping(EndpointUtil.EMAIL + EndpointUtil.VERIFY_OTP)
-    public boolean verifyOtp(@RequestBody @Valid ForgotPasswordRequest request) {
+    public String verifyOtp(@RequestBody @Valid ForgotPasswordRequest request) {
         return adminEmailService.verifyOtp(request);
     }
 
