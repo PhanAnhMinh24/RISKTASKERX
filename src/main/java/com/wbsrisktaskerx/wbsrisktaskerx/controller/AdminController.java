@@ -21,7 +21,7 @@ public class AdminController {
     }
 
     @GetMapping(EndpointUtil.EMAIL + EndpointUtil.SEND_OTP)
-    public boolean sendOtpEmail(@RequestParam String to) throws MessagingException, IOException {
+    public String sendOtpEmail(@RequestParam String to) throws MessagingException, IOException {
         return adminEmailService.sendOtpEmail(to);
     }
 

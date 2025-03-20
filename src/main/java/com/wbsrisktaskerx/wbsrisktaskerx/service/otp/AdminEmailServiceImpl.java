@@ -44,7 +44,7 @@ public class AdminEmailServiceImpl implements AdminEmailService {
     }
 
     @Override
-    public boolean sendOtpEmail(String to) throws MessagingException, IOException {
+    public String sendOtpEmail(String to) throws MessagingException, IOException {
         if (!adminOtpJpaQueryRepository.existsByEmail(to)) {
             throw new AppException(ErrorCode.EMAIL_NOT_FOUND);
         }
@@ -69,7 +69,7 @@ public class AdminEmailServiceImpl implements AdminEmailService {
         placeholders.put(EmailConstants.PLACEHOLDER_SUBJECT_EMAIL_SUBJECT, EmailConstants.PLACEHOLDER_SUBJECT_SEND_OTP);
 
         emailService.sendEmail(to, templatePath, placeholders);
-        return true;
+        return to;
     }
 
     @Override
