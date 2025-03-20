@@ -30,7 +30,7 @@ public class AdminController {
         return adminEmailService.verifyOtp(request);
     }
 
-    @PostMapping(EndpointUtil.EMAIL + EndpointUtil.FORGOT_PASSWORD)
+    @PutMapping(EndpointUtil.EMAIL + EndpointUtil.FORGOT_PASSWORD)
     public boolean resetPassword(@RequestBody @Valid ResetPasswordRequest request) {
         return adminEmailService.resetPassword(request);
     }
