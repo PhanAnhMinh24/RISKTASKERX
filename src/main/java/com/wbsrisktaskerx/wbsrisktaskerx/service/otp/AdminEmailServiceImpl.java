@@ -44,7 +44,7 @@ public class AdminEmailServiceImpl implements AdminEmailService {
     }
 
     @Override
-    public String sendOtpEmail(String to) throws MessagingException, IOException {
+    public boolean sendOtpEmail(String to) throws MessagingException, IOException {
         if (!adminOtpJpaQueryRepository.existsByEmail(to)) {
             throw new AppException(ErrorCode.EMAIL_NOT_FOUND);
         }
@@ -69,20 +69,20 @@ public class AdminEmailServiceImpl implements AdminEmailService {
         placeholders.put(EmailConstants.PLACEHOLDER_SUBJECT_EMAIL_SUBJECT, EmailConstants.PLACEHOLDER_SUBJECT_SEND_OTP);
 
         emailService.sendEmail(to, templatePath, placeholders);
-        return to;
+        return true;
     }
 
     @Override
     @Transactional
-    public boolean verifyOtp(ForgotPasswordRequest request) {
+    public String verifyOtp(ForgotPasswordRequest request) {
         Optional<AdminOtp> adminOtpOpt = adminOtpJpaQueryRepository
                 .findValidOtpByEmail(request.getEmail(), request.getOtp());
 
         if (adminOtpOpt.isPresent()) {
             adminOtpJpaQueryRepository.deleteOtpByEmailAndCode(request.getEmail(), request.getOtp());
-            return true;
+            return request.getEmail();
         }
-        return false;
+        throw new AppException(ErrorCode.INVALID_OTP);
     }
 
     @Override
