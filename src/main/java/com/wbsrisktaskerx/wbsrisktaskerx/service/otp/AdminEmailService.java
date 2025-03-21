@@ -4,11 +4,12 @@ import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.ForgotPasswordRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.ResetPasswordRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.VerifyOtpResponse;
 import jakarta.mail.MessagingException;
+import org.springframework.http.ResponseEntity;
 
 import java.io.IOException;
 
 public interface AdminEmailService {
-    boolean sendOtpEmail(String to) throws MessagingException, IOException;
+    ResponseEntity<Boolean> sendOtpEmail(String to) throws MessagingException, IOException;
     VerifyOtpResponse verifyOtp(ForgotPasswordRequest request);
-    boolean resetPassword(ResetPasswordRequest request);
+    ResponseEntity<Boolean> resetPassword(ResetPasswordRequest request);
 }

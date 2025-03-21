@@ -15,6 +15,7 @@ import jakarta.mail.MessagingException;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -36,7 +37,8 @@ public class AdminEmailServiceImpl implements AdminEmailService {
     @Value("${spring.mail.username}")
     private String fromEmail;
 
-    public AdminEmailServiceImpl(EmailService emailService, AdminOtpJpaQueryRepository adminOtpJpaQueryRepository, PasswordEncoder passwordEncoder, EntityManager entityManager, JPAQueryFactory jpaQueryFactory) {
+    public AdminEmailServiceImpl(EmailService emailService, AdminOtpJpaQueryRepository adminOtpJpaQueryRepository,
+                                 PasswordEncoder passwordEncoder, EntityManager entityManager, JPAQueryFactory jpaQueryFactory) {
         this.emailService = emailService;
         this.adminOtpJpaQueryRepository = adminOtpJpaQueryRepository;
         this.passwordEncoder = passwordEncoder;
@@ -45,7 +47,7 @@ public class AdminEmailServiceImpl implements AdminEmailService {
     }
 
     @Override
-    public boolean sendOtpEmail(String to) throws MessagingException, IOException {
+    public ResponseEntity<Boolean> sendOtpEmail(String to) throws MessagingException, IOException {
         if (!adminOtpJpaQueryRepository.existsByEmail(to)) {
             throw new AppException(ErrorCode.EMAIL_NOT_FOUND);
         }
@@ -70,7 +72,7 @@ public class AdminEmailServiceImpl implements AdminEmailService {
         placeholders.put(EmailConstants.PLACEHOLDER_SUBJECT_EMAIL_SUBJECT, EmailConstants.PLACEHOLDER_SUBJECT_SEND_OTP);
 
         emailService.sendEmail(to, templatePath, placeholders);
-        return true;
+        return ResponseEntity.ok(true);
     }
 
     @Override
@@ -88,7 +90,7 @@ public class AdminEmailServiceImpl implements AdminEmailService {
 
     @Override
     @Transactional
-    public boolean resetPassword(ResetPasswordRequest request) {
+    public ResponseEntity<Boolean> resetPassword(ResetPasswordRequest request) {
 
         Optional<AdminOtp> recentOtp = adminOtpJpaQueryRepository.findValidOtpByEmail(request.getEmail(), null);
         if (recentOtp.isPresent()) {
@@ -103,6 +105,6 @@ public class AdminEmailServiceImpl implements AdminEmailService {
         admin.setPassword(passwordEncoder.encode(request.getNewPassword()));
         entityManager.merge(admin);
         entityManager.flush();
-        return true;
+        return ResponseEntity.ok(true);
     }
 }
