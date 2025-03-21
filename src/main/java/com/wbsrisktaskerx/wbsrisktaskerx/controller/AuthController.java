@@ -30,7 +30,7 @@ public class AuthController {
         return ResponseEntity.ok(ApiResult.success(jwtResponse));
     }
 
-    @PostMapping(EndpointConstants.CHANGE_PASSWORD)
+    @PutMapping(EndpointConstants.CHANGE_PASSWORD)
     public ResponseEntity<ApiResult<String>> changePassword(@RequestBody ChangePasswordRequest changePasswordRequest) {
         String message = authService.changePassword(changePasswordRequest);
         return ResponseEntity.ok(ApiResult.success(message));
