@@ -1,6 +1,7 @@
 package com.wbsrisktaskerx.wbsrisktaskerx.controller;
 
 import com.wbsrisktaskerx.wbsrisktaskerx.common.constants.EndpointUtil;
+import com.wbsrisktaskerx.wbsrisktaskerx.pojo.ApiResult;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.ForgotPasswordRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.ResetPasswordRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.VerifyOtpResponse;
@@ -23,17 +24,17 @@ public class AdminController {
     }
 
     @GetMapping(EndpointUtil.EMAIL + EndpointUtil.SEND)
-    public ResponseEntity<Boolean> sendOtpEmail(@RequestParam String to) throws MessagingException, IOException {
-        return adminEmailService.sendOtpEmail(to);
+    public ResponseEntity<ApiResult<Boolean>> sendOtpEmail(@RequestParam String to) throws MessagingException, IOException {
+        return ResponseEntity.ok(ApiResult.success(adminEmailService.sendOtpEmail(to)));
     }
 
     @PostMapping(EndpointUtil.EMAIL + EndpointUtil.VERIFY)
-    public VerifyOtpResponse verifyOtp(@RequestBody @Valid ForgotPasswordRequest request) {
-        return adminEmailService.verifyOtp(request);
+    public ResponseEntity<ApiResult<VerifyOtpResponse>> verifyOtp(@RequestBody @Valid ForgotPasswordRequest request) {
+        return ResponseEntity.ok(ApiResult.success(adminEmailService.verifyOtp(request)));
     }
 
     @PutMapping(EndpointUtil.EMAIL + EndpointUtil.FORGOT_PASSWORD)
-    public ResponseEntity<Boolean> resetPassword(@RequestBody @Valid ResetPasswordRequest request) {
-        return adminEmailService.resetPassword(request);
+    public ResponseEntity<ApiResult<Boolean>> resetPassword(@RequestBody @Valid ResetPasswordRequest request) {
+        return ResponseEntity.ok(ApiResult.success(adminEmailService.resetPassword(request)));
     }
 }

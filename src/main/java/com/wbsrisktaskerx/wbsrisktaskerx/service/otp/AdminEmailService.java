@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import java.io.IOException;
 
 public interface AdminEmailService {
-    ResponseEntity<Boolean> sendOtpEmail(String to) throws MessagingException, IOException;
+    boolean sendOtpEmail(String to) throws MessagingException, IOException;
     VerifyOtpResponse verifyOtp(ForgotPasswordRequest request);
-    ResponseEntity<Boolean> resetPassword(ResetPasswordRequest request);
+    boolean resetPassword(ResetPasswordRequest request);
 }

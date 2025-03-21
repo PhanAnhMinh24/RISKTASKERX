@@ -47,7 +47,7 @@ public class AdminEmailServiceImpl implements AdminEmailService {
     }
 
     @Override
-    public ResponseEntity<Boolean> sendOtpEmail(String to) throws MessagingException, IOException {
+    public boolean sendOtpEmail(String to) throws MessagingException, IOException {
         if (!adminOtpJpaQueryRepository.existsByEmail(to)) {
             throw new AppException(ErrorCode.EMAIL_NOT_FOUND);
         }
@@ -72,7 +72,7 @@ public class AdminEmailServiceImpl implements AdminEmailService {
         placeholders.put(EmailConstants.PLACEHOLDER_SUBJECT_EMAIL_SUBJECT, EmailConstants.PLACEHOLDER_SUBJECT_SEND_OTP);
 
         emailService.sendEmail(to, templatePath, placeholders);
-        return ResponseEntity.ok(true);
+        return true;
     }
 
     @Override
@@ -90,7 +90,8 @@ public class AdminEmailServiceImpl implements AdminEmailService {
 
     @Override
     @Transactional
-    public ResponseEntity<Boolean> resetPassword(ResetPasswordRequest request) {
+
+    public boolean resetPassword(ResetPasswordRequest request) {
 
         Optional<AdminOtp> recentOtp = adminOtpJpaQueryRepository.findValidOtpByEmail(request.getEmail(), null);
         if (recentOtp.isPresent()) {
@@ -105,6 +106,6 @@ public class AdminEmailServiceImpl implements AdminEmailService {
         admin.setPassword(passwordEncoder.encode(request.getNewPassword()));
         entityManager.merge(admin);
         entityManager.flush();
-        return ResponseEntity.ok(true);
+        return true;
     }
 }
