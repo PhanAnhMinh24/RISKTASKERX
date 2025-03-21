@@ -15,6 +15,7 @@ import jakarta.mail.MessagingException;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -36,7 +37,8 @@ public class AdminEmailServiceImpl implements AdminEmailService {
     @Value("${spring.mail.username}")
     private String fromEmail;
 
-    public AdminEmailServiceImpl(EmailService emailService, AdminOtpJpaQueryRepository adminOtpJpaQueryRepository, PasswordEncoder passwordEncoder, EntityManager entityManager, JPAQueryFactory jpaQueryFactory) {
+    public AdminEmailServiceImpl(EmailService emailService, AdminOtpJpaQueryRepository adminOtpJpaQueryRepository,
+                                 PasswordEncoder passwordEncoder, EntityManager entityManager, JPAQueryFactory jpaQueryFactory) {
         this.emailService = emailService;
         this.adminOtpJpaQueryRepository = adminOtpJpaQueryRepository;
         this.passwordEncoder = passwordEncoder;
@@ -88,6 +90,7 @@ public class AdminEmailServiceImpl implements AdminEmailService {
 
     @Override
     @Transactional
+
     public boolean resetPassword(ResetPasswordRequest request) {
 
         Optional<AdminOtp> recentOtp = adminOtpJpaQueryRepository.findValidOtpByEmail(request.getEmail(), null);

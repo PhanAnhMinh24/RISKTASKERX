@@ -90,10 +90,10 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 
         return path.equals(EndpointConstants.AUTH + EndpointConstants.SIGN_IN) ||
                 path.equals(EndpointConstants.AUTH + EndpointConstants.SIGN_UP) ||
-                path.startsWith(EndpointUtil.OTP_API + EndpointUtil.EMAIL) ||
-                path.startsWith(EndpointUtil.OTP_API + EndpointUtil.VERIFY_OTP) ||
-                path.startsWith(EndpointUtil.OTP_API + EndpointUtil.FORGOT_PASSWORD) ||
-                path.equals(EndpointUtil.OTP_API) ||
+                path.startsWith(EndpointUtil.OTP + EndpointUtil.EMAIL) ||
+                path.startsWith(EndpointUtil.OTP + EndpointUtil.VERIFY) ||
+                path.startsWith(EndpointUtil.OTP + EndpointUtil.FORGOT_PASSWORD) ||
+                path.equals(EndpointUtil.OTP) ||
                 path.startsWith(EndpointConstants.ACTUATOR) ||
                 path.startsWith(EndpointConstants.SWAGGER_ICO) ||
                 (path.startsWith(EndpointConstants.SWAGGER_UI) && HttpMethod.GET.matches(method)) ||
