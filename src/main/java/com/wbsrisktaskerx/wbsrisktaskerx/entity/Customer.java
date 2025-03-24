@@ -1,6 +1,7 @@
 package com.wbsrisktaskerx.wbsrisktaskerx.entity;
 
 import com.wbsrisktaskerx.wbsrisktaskerx.common.constants.EntityConstant;
+import com.wbsrisktaskerx.wbsrisktaskerx.pojo.data.Tier;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -31,6 +32,11 @@ public class Customer {
     @Column(name = "address", length = 100, nullable = false)
     String address;
 
-    @Column(name = "loyalty_points", length = 100, nullable = false)
-    Integer loyaltyPoints;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "tier", nullable = false, length = 10)
+    Tier tier = Tier.Bronze;
+
+    @Column(name = "is_active", nullable = false)
+    Boolean  isActive = false;
+
 }
