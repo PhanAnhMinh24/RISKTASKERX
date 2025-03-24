@@ -9,10 +9,11 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class CustomerReponse {
+public class CustomerResponse {
     Long id;
     String fullName;
     String email;
     String phoneNumber;
-    Long loyalty_points;
+    Boolean isActive;
+    String tier;
 }

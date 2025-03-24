@@ -18,9 +18,12 @@ public class EndpointConstants {
     public static final String SIGN_UP = "/sign-up";
     public static final String CHANGE_PASSWORD = "/change-password";
 
-
     // Profile
 
     public static final String PROFILE = "/api/profile";
+
+    // Customers
+    public static final String CUSTOMERS = "/customers";
+    public static final String LIST_CUSTOMERS = "/list-customers";
 
 }
