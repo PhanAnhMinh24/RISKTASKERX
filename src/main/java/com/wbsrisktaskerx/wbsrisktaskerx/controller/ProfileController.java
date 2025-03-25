@@ -15,11 +15,9 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(EndpointConstants.PROFILE)
 @RequiredArgsConstructor
 public class ProfileController {
-
     private final IProfileService profileService;
     private final JwtUtils jwtUtils;
-
-    @GetMapping
+    @PostMapping
     public ApiResult<ProfileResponse> getProfile(HttpServletRequest request) {
         String authHeader = request.getHeader("Authorization");
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {

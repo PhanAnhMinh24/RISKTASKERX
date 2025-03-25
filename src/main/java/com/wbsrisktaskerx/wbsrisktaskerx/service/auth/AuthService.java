@@ -1,6 +1,8 @@
 package com.wbsrisktaskerx.wbsrisktaskerx.service.auth;
 
 import com.wbsrisktaskerx.wbsrisktaskerx.entity.Admin;
+import com.wbsrisktaskerx.wbsrisktaskerx.exception.AppException;
+import com.wbsrisktaskerx.wbsrisktaskerx.exception.ErrorCode;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.ChangePasswordRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.LoginRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.SignupRequest;
@@ -23,10 +25,10 @@ public class AuthService implements IAuthService {
     @Override
     public JwtResponse login(LoginRequest loginRequest) {
         Admin admin = adminRepository.findByEmail(loginRequest.getEmail())
-                .orElseThrow(() -> new RuntimeException("Invalid email or password"));
+                .orElseThrow(() -> new RuntimeException(ErrorCode.INVALID_USERNAME_OR_PASSWORD.getMessage()));
 
         if (!passwordEncoder.matches(loginRequest.getPassword(), admin.getPassword())) {
-            throw new RuntimeException("Invalid email or password");
+            throw new RuntimeException(ErrorCode.INVALID_USERNAME_OR_PASSWORD.getMessage());
         }
 
         String token = jwtUtils.generateToken(admin.getEmail());
@@ -41,12 +43,13 @@ public class AuthService implements IAuthService {
 
     @Override
     public JwtResponse signup(SignupRequest signupRequest) {
+        // Kiểm tra định dạng email
         if (!signupRequest.getEmail().matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")) {
-            throw new RuntimeException("Invalid email format");
+            throw new RuntimeException(ErrorCode.INVALID_REQUEST.getMessage());
         }
 
         if (adminRepository.findByEmail(signupRequest.getEmail()).isPresent()) {
-            throw new RuntimeException("Email is already in use");
+            throw new RuntimeException(ErrorCode.EMAIL_EXIST.getMessage());
         }
         String encodedPassword = passwordEncoder.encode(signupRequest.getPassword());
         Admin newAdmin = Admin.builder()
@@ -74,22 +77,37 @@ public class AuthService implements IAuthService {
     public String changePassword(ChangePasswordRequest changePasswordRequest) {
         String email = JwtUtils.getCurrentAdmin();
         Admin admin = adminRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
 
         if (!passwordEncoder.matches(changePasswordRequest.getOldPassword(), admin.getPassword())) {
-            throw new RuntimeException("Old password is incorrect");
+            throw new AppException(ErrorCode.INVALID_USERNAME_OR_PASSWORD);
+        }
+        if (passwordEncoder.matches(changePasswordRequest.getNewPassword(), admin.getPassword())) {
+            throw new AppException(ErrorCode.PASSWORD_MATCHES_OLD_PASSWORD, "New password cannot be the same as the old password.");
         }
 
         if (!changePasswordRequest.getNewPassword().equals(changePasswordRequest.getConfirmPassword())) {
-            throw new RuntimeException("New passwords do not match");
+            throw new AppException(ErrorCode.PASSWORDS_NOT_MATCH);
         }
 
         String newPassword = changePasswordRequest.getNewPassword();
-        String passwordRegex = "^(?=.*[0-9])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{8,}$";
-        if (!newPassword.matches(passwordRegex)) {
-            throw new RuntimeException("New password must be at least 8 characters long, contain at least one special character, one number, one uppercase letter, and have no spaces.");
+        if (newPassword.length() < 8) {
+            throw new AppException(ErrorCode.PASSWORD_TOO_SHORT);
+        }
+        if (!newPassword.matches(".*[A-Z].*")) {
+            throw new AppException(ErrorCode.PASSWORD_NO_UPPERCASE);
+        }
+        if (!newPassword.matches(".*[0-9].*")) {
+            throw new AppException(ErrorCode.PASSWORD_NO_NUMBER);
+        }
+        if (!newPassword.matches(".*[@#$%^&+=!].*")) {
+            throw new AppException(ErrorCode.PASSWORD_NO_SPECIAL_CHAR);
+        }
+        if (newPassword.contains(" ")) {
+            throw new AppException(ErrorCode.PASSWORD_CONTAINS_SPACE);
         }
 
+        // Cập nhật mật khẩu mới
         admin.setPassword(passwordEncoder.encode(newPassword));
         adminRepository.save(admin);
 

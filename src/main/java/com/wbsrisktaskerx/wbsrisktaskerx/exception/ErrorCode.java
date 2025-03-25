@@ -38,6 +38,8 @@ public enum  ErrorCode {
     PASSWORD_NO_NUMBER("password-no-number", HttpStatus.BAD_REQUEST),
     PASSWORD_NO_SPECIAL_CHAR("password-no-special-char", HttpStatus.BAD_REQUEST),
     PASSWORD_CONTAINS_SPACE("password-contains-space", HttpStatus.BAD_REQUEST),
+    PASSWORD_MATCHES_OLD_PASSWORD("password-matches-old-password", HttpStatus.BAD_REQUEST),
+
 
     INVALID_REQUEST("invalid-request", HttpStatus.BAD_REQUEST),
     REQUEST_NOT_FOUND("request-not-found", HttpStatus.BAD_REQUEST),
