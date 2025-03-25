@@ -1,28 +1,39 @@
 package com.wbsrisktaskerx.wbsrisktaskerx.controller;
 
 import com.wbsrisktaskerx.wbsrisktaskerx.common.constants.EndpointConstants;
-import com.wbsrisktaskerx.wbsrisktaskerx.entity.Customer;
-import com.wbsrisktaskerx.wbsrisktaskerx.pojo.ApiResult;
-import com.wbsrisktaskerx.wbsrisktaskerx.service.customer.ICustomerService;
+import com.wbsrisktaskerx.wbsrisktaskerx.common.constants.ExportConstants;
+import com.wbsrisktaskerx.wbsrisktaskerx.service.export.IExportService;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.*;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 @RestController
 @RequestMapping(EndpointConstants.CUSTOMERS)
 public class CustomerController {
 
-    private final ICustomerService customerService;
+    private final IExportService exportService;
 
-    public CustomerController(ICustomerService customerService) {
-        this.customerService = customerService;
+    public CustomerController(IExportService exportService) {
+        this.exportService = exportService;
     }
 
-    @GetMapping(EndpointConstants.LIST_CUSTOMERS)
-    public ResponseEntity<ApiResult<List<Customer>>> getAllCustomers() {
-        return ResponseEntity.ok(ApiResult.success(customerService.getAllCustomers()));
+    @GetMapping(EndpointConstants.EXPORT_CUSTOMER)
+    public ResponseEntity<InputStreamResource> download() throws IOException {
+        ByteArrayInputStream inputStream = exportService.getCustomerList();
+        InputStreamResource response = new InputStreamResource(inputStream);
+
+        String currentDate = LocalDate.now().format(DateTimeFormatter.ofPattern("dd_MM_yyyy"));
+        String fileName = ExportConstants.FILENAME + currentDate + ExportConstants.XLSX;
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, ExportConstants.HEADER_VALUE + fileName)
+                .contentType(MediaType.parseMediaType(ExportConstants.MS_EXCEL))
+                .body(response);
     }
 }

@@ -64,6 +64,9 @@ dependencies {
 	testImplementation 'org.springframework.security:spring-security-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
+	// Export
+	implementation 'org.apache.poi:poi-ooxml:5.4.0'
+
 }
 
 tasks.named('test') {

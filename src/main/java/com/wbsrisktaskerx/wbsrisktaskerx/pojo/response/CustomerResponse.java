@@ -1,5 +1,6 @@
 package com.wbsrisktaskerx.wbsrisktaskerx.pojo.response;
 
+import com.wbsrisktaskerx.wbsrisktaskerx.pojo.data.Tier;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -10,10 +11,10 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CustomerResponse {
-    Long id;
+    Integer id;
     String fullName;
     String email;
-    String phoneNumber;
+    Integer phoneNumber;
     Boolean isActive;
-    String tier;
+    Tier tier;
 }

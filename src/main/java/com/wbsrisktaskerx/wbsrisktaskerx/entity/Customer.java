@@ -27,7 +27,7 @@ public class Customer {
     String fullName;
 
     @Column(name = "phone_number", length = 13, nullable = false)
-    Integer phoneNumber;
+    String phoneNumber;
 
     @Column(name = "address", length = 100, nullable = false)
     String address;
