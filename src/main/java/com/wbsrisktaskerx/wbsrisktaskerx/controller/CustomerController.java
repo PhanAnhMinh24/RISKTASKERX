@@ -4,6 +4,7 @@ package com.wbsrisktaskerx.wbsrisktaskerx.controller;
 import com.wbsrisktaskerx.wbsrisktaskerx.common.constants.EndpointConstants;
 import com.wbsrisktaskerx.wbsrisktaskerx.entity.Customer;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.ApiResult;
+import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.CustomerResponse;
 import com.wbsrisktaskerx.wbsrisktaskerx.service.customer.ICustomerService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,7 +25,7 @@ public class CustomerController {
     }
 
     @GetMapping(EndpointConstants.ID)
-    public ResponseEntity<ApiResult<Customer>> getCustomerDetail(@PathVariable int id) {
+    public ResponseEntity<ApiResult<CustomerResponse>> getCustomerDetail(@PathVariable int id) {
         return ResponseEntity.ok(ApiResult.success(customerService.getCustomerById(id)));
     }
 }
