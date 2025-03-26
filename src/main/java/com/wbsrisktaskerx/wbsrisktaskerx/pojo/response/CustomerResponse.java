@@ -17,4 +17,5 @@ public class CustomerResponse {
     Integer phoneNumber;
     Boolean isActive;
     Tier tier;
+    String dateOfBirth;
 }

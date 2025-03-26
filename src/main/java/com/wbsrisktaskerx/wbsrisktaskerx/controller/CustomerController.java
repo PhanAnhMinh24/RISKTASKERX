@@ -5,7 +5,6 @@ import com.wbsrisktaskerx.wbsrisktaskerx.common.constants.EndpointConstants;
 import com.wbsrisktaskerx.wbsrisktaskerx.entity.Customer;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.ApiResult;
 import com.wbsrisktaskerx.wbsrisktaskerx.service.customer.ICustomerService;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,14 +23,8 @@ public class CustomerController {
         this.customerService = customerService;
     }
 
-    @GetMapping(EndpointConstants.LIST_CUSTOMERS)
-    public ResponseEntity<ApiResult<List<Customer>>> getAllCustomers() {
-        return ResponseEntity.ok(ApiResult.success(customerService.getAllCustomers()));
-    }
-
-    @GetMapping(EndpointConstants.FIND_CUSTOMER_BY_ID)
-    public ResponseEntity<?> getCustomerDetail(@PathVariable int id) {
-        Customer customer = customerService.getCustomerById(id);
-        return customer == null ? ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"message\": \"Customer not found\"}") : ResponseEntity.ok(customer);
+    @GetMapping(EndpointConstants.ID)
+    public ResponseEntity<ApiResult<Customer>> getCustomerDetail(@PathVariable int id) {
+        return ResponseEntity.ok(ApiResult.success(customerService.getCustomerById(id)));
     }
 }
