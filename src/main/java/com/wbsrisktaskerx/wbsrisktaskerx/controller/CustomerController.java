@@ -29,7 +29,7 @@ public class CustomerController {
         return ResponseEntity.ok(ApiResult.success(customerService.getAllCustomers()));
     }
 
-    @GetMapping("/{id}")
+    @GetMapping(EndpointConstants.FIND_CUSTOMER_BY_ID)
     public ResponseEntity<?> getCustomerDetail(@PathVariable int id) {
         Customer customer = customerService.getCustomerById(id);
         return customer == null ? ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"message\": \"Customer not found\"}") : ResponseEntity.ok(customer);

@@ -25,5 +25,5 @@ public class EndpointConstants {
     // Customers
     public static final String CUSTOMERS = "/customers";
     public static final String LIST_CUSTOMERS = "/list-customers";
-
+    public static final String FIND_CUSTOMER_BY_ID = "/{id}";
 }
