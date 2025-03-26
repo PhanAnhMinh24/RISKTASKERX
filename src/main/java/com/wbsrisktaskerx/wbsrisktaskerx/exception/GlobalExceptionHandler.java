@@ -33,6 +33,7 @@ public class GlobalExceptionHandler {
         ErrorResponse response = ErrorResponse.from(errorCode);
         return ResponseEntity.status(e.getErrorCode().getStatus()).body(response);
     }
+
     @ExceptionHandler(UnauthorizedException.class)
     public ResponseEntity<ErrorResponse> handleUnauthorizedException(UnauthorizedException e) {
         log.info("Unauthorized Exception: {}", e.getMessage());

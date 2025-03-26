@@ -1,16 +1,18 @@
 package com.wbsrisktaskerx.wbsrisktaskerx.controller;
 
-
 import com.wbsrisktaskerx.wbsrisktaskerx.common.constants.EndpointConstants;
 import com.wbsrisktaskerx.wbsrisktaskerx.entity.Customer;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.ApiResult;
+import com.wbsrisktaskerx.wbsrisktaskerx.pojo.PagingRequest;
+import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.CustomerRequest;
+import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.SearchFilterCustomersRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.CustomerResponse;
 import com.wbsrisktaskerx.wbsrisktaskerx.service.customer.ICustomerService;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -22,6 +24,23 @@ public class CustomerController {
 
     public CustomerController(ICustomerService customerService) {
         this.customerService = customerService;
+    }
+
+    @GetMapping(EndpointConstants.LIST_CUSTOMERS)
+    public ResponseEntity<ApiResult<List<Customer>>> getAllCustomers() {
+        return ResponseEntity.ok(ApiResult.success(customerService.getAllCustomers()));
+    }
+
+    @PostMapping(EndpointConstants.SEARCH_FILTER)
+    public ResponseEntity<ApiResult<Page<CustomerResponse>>> searchFilterCustomers(@RequestBody PagingRequest<SearchFilterCustomersRequest> request) {
+        Page<CustomerResponse> pageResult = customerService.searchAndFilterCustomers(request);
+        return ResponseEntity.ok(ApiResult.success(pageResult));
+    }
+
+    @PutMapping(EndpointConstants.STATUS)
+    public ResponseEntity<ApiResult<Boolean>> updateCustomerActive(@RequestBody CustomerRequest request) {
+        boolean result = customerService.updateIsActive(request);
+        return ResponseEntity.ok(ApiResult.success(result));
     }
 
     @GetMapping(EndpointConstants.ID)

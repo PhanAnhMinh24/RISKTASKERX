@@ -29,6 +29,7 @@ public enum  ErrorCode {
     INVALID_OTP("invalid-otp", HttpStatus.BAD_REQUEST),
     OTP_NOT_VERIFIED("otp-not-verified", HttpStatus.BAD_REQUEST),
     USER_NOT_FOUND("user-not-found", HttpStatus.BAD_REQUEST),
+    CUSTOMER_NOT_FOUND("customer-not-found", HttpStatus.BAD_REQUEST),
     NOT_FOUND("not-found", HttpStatus.BAD_REQUEST),
     ACCOUNT_NOT_ACTIVE("account-not-active", HttpStatus.FORBIDDEN),
     PASSWORD_REQUIRED("password-required", HttpStatus.BAD_REQUEST),
@@ -38,9 +39,14 @@ public enum  ErrorCode {
     PASSWORD_NO_NUMBER("password-no-number", HttpStatus.BAD_REQUEST),
     PASSWORD_NO_SPECIAL_CHAR("password-no-special-char", HttpStatus.BAD_REQUEST),
     PASSWORD_CONTAINS_SPACE("password-contains-space", HttpStatus.BAD_REQUEST),
+    PASSWORD_MATCHES_OLD_PASSWORD("password-matches-old-password", HttpStatus.BAD_REQUEST),
+    INVALID_NUMERIC_VALUE("invalid-numeric-value", HttpStatus.BAD_REQUEST),
+
 
     INVALID_REQUEST("invalid-request", HttpStatus.BAD_REQUEST),
     REQUEST_NOT_FOUND("request-not-found", HttpStatus.BAD_REQUEST),
+
+    AUTHORIZATION_HEADER_IS_MISSING_OR_INVALID("authorization-header-is-missing-or-invalid", HttpStatus.BAD_REQUEST),
 
     /*
      * Error Authentication

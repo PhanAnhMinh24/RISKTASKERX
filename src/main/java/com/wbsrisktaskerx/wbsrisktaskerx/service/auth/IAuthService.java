@@ -7,7 +7,8 @@ import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.JwtResponse;
 
 public interface IAuthService {
     JwtResponse login(LoginRequest loginRequest);
+
     JwtResponse signup(SignupRequest signupRequest);
 
-    String changePassword(ChangePasswordRequest changePasswordRequest);
+    Boolean changePassword(ChangePasswordRequest changePasswordRequest);
 }
