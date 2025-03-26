@@ -44,6 +44,8 @@ public enum  ErrorCode {
     INVALID_REQUEST("invalid-request", HttpStatus.BAD_REQUEST),
     REQUEST_NOT_FOUND("request-not-found", HttpStatus.BAD_REQUEST),
 
+    AUTHORIZATION_HEADER_IS_MISSING_OR_INVALID("Authorization-header-is-missing-or-invalid", HttpStatus.BAD_REQUEST),
+
     /*
      * Error Authentication
      */

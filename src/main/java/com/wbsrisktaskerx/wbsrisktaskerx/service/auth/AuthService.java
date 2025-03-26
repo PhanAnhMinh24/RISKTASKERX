@@ -1,5 +1,6 @@
 package com.wbsrisktaskerx.wbsrisktaskerx.service.auth;
 
+import com.wbsrisktaskerx.wbsrisktaskerx.common.constants.EmailConstants;
 import com.wbsrisktaskerx.wbsrisktaskerx.entity.Admin;
 import com.wbsrisktaskerx.wbsrisktaskerx.exception.AppException;
 import com.wbsrisktaskerx.wbsrisktaskerx.exception.ErrorCode;
@@ -8,7 +9,9 @@ import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.LoginRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.SignupRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.JwtResponse;
 import com.wbsrisktaskerx.wbsrisktaskerx.repository.AdminRepository;
+import com.wbsrisktaskerx.wbsrisktaskerx.common.constants.PasswordConstants;
 import com.wbsrisktaskerx.wbsrisktaskerx.utils.JwtUtils;
+import com.wbsrisktaskerx.wbsrisktaskerx.utils.PasswordUtils;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -43,8 +46,7 @@ public class AuthService implements IAuthService {
 
     @Override
     public JwtResponse signup(SignupRequest signupRequest) {
-        // Kiểm tra định dạng email
-        if (!signupRequest.getEmail().matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")) {
+        if (!signupRequest.getEmail().matches(EmailConstants.EMAIL_REGEX)) {
             throw new RuntimeException(ErrorCode.INVALID_REQUEST.getMessage());
         }
 
@@ -78,40 +80,12 @@ public class AuthService implements IAuthService {
         String email = JwtUtils.getCurrentAdmin();
         Admin admin = adminRepository.findByEmail(email)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
-
-        if (!passwordEncoder.matches(changePasswordRequest.getOldPassword(), admin.getPassword())) {
-            throw new AppException(ErrorCode.INVALID_USERNAME_OR_PASSWORD);
-        }
-        if (passwordEncoder.matches(changePasswordRequest.getNewPassword(), admin.getPassword())) {
-            throw new AppException(ErrorCode.PASSWORD_MATCHES_OLD_PASSWORD, "New password cannot be the same as the old password.");
-        }
-
-        if (!changePasswordRequest.getNewPassword().equals(changePasswordRequest.getConfirmPassword())) {
-            throw new AppException(ErrorCode.PASSWORDS_NOT_MATCH);
-        }
-
-        String newPassword = changePasswordRequest.getNewPassword();
-        if (newPassword.length() < 8) {
-            throw new AppException(ErrorCode.PASSWORD_TOO_SHORT);
-        }
-        if (!newPassword.matches(".*[A-Z].*")) {
-            throw new AppException(ErrorCode.PASSWORD_NO_UPPERCASE);
-        }
-        if (!newPassword.matches(".*[0-9].*")) {
-            throw new AppException(ErrorCode.PASSWORD_NO_NUMBER);
-        }
-        if (!newPassword.matches(".*[@#$%^&+=!].*")) {
-            throw new AppException(ErrorCode.PASSWORD_NO_SPECIAL_CHAR);
-        }
-        if (newPassword.contains(" ")) {
-            throw new AppException(ErrorCode.PASSWORD_CONTAINS_SPACE);
-        }
-
-        // Cập nhật mật khẩu mới
-        admin.setPassword(passwordEncoder.encode(newPassword));
+        PasswordUtils.validatePassword(passwordEncoder, changePasswordRequest, admin.getPassword());
+        admin.setPassword(passwordEncoder.encode(changePasswordRequest.getNewPassword()));
         adminRepository.save(admin);
 
         return "Password changed successfully";
     }
+
 
 }

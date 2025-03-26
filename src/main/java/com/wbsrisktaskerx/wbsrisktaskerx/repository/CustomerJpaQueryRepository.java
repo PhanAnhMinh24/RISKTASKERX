@@ -24,22 +24,7 @@ public class CustomerJpaQueryRepository {
         return jpaQueryFactory.selectFrom(customer).fetch();
     }
 
-    public List<Customer> getFilteredCustomers(Tier tier, Boolean isActive, Integer page, Integer size) {
-        JPAQuery<Customer> query = jpaQueryFactory.selectFrom(customer);
-        if (tier == null) {
-            query.where(customer.tier.in(Tier.values()));
-        } else {
-            query.where(customer.tier.eq(tier));
-        }
-        if (isActive != null) {
-            query.where(customer.isActive.eq(isActive));
-        }
-        query = PageService.applyPagination(query, page, size, null, null);
-        return query.fetch();
-    }
-
-
-    public List<Customer> getSearchedCustomers(Integer id, String fullName, Integer page, Integer size) {
+    public List<Customer> getSearchedAndFilteredCustomers(Integer id, String fullName, Tier tier, Boolean isActive, Integer page, Integer size) {
         JPAQuery<Customer> query = jpaQueryFactory.selectFrom(customer);
         BooleanExpression condition = null;
 
@@ -48,7 +33,14 @@ public class CustomerJpaQueryRepository {
         }
         if (fullName != null && !fullName.isEmpty()) {
             BooleanExpression fullNameCondition = customer.fullName.containsIgnoreCase(fullName);
+            // Nếu có cả id và fullName thì có thể chọn cách OR hoặc AND tùy vào yêu cầu nghiệp vụ
             condition = (condition != null) ? condition.or(fullNameCondition) : fullNameCondition;
+        }
+        if (tier != null) {
+            condition = (condition != null) ? condition.and(customer.tier.eq(tier)) : customer.tier.eq(tier);
+        }
+        if (isActive != null) {
+            condition = (condition != null) ? condition.and(customer.isActive.eq(isActive)) : customer.isActive.eq(isActive);
         }
         if (condition != null) {
             query.where(condition);
