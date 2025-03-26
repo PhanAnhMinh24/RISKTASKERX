@@ -76,15 +76,14 @@ public class AuthService implements IAuthService {
     }
 
     @Override
-    public String changePassword(ChangePasswordRequest changePasswordRequest) {
+    public Boolean changePassword(ChangePasswordRequest changePasswordRequest) {
         String email = JwtUtils.getCurrentAdmin();
         Admin admin = adminRepository.findByEmail(email)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
         PasswordUtils.validatePassword(passwordEncoder, changePasswordRequest, admin.getPassword());
         admin.setPassword(passwordEncoder.encode(changePasswordRequest.getNewPassword()));
         adminRepository.save(admin);
-
-        return "Password changed successfully";
+        return Boolean.TRUE;
     }
 
 

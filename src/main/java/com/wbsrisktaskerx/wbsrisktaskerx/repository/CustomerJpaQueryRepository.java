@@ -4,6 +4,8 @@ import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.wbsrisktaskerx.wbsrisktaskerx.entity.Customer;
+import com.wbsrisktaskerx.wbsrisktaskerx.exception.AppException;
+import com.wbsrisktaskerx.wbsrisktaskerx.exception.ErrorCode;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.PagingRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.SearchFilterCustomersRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.CustomerResponse;
@@ -37,38 +39,38 @@ public class CustomerJpaQueryRepository {
 
 
     public Page<CustomerResponse> searchedAndFilteredCustomers(PagingRequest<SearchFilterCustomersRequest> request) {
-        int currentPage = (request.getPage() != null && request.getPage() > 0) ? request.getPage() : 1;
-        int pageSize = (request.getSize() != null && request.getSize() > 0) ? request.getSize() : 10;
-
-        BooleanBuilder booleanBuilder = new BooleanBuilder();
+        BooleanBuilder builder = new BooleanBuilder();
         SearchFilterCustomersRequest filter = request.getFilters();
-
         String searchKey = filter.getSearchKey();
         if (StringUtils.isNotBlank(searchKey)) {
+            BooleanBuilder searchBuilder = new BooleanBuilder();
+            searchBuilder.or(customer.fullName.like("%" + searchKey + "%"));
             try {
                 Integer idValue = Integer.valueOf(searchKey);
-                booleanBuilder.and(customer.id.eq(idValue).or(customer.fullName.containsIgnoreCase(searchKey)));
+                searchBuilder.or(customer.id.eq(idValue));
             } catch (NumberFormatException e) {
-                booleanBuilder.and(customer.fullName.containsIgnoreCase(searchKey));
             }
+            builder.and(searchBuilder);
         }
-
         if (!ObjectUtils.isEmpty(filter.getTier())) {
-            booleanBuilder.and(customer.tier.eq(filter.getTier()));
+            builder.and(customer.tier.eq(filter.getTier()));
         }
         if (!ObjectUtils.isEmpty(filter.getIsActive())) {
-            booleanBuilder.and(customer.isActive.eq(filter.getIsActive()));
+            builder.and(customer.isActive.eq(filter.getIsActive()));
         }
-
         long total = Optional.ofNullable(
-                jpaQueryFactory.select(customer.id.count()).from(customer).where(booleanBuilder).fetchOne()
+                jpaQueryFactory.select(customer.id.count())
+                        .from(customer)
+                        .where(builder)
+                        .fetchOne()
         ).orElse(0L);
 
+        Pageable pageable = PageService.getPageRequest(request);
         if (total == 0) {
-            return new PageImpl<>(Collections.emptyList(), PageRequest.of(currentPage - 1, pageSize), total);
+            return new PageImpl<>(Collections.emptyList(), pageable, total);
         }
 
-        JPAQuery<CustomerResponse> query = jpaQueryFactory.select(
+        List<CustomerResponse> content = jpaQueryFactory.select(
                         new QCustomerResponse(
                                 customer.id,
                                 customer.fullName,
@@ -78,13 +80,11 @@ public class CustomerJpaQueryRepository {
                                 customer.tier
                         ))
                 .from(customer)
-                .where(booleanBuilder)
-                .offset((currentPage - 1) * pageSize)
-                .limit(pageSize);
+                .where(builder)
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
 
-        List<CustomerResponse> content = query.fetch();
-
-        Pageable pageable = PageRequest.of(currentPage - 1, pageSize);
         return new PageImpl<>(content, pageable, total);
     }
 

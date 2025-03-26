@@ -39,6 +39,7 @@ public enum  ErrorCode {
     PASSWORD_NO_SPECIAL_CHAR("password-no-special-char", HttpStatus.BAD_REQUEST),
     PASSWORD_CONTAINS_SPACE("password-contains-space", HttpStatus.BAD_REQUEST),
     PASSWORD_MATCHES_OLD_PASSWORD("password-matches-old-password", HttpStatus.BAD_REQUEST),
+    INVALID_NUMERIC_VALUE("invalid-numeric-value", HttpStatus.BAD_REQUEST),
 
 
     INVALID_REQUEST("invalid-request", HttpStatus.BAD_REQUEST),

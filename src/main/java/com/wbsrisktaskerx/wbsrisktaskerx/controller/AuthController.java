@@ -31,8 +31,8 @@ public class AuthController {
     }
 
     @PutMapping(EndpointConstants.CHANGE_PASSWORD)
-    public ResponseEntity<ApiResult<String>> changePassword(@RequestBody ChangePasswordRequest changePasswordRequest) {
-        String message = authService.changePassword(changePasswordRequest);
-        return ResponseEntity.ok(ApiResult.success(message));
+    public ResponseEntity<ApiResult<Boolean>> changePassword(@RequestBody ChangePasswordRequest changePasswordRequest) {
+        Boolean result = authService.changePassword(changePasswordRequest);
+        return ResponseEntity.ok(ApiResult.success(result));
     }
 }

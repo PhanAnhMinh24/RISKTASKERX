@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 public class ErrorResponse {
     String message;
     HttpStatus status;
+
     public static ErrorResponse from(ErrorCode errorCode) {
         return new ErrorResponse(errorCode.getMessage(), errorCode.getStatus());
     }
