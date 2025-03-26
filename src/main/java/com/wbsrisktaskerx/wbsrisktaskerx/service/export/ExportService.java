@@ -1,7 +1,6 @@
 package com.wbsrisktaskerx.wbsrisktaskerx.service.export;
 
 import com.wbsrisktaskerx.wbsrisktaskerx.common.constants.ExportConstants;
-import com.wbsrisktaskerx.wbsrisktaskerx.entity.Customer;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.ExportCustomerResponse;
 import com.wbsrisktaskerx.wbsrisktaskerx.repository.CustomerJpaQueryRepository;
 import com.wbsrisktaskerx.wbsrisktaskerx.utils.ExcelUtils;
@@ -12,7 +11,6 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
 
 @Service
 public class ExportService implements IExportService{

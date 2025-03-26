@@ -9,22 +9,20 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import java.io.ByteArrayInputStream;
+
 import java.io.IOException;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 
 @RestController
-@RequestMapping(EndpointConstants.CUSTOMERS)
-public class CustomerController {
+@RequestMapping(EndpointConstants.EXPORT)
+public class ExportController {
 
     private final IExportService exportService;
 
-    public CustomerController(IExportService exportService) {
+    public ExportController(IExportService exportService) {
         this.exportService = exportService;
     }
 
-    @GetMapping(EndpointConstants.EXPORT + EndpointConstants.CUSTOMERS)
+    @GetMapping(EndpointConstants.CUSTOMERS)
     public ResponseEntity<InputStreamResource> download() throws IOException {
         ExportCustomerResponse exportResponse = exportService.getCustomerList();
 
