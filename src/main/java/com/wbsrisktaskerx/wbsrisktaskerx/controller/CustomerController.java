@@ -37,7 +37,7 @@ public class CustomerController {
 
     @PutMapping(EndpointConstants.UPDATE_CUSTOMER_ACTIVE)
     public ResponseEntity<ApiResult<Boolean>> updateCustomerActive(@RequestBody IsActiveCustomersRequest request) {
-        boolean result = customerService.updateCustomerIsActive(request);
+        boolean result = customerService.updateIsActive(request);
         return ResponseEntity.ok(ApiResult.success(result));
     }
 

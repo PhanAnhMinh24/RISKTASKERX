@@ -84,12 +84,5 @@ public class CustomerJpaQueryRepository {
         return new PageImpl<>(content, pageable, total);
     }
 
-    public int updateCustomerIsActive(Integer id, Boolean isActive) {
-        return (int) jpaQueryFactory.update(customer)
-                .set(customer.isActive, isActive)
-                .where(customer.id.eq(id))
-                .execute();
-    }
-
 
 }

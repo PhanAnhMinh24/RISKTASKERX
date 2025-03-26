@@ -29,6 +29,7 @@ public enum  ErrorCode {
     INVALID_OTP("invalid-otp", HttpStatus.BAD_REQUEST),
     OTP_NOT_VERIFIED("otp-not-verified", HttpStatus.BAD_REQUEST),
     USER_NOT_FOUND("user-not-found", HttpStatus.BAD_REQUEST),
+    CUSTOMER_NOT_FOUND("customer-not-found", HttpStatus.BAD_REQUEST),
     NOT_FOUND("not-found", HttpStatus.BAD_REQUEST),
     ACCOUNT_NOT_ACTIVE("account-not-active", HttpStatus.FORBIDDEN),
     PASSWORD_REQUIRED("password-required", HttpStatus.BAD_REQUEST),

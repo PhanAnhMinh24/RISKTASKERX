@@ -12,5 +12,5 @@ import java.util.List;
 public interface ICustomerService {
     List<Customer> getAllCustomers();
     Page<CustomerResponse> searchAndFilterCustomers(PagingRequest<SearchFilterCustomersRequest> request);
-    boolean updateCustomerIsActive(IsActiveCustomersRequest request);
+    boolean updateIsActive(IsActiveCustomersRequest request);
 }
