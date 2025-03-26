@@ -2,6 +2,7 @@ package com.wbsrisktaskerx.wbsrisktaskerx.controller;
 
 import com.wbsrisktaskerx.wbsrisktaskerx.common.constants.EndpointConstants;
 import com.wbsrisktaskerx.wbsrisktaskerx.common.constants.ExportConstants;
+import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.ExportCustomerResponse;
 import com.wbsrisktaskerx.wbsrisktaskerx.service.export.IExportService;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
@@ -23,17 +24,13 @@ public class CustomerController {
         this.exportService = exportService;
     }
 
-    @GetMapping(EndpointConstants.EXPORT_CUSTOMER)
+    @GetMapping(EndpointConstants.EXPORT + EndpointConstants.CUSTOMERS)
     public ResponseEntity<InputStreamResource> download() throws IOException {
-        ByteArrayInputStream inputStream = exportService.getCustomerList();
-        InputStreamResource response = new InputStreamResource(inputStream);
-
-        String currentDate = LocalDate.now().format(DateTimeFormatter.ofPattern("dd_MM_yyyy"));
-        String fileName = ExportConstants.FILENAME + currentDate + ExportConstants.XLSX;
+        ExportCustomerResponse exportResponse = exportService.getCustomerList();
 
         return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, ExportConstants.HEADER_VALUE + fileName)
+                .header(HttpHeaders.CONTENT_DISPOSITION, ExportConstants.HEADER_VALUE + exportResponse.getFileName())
                 .contentType(MediaType.parseMediaType(ExportConstants.MS_EXCEL))
-                .body(response);
+                .body(exportResponse.getResponse());
     }
 }
