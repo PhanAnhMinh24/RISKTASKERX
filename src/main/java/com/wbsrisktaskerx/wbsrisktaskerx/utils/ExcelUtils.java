@@ -1,6 +1,7 @@
 package com.wbsrisktaskerx.wbsrisktaskerx.utils;
 
 import com.wbsrisktaskerx.wbsrisktaskerx.entity.Customer;
+import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.CustomerResponse;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
@@ -13,13 +14,13 @@ public class ExcelUtils {
     public static String[] HEADER = {"Customer ID", "Customer Name", "Phone number", "Address", "Email", "Tier", "Actions"};
     public static String SHEET_NAME = "Sheet1";
 
-    public static ByteArrayInputStream customerToExcel(List<Customer> customerList) throws IOException {
+    public static ByteArrayInputStream customerToExcel(List<CustomerResponse> customerList) throws IOException {
         try (Workbook workbook = new XSSFWorkbook(); ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
             Sheet sheet = workbook.createSheet(SHEET_NAME);
             createHeader(sheet, workbook, HEADER);
 
             int rowIndex = 1;
-            for (Customer c : customerList) {
+            for (CustomerResponse c : customerList) {
                 Row row1 = sheet.createRow(rowIndex);
                 rowIndex++;
                 row1.createCell(0).setCellValue(c.getId());

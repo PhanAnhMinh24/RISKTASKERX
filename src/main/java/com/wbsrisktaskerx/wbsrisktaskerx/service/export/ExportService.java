@@ -4,10 +4,11 @@ import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.wbsrisktaskerx.wbsrisktaskerx.common.constants.CommonConstants;
 import com.wbsrisktaskerx.wbsrisktaskerx.common.constants.ExportConstants;
-import com.wbsrisktaskerx.wbsrisktaskerx.entity.Customer;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.PagingRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.SearchFilterCustomersRequest;
+import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.CustomerResponse;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.ExportCustomerResponse;
+import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.QCustomerResponse;
 import com.wbsrisktaskerx.wbsrisktaskerx.repository.CustomerJpaQueryRepository;
 import com.wbsrisktaskerx.wbsrisktaskerx.utils.ExcelUtils;
 import io.micrometer.common.util.StringUtils;
@@ -21,6 +22,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.wbsrisktaskerx.wbsrisktaskerx.entity.QCustomer.customer;
 
@@ -58,11 +60,27 @@ public class ExportService implements IExportService{
             builder.and(customer.isActive.eq(filter.getIsActive()));
         }
 
-        List<Customer> customers = jpaQueryFactory.selectFrom(customer)
+        List<CustomerResponse> content;
+        content = customerJpaQueryRepository.getAll().stream()
+                .map(c -> new CustomerResponse(c.getId(), c.getFullName(), c.getEmail(),
+                        c.getAddress(), c.getPhoneNumber(), c.getIsActive(), c.getTier()))
+                .collect(Collectors.toList());
+
+        content = jpaQueryFactory.select(
+                new QCustomerResponse(
+                                customer.id,
+                                customer.fullName,
+                                customer.email,
+                                customer.address,
+                                customer.phoneNumber,
+                                customer.isActive,
+                                customer.tier
+                        ))
+                .from(customer)
                 .where(builder)
                 .fetch();
 
-        ByteArrayInputStream inputStream = ExcelUtils.customerToExcel(customers);
+        ByteArrayInputStream inputStream = ExcelUtils.customerToExcel(content);
         InputStreamResource response = new InputStreamResource(inputStream);
 
         String currentDate = LocalDate.now().format(DateTimeFormatter.ofPattern(ExportConstants.DATE_TIME));
