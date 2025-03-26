@@ -1,8 +1,8 @@
 package com.wbsrisktaskerx.wbsrisktaskerx.pojo.response;
 
-import com.wbsrisktaskerx.wbsrisktaskerx.pojo.data.Tier;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.springframework.core.io.InputStreamResource;
 
 @Getter
 @Setter
@@ -10,11 +10,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class CustomerResponse {
-    Integer id;
-    String fullName;
-    String email;
-    Integer phoneNumber;
-    Boolean isActive;
-    Tier tier;
+public class ExportCustomerResponse {
+    InputStreamResource response;
+    String fileName;
 }
