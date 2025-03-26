@@ -37,14 +37,6 @@ public class ExportService implements IExportService{
     @Override
     public ExportCustomerResponse getCustomerList(PagingRequest<SearchFilterCustomersRequest> request) throws IOException {
 
-        if (request == null) {
-            ByteArrayInputStream inputStream = ExcelUtils.customerToExcel(customerJpaQueryRepository.getAll());
-            InputStreamResource response = new InputStreamResource(inputStream);
-            String currentDate = LocalDate.now().format(DateTimeFormatter.ofPattern(ExportConstants.DATE_TIME));
-            String fileName = ExportConstants.FILENAME + currentDate + ExportConstants.XLSX;
-            return new ExportCustomerResponse(response, fileName);
-        }
-
         SearchFilterCustomersRequest filter = request.getFilters();
         String searchKey = filter.getSearchKey();
 
