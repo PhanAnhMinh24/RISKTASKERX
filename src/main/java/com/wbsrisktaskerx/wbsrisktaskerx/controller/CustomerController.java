@@ -42,7 +42,7 @@ public class CustomerController {
     }
 
     @GetMapping(EndpointConstants.ID)
-    public ResponseEntity<ApiResult<Customer>> getCustomerDetail(@PathVariable int id) {
+    public ResponseEntity<ApiResult<CustomerResponse>> getCustomerDetail(@PathVariable int id) {
         return ResponseEntity.ok(ApiResult.success(customerService.getCustomerById(id)));
     }
 }
