@@ -2,9 +2,6 @@ package com.wbsrisktaskerx.wbsrisktaskerx.common.constants;
 
 public class EndpointConstants {
 
-    public static final String EMAIL = "/email";
-    public static final String SEND = "/send";
-
     public static final String ACTUATOR = "/actuator";
     public static final String SWAGGER_ICO = "/favicon.ico";
     public static final String SWAGGER_UI = "/swagger-ui";
@@ -24,6 +21,6 @@ public class EndpointConstants {
 
     // Customers
     public static final String CUSTOMERS = "/customers";
-    public static final String LIST_CUSTOMERS = "/list-customers";
+    public static final String EXPORT = "/export";
 
 }
