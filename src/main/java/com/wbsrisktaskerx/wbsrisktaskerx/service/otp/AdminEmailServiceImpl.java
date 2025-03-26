@@ -90,7 +90,6 @@ public class AdminEmailServiceImpl implements AdminEmailService {
 
     @Override
     @Transactional
-
     public boolean resetPassword(ResetPasswordRequest request) {
 
         Optional<AdminOtp> recentOtp = adminOtpJpaQueryRepository.findValidOtpByEmail(request.getEmail(), null);
