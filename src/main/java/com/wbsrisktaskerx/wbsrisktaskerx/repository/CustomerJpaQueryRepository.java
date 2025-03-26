@@ -6,8 +6,13 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.wbsrisktaskerx.wbsrisktaskerx.entity.Customer;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.data.Tier;
 import com.wbsrisktaskerx.wbsrisktaskerx.utils.PageService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.wbsrisktaskerx.wbsrisktaskerx.entity.QCustomer.customer;
@@ -24,28 +29,40 @@ public class CustomerJpaQueryRepository {
         return jpaQueryFactory.selectFrom(customer).fetch();
     }
 
-    public List<Customer> getSearchedAndFilteredCustomers(Integer id, String fullName, Tier tier, Boolean isActive, Integer page, Integer size) {
+
+    public Page<Customer> getSearchedAndFilteredCustomers(
+            Integer id, String fullName, Tier tier, Boolean isActive, Integer page, Integer size) {
+        int currentPage = (page != null && page > 0) ? page : 1;
+        int pageSize = (size != null && size > 0) ? size : 50;
         JPAQuery<Customer> query = jpaQueryFactory.selectFrom(customer);
-        BooleanExpression condition = null;
+        List<BooleanExpression> conditions = new ArrayList<>();
 
         if (id != null) {
-            condition = customer.id.eq(id);
+            conditions.add(customer.id.eq(id));
         }
         if (fullName != null && !fullName.isEmpty()) {
-            BooleanExpression fullNameCondition = customer.fullName.containsIgnoreCase(fullName);
-            // Nếu có cả id và fullName thì có thể chọn cách OR hoặc AND tùy vào yêu cầu nghiệp vụ
-            condition = (condition != null) ? condition.or(fullNameCondition) : fullNameCondition;
+            conditions.add(customer.fullName.containsIgnoreCase(fullName));
         }
         if (tier != null) {
-            condition = (condition != null) ? condition.and(customer.tier.eq(tier)) : customer.tier.eq(tier);
+            conditions.add(customer.tier.eq(tier));
         }
         if (isActive != null) {
-            condition = (condition != null) ? condition.and(customer.isActive.eq(isActive)) : customer.isActive.eq(isActive);
+            conditions.add(customer.isActive.eq(isActive));
         }
-        if (condition != null) {
-            query.where(condition);
+
+        if (!conditions.isEmpty()) {
+            BooleanExpression combinedCondition = conditions.stream()
+                    .reduce(BooleanExpression::and)
+                    .orElse(null);
+            query.where(combinedCondition);
         }
-        query = PageService.applyPagination(query, page, size, null, null);
-        return query.fetch();
+
+        long total = query.fetchCount();
+        query = PageService.applyPagination(query, currentPage, pageSize, null, null);
+        List<Customer> content = query.fetch();
+        Pageable pageable = PageRequest.of(currentPage - 1, pageSize);
+
+        return new PageImpl<>(content, pageable, total);
     }
+
 }

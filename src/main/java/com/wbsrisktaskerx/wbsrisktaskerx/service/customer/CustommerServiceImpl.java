@@ -4,6 +4,7 @@ import com.wbsrisktaskerx.wbsrisktaskerx.entity.Customer;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.data.Tier;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.SearchFilterCustomersRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.repository.CustomerJpaQueryRepository;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,7 +21,7 @@ public class CustommerServiceImpl implements ICustomerService {
         return customerJpaQueryRepository.getAll();
     }
     @Override
-    public List<Customer> searchAndFilterCustomers(SearchFilterCustomersRequest request) {
+    public Page<Customer> searchAndFilterCustomers(SearchFilterCustomersRequest request) {
         return customerJpaQueryRepository.getSearchedAndFilteredCustomers(
                 request.getId(),
                 request.getFullName(),
@@ -29,4 +30,5 @@ public class CustommerServiceImpl implements ICustomerService {
                 request.getPage(),
                 request.getSize());
     }
+
 }

@@ -5,6 +5,7 @@ import com.wbsrisktaskerx.wbsrisktaskerx.entity.Customer;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.ApiResult;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.SearchFilterCustomersRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.service.customer.ICustomerService;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -30,8 +31,10 @@ public class CustomerController {
 
     @GetMapping(EndpointConstants.SEARCH_FILTER)
     public ResponseEntity<ApiResult<List<Customer>>> searchFilterCustomers(@ModelAttribute SearchFilterCustomersRequest request) {
-        List<Customer> customers = customerService.searchAndFilterCustomers(request);
+        Page<Customer> pageResult = customerService.searchAndFilterCustomers(request);
+        List<Customer> customers = pageResult.getContent();
         return ResponseEntity.ok(ApiResult.success(customers));
     }
+
 
 }
