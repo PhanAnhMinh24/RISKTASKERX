@@ -3,6 +3,7 @@ package com.wbsrisktaskerx.wbsrisktaskerx.repository;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.wbsrisktaskerx.wbsrisktaskerx.common.constants.CommonConstants;
+import com.wbsrisktaskerx.wbsrisktaskerx.common.constants.StringConstants;
 import com.wbsrisktaskerx.wbsrisktaskerx.entity.Customer;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.PagingRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.SearchFilterCustomersRequest;
@@ -17,7 +18,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,7 +35,6 @@ public class CustomerJpaQueryRepository {
         return jpaQueryFactory.selectFrom(customer).fetch();
     }
 
-
     public Page<CustomerResponse> searchedAndFilteredCustomers(PagingRequest<SearchFilterCustomersRequest> request) {
         SearchFilterCustomersRequest filter = request.getFilters();
         Pageable pageable = PageService.getPageRequest(request);
@@ -44,7 +43,9 @@ public class CustomerJpaQueryRepository {
         BooleanBuilder builder = new BooleanBuilder();
         if (StringUtils.isNotBlank(searchKey)) {
             BooleanBuilder searchBuilder = new BooleanBuilder();
-            searchBuilder.or(customer.fullName.like(CommonConstants.WILDCARD + searchKey + CommonConstants.WILDCARD));
+            searchBuilder.or(customer.fullName.like(
+                    String.format(StringConstants.PERCENT, CommonConstants.WILDCARD, searchKey, CommonConstants.WILDCARD)
+            ));
             if (NumberUtils.isCreatable(searchKey)) {
                 Integer idValue = Integer.valueOf(searchKey);
                 searchBuilder.or(customer.id.eq(idValue));
@@ -80,10 +81,6 @@ public class CustomerJpaQueryRepository {
                         .where(builder)
                         .fetchOne()
         ).orElse(0L);
-
-        if (total == 0) {
-            return new PageImpl<>(Collections.emptyList(), pageable, total);
-        }
         return new PageImpl<>(content, pageable, total);
     }
 }

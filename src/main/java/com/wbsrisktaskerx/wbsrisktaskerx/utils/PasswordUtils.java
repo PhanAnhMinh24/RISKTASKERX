@@ -8,7 +8,9 @@ import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.ChangePasswordRequest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 public class PasswordUtils {
-    public static void validatePassword(BCryptPasswordEncoder passwordEncoder, ChangePasswordRequest changePasswordRequest, String currentPasswordHash) {
+    public static void validatePassword(BCryptPasswordEncoder passwordEncoder,
+                                        ChangePasswordRequest changePasswordRequest,
+                                        String currentPasswordHash) {
 
         if (!passwordEncoder.matches(changePasswordRequest.getOldPassword(), currentPasswordHash)) {
             throw new AppException(ErrorCode.INVALID_USERNAME_OR_PASSWORD);

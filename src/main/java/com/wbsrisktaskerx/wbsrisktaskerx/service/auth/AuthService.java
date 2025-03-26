@@ -9,7 +9,6 @@ import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.LoginRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.SignupRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.JwtResponse;
 import com.wbsrisktaskerx.wbsrisktaskerx.repository.AdminRepository;
-import com.wbsrisktaskerx.wbsrisktaskerx.common.constants.PasswordConstants;
 import com.wbsrisktaskerx.wbsrisktaskerx.utils.JwtUtils;
 import com.wbsrisktaskerx.wbsrisktaskerx.utils.PasswordUtils;
 import lombok.RequiredArgsConstructor;
