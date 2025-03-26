@@ -6,6 +6,8 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.wbsrisktaskerx.wbsrisktaskerx.entity.Customer;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.data.Tier;
 import com.wbsrisktaskerx.wbsrisktaskerx.utils.PageService;
+import io.micrometer.common.util.StringUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -37,16 +39,16 @@ public class CustomerJpaQueryRepository {
         JPAQuery<Customer> query = jpaQueryFactory.selectFrom(customer);
         List<BooleanExpression> conditions = new ArrayList<>();
 
-        if (id != null) {
+        if (!ObjectUtils.isEmpty(id)) {
             conditions.add(customer.id.eq(id));
         }
-        if (fullName != null && !fullName.isEmpty()) {
+        if (StringUtils.isNotBlank(fullName)) {
             conditions.add(customer.fullName.containsIgnoreCase(fullName));
         }
-        if (tier != null) {
+        if (!ObjectUtils.isEmpty(tier)) {
             conditions.add(customer.tier.eq(tier));
         }
-        if (isActive != null) {
+        if (!ObjectUtils.isEmpty(isActive)) {
             conditions.add(customer.isActive.eq(isActive));
         }
 
