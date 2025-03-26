@@ -86,5 +86,4 @@ public class CustomerJpaQueryRepository {
         }
         return new PageImpl<>(content, pageable, total);
     }
-
 }
