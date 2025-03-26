@@ -1,8 +1,8 @@
 package com.wbsrisktaskerx.wbsrisktaskerx.service.export;
 
-import java.io.ByteArrayInputStream;
+import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.ExportCustomerResponse;
 import java.io.IOException;
 
 public interface IExportService {
-    ByteArrayInputStream getCustomerList()throws IOException;
+    ExportCustomerResponse getCustomerList()throws IOException;
 }

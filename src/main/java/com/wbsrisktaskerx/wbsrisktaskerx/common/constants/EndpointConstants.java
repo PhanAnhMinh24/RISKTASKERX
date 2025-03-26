@@ -21,6 +21,6 @@ public class EndpointConstants {
 
     // Customers
     public static final String CUSTOMERS = "/customers";
-    public static final String EXPORT_CUSTOMER = "/export-customer";
+    public static final String EXPORT = "/export";
 
 }
