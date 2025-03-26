@@ -14,16 +14,18 @@ public class CustomerResponse {
     Integer id;
     String fullName;
     String email;
+    String address;
     String phoneNumber;
     Boolean isActive;
     Tier tier;
     String dateOfBirth;
 
     @QueryProjection
-    public CustomerResponse(Integer id, String fullName, String email, String phoneNumber, Boolean isActive, Tier tier, String dateOfBirth) {
+    public CustomerResponse(Integer id, String fullName, String email, String address, String phoneNumber, Boolean isActive, Tier tier,  String dateOfBirth) {
         this.id = id;
         this.fullName = fullName;
         this.email = email;
+        this.address = address;
         this.phoneNumber = phoneNumber;
         this.isActive = isActive;
         this.tier = tier;
