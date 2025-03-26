@@ -4,7 +4,7 @@ import com.wbsrisktaskerx.wbsrisktaskerx.entity.Customer;
 import com.wbsrisktaskerx.wbsrisktaskerx.exception.AppException;
 import com.wbsrisktaskerx.wbsrisktaskerx.exception.ErrorCode;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.PagingRequest;
-import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.IsActiveCustomersRequest;
+import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.CustomersRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.SearchFilterCustomersRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.CustomerResponse;
 import com.wbsrisktaskerx.wbsrisktaskerx.repository.CustomerJpaQueryRepository;
@@ -38,7 +38,7 @@ public class CustomerServiceImpl implements ICustomerService {
 
     @Override
     @Transactional
-    public boolean updateIsActive(IsActiveCustomersRequest request) {
+    public boolean updateIsActive(CustomersRequest request) {
         Customer customer = findById(request.getId());
         customer.setIsActive(request.getIsActive());
         customerRepository.save(customer);

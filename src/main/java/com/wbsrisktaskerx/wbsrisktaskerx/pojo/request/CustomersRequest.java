@@ -8,7 +8,7 @@ import lombok.AccessLevel;
 @Data
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class IsActiveCustomersRequest {
+public class CustomersRequest {
     Integer id;
     Boolean isActive;
 }
