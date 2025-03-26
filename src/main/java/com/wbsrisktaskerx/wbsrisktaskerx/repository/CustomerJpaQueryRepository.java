@@ -18,7 +18,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,6 +34,7 @@ public class CustomerJpaQueryRepository {
     public List<Customer> getAll() {
         return jpaQueryFactory.selectFrom(customer).fetch();
     }
+
     public Page<CustomerResponse> searchedAndFilteredCustomers(PagingRequest<SearchFilterCustomersRequest> request) {
         SearchFilterCustomersRequest filter = request.getFilters();
         Pageable pageable = PageService.getPageRequest(request);
