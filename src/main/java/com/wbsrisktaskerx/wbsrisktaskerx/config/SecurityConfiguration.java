@@ -1,6 +1,5 @@
 package com.wbsrisktaskerx.wbsrisktaskerx.config;
 
-
 import com.wbsrisktaskerx.wbsrisktaskerx.service.admin.AdminDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
