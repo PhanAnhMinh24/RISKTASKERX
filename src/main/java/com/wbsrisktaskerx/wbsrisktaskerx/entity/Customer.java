@@ -39,4 +39,6 @@ public class Customer {
     @Column(name = "is_active", nullable = false)
     Boolean  isActive = false;
 
+    @Column(name = "date_of_birth", nullable = false)
+    String dateOfBirth;
 }
