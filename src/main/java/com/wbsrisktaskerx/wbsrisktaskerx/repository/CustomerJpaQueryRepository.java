@@ -84,5 +84,4 @@ public class CustomerJpaQueryRepository {
         ).orElse(0L);
         return new PageImpl<>(content, pageable, total);
     }
-
 }

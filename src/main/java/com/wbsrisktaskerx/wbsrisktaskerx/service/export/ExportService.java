@@ -1,9 +1,18 @@
 package com.wbsrisktaskerx.wbsrisktaskerx.service.export;
 
+import com.querydsl.core.BooleanBuilder;
+import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.wbsrisktaskerx.wbsrisktaskerx.common.constants.CommonConstants;
 import com.wbsrisktaskerx.wbsrisktaskerx.common.constants.ExportConstants;
+import com.wbsrisktaskerx.wbsrisktaskerx.entity.Customer;
+import com.wbsrisktaskerx.wbsrisktaskerx.pojo.PagingRequest;
+import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.SearchFilterCustomersRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.ExportCustomerResponse;
 import com.wbsrisktaskerx.wbsrisktaskerx.repository.CustomerJpaQueryRepository;
 import com.wbsrisktaskerx.wbsrisktaskerx.utils.ExcelUtils;
+import io.micrometer.common.util.StringUtils;
+import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.stereotype.Service;
 
@@ -11,18 +20,57 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
+
+import static com.wbsrisktaskerx.wbsrisktaskerx.entity.QCustomer.customer;
 
 @Service
 public class ExportService implements IExportService{
     private final CustomerJpaQueryRepository customerJpaQueryRepository;
+    private final JPAQueryFactory jpaQueryFactory;
 
-    public ExportService (CustomerJpaQueryRepository customerJpaQueryRepository){
+    public ExportService (CustomerJpaQueryRepository customerJpaQueryRepository, JPAQueryFactory jpaQueryFactory){
         this.customerJpaQueryRepository =customerJpaQueryRepository;
+        this.jpaQueryFactory = jpaQueryFactory;
     }
 
     @Override
-    public ExportCustomerResponse getCustomerList() throws IOException {
-        ByteArrayInputStream inputStream = ExcelUtils.customerToExcel(customerJpaQueryRepository.getAll());
+    public ExportCustomerResponse getCustomerList(PagingRequest<SearchFilterCustomersRequest> request) throws IOException {
+
+        if (request == null) {
+            ByteArrayInputStream inputStream = ExcelUtils.customerToExcel(customerJpaQueryRepository.getAll());
+            InputStreamResource response = new InputStreamResource(inputStream);
+            String currentDate = LocalDate.now().format(DateTimeFormatter.ofPattern(ExportConstants.DATE_TIME));
+            String fileName = ExportConstants.FILENAME + currentDate + ExportConstants.XLSX;
+            return new ExportCustomerResponse(response, fileName);
+        }
+
+        SearchFilterCustomersRequest filter = request.getFilters();
+        String searchKey = filter.getSearchKey();
+
+        BooleanBuilder builder = new BooleanBuilder();
+        if (StringUtils.isNotBlank(searchKey)) {
+            BooleanBuilder searchBuilder = new BooleanBuilder();
+            searchBuilder.or(customer.fullName.like(CommonConstants.WILDCARD + searchKey + CommonConstants.WILDCARD));
+            if (NumberUtils.isCreatable(searchKey)) {
+                Integer idValue = Integer.valueOf(searchKey);
+                searchBuilder.or(customer.id.eq(idValue));
+            }
+            builder.and(searchBuilder);
+        }
+
+        if (!ObjectUtils.isEmpty(filter.getTier())) {
+            builder.and(customer.tier.eq(filter.getTier()));
+        }
+        if (!ObjectUtils.isEmpty(filter.getIsActive())) {
+            builder.and(customer.isActive.eq(filter.getIsActive()));
+        }
+
+        List<Customer> customers = jpaQueryFactory.selectFrom(customer)
+                .where(builder)
+                .fetch();
+
+        ByteArrayInputStream inputStream = ExcelUtils.customerToExcel(customers);
         InputStreamResource response = new InputStreamResource(inputStream);
 
         String currentDate = LocalDate.now().format(DateTimeFormatter.ofPattern(ExportConstants.DATE_TIME));
