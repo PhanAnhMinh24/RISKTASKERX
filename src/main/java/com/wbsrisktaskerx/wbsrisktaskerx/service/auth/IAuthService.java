@@ -9,5 +9,5 @@ public interface IAuthService {
     JwtResponse login(LoginRequest loginRequest);
     JwtResponse signup(SignupRequest signupRequest);
 
-    Boolean changePassword(ChangePasswordRequest changePasswordRequest);
+    String changePassword(ChangePasswordRequest changePasswordRequest);
 }
