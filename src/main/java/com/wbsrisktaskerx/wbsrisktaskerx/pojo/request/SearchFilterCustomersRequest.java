@@ -8,10 +8,9 @@ import lombok.experimental.FieldDefaults;
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class SearchFilterCustomersRequest {
-    Integer id;
-    String fullName;
+    String searchKey;
     Tier tier;
     Boolean isActive;
     Integer page = 1;
-    Integer size = 50;
+    Integer size = 10;
 }

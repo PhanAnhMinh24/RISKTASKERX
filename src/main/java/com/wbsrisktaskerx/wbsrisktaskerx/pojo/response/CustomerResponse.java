@@ -14,7 +14,7 @@ public class CustomerResponse {
     Integer id;
     String fullName;
     String email;
-    Integer phoneNumber;
+    String phoneNumber;
     Boolean isActive;
     Tier tier;
 }

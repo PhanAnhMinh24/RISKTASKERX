@@ -3,6 +3,7 @@ package com.wbsrisktaskerx.wbsrisktaskerx.service.customer;
 import com.wbsrisktaskerx.wbsrisktaskerx.entity.Customer;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.data.Tier;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.SearchFilterCustomersRequest;
+import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.CustomerResponse;
 import com.wbsrisktaskerx.wbsrisktaskerx.repository.CustomerJpaQueryRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
@@ -21,14 +22,9 @@ public class CustommerServiceImpl implements ICustomerService {
         return customerJpaQueryRepository.getAll();
     }
     @Override
-    public Page<Customer> searchAndFilterCustomers(SearchFilterCustomersRequest request) {
-        return customerJpaQueryRepository.getSearchedAndFilteredCustomers(
-                request.getId(),
-                request.getFullName(),
-                request.getTier(),
-                request.getIsActive(),
-                request.getPage(),
-                request.getSize());
+    public Page<CustomerResponse> searchAndFilterCustomers(SearchFilterCustomersRequest request) {
+        return customerJpaQueryRepository.searchedAndFilteredCustomers(request);
     }
+
 
 }
