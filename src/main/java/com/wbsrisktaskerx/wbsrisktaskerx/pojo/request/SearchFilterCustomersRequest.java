@@ -11,6 +11,4 @@ public class SearchFilterCustomersRequest {
     String searchKey;
     Tier tier;
     Boolean isActive;
-    Integer page = 1;
-    Integer size = 10;
 }

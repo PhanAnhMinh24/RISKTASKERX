@@ -1,6 +1,7 @@
 package com.wbsrisktaskerx.wbsrisktaskerx.service.customer;
 
 import com.wbsrisktaskerx.wbsrisktaskerx.entity.Customer;
+import com.wbsrisktaskerx.wbsrisktaskerx.pojo.PagingRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.data.Tier;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.SearchFilterCustomersRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.CustomerResponse;
@@ -22,7 +23,7 @@ public class CustommerServiceImpl implements ICustomerService {
         return customerJpaQueryRepository.getAll();
     }
     @Override
-    public Page<CustomerResponse> searchAndFilterCustomers(SearchFilterCustomersRequest request) {
+    public Page<CustomerResponse> searchAndFilterCustomers(PagingRequest<SearchFilterCustomersRequest> request) {
         return customerJpaQueryRepository.searchedAndFilteredCustomers(request);
     }
 

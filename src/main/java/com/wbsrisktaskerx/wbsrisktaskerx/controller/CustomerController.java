@@ -3,15 +3,13 @@ package com.wbsrisktaskerx.wbsrisktaskerx.controller;
 import com.wbsrisktaskerx.wbsrisktaskerx.common.constants.EndpointConstants;
 import com.wbsrisktaskerx.wbsrisktaskerx.entity.Customer;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.ApiResult;
+import com.wbsrisktaskerx.wbsrisktaskerx.pojo.PagingRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.SearchFilterCustomersRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.CustomerResponse;
 import com.wbsrisktaskerx.wbsrisktaskerx.service.customer.ICustomerService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -30,8 +28,8 @@ public class CustomerController {
         return ResponseEntity.ok(ApiResult.success(customerService.getAllCustomers()));
     }
 
-    @GetMapping(EndpointConstants.SEARCH_FILTER)
-    public ResponseEntity<ApiResult<Page<CustomerResponse>>> searchFilterCustomers(@ModelAttribute SearchFilterCustomersRequest request) {
+    @PostMapping(EndpointConstants.SEARCH_FILTER)
+    public ResponseEntity<ApiResult<Page<CustomerResponse>>> searchFilterCustomers(@RequestBody PagingRequest<SearchFilterCustomersRequest> request) {
         Page<CustomerResponse> pageResult = customerService.searchAndFilterCustomers(request);
         return ResponseEntity.ok(ApiResult.success(pageResult));
     }

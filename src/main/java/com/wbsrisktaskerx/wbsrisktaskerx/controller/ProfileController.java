@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 public class ProfileController {
     private final IProfileService profileService;
     private final JwtUtils jwtUtils;
-    @PostMapping
+    @GetMapping
     public ApiResult<ProfileResponse> getProfile(HttpServletRequest request) {
         String authHeader = request.getHeader(CommonConstants.AUTHORIZATION);
         if (authHeader == null || !authHeader.startsWith(CommonConstants.BEARER)) {
