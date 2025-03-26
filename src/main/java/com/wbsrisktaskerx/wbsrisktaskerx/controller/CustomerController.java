@@ -4,6 +4,7 @@ import com.wbsrisktaskerx.wbsrisktaskerx.common.constants.EndpointConstants;
 import com.wbsrisktaskerx.wbsrisktaskerx.entity.Customer;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.ApiResult;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.PagingRequest;
+import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.CustomerRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.SearchFilterCustomersRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.CustomerResponse;
 import com.wbsrisktaskerx.wbsrisktaskerx.service.customer.ICustomerService;
@@ -32,6 +33,12 @@ public class CustomerController {
     public ResponseEntity<ApiResult<Page<CustomerResponse>>> searchFilterCustomers(@RequestBody PagingRequest<SearchFilterCustomersRequest> request) {
         Page<CustomerResponse> pageResult = customerService.searchAndFilterCustomers(request);
         return ResponseEntity.ok(ApiResult.success(pageResult));
+    }
+
+    @PutMapping(EndpointConstants.STATUS)
+    public ResponseEntity<ApiResult<Boolean>> updateCustomerActive(@RequestBody CustomerRequest request) {
+        boolean result = customerService.updateIsActive(request);
+        return ResponseEntity.ok(ApiResult.success(result));
     }
 
 }
