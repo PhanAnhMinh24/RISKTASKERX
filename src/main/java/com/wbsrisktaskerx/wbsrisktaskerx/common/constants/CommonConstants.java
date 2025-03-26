@@ -13,4 +13,9 @@ public class CommonConstants {
 
     public static  final  String AUTHORIZATION = "authorization";
 
+    public static final String WILDCARD = "%";
+    public static final String SPACE = " ";
+
+
+
 }

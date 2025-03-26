@@ -1,5 +1,6 @@
 package com.wbsrisktaskerx.wbsrisktaskerx.utils;
 
+import com.wbsrisktaskerx.wbsrisktaskerx.common.constants.CommonConstants;
 import com.wbsrisktaskerx.wbsrisktaskerx.common.constants.PasswordConstants;
 import com.wbsrisktaskerx.wbsrisktaskerx.exception.AppException;
 import com.wbsrisktaskerx.wbsrisktaskerx.exception.ErrorCode;
@@ -31,7 +32,7 @@ public class PasswordUtils {
         if (!newPassword.matches(PasswordConstants.SPECIAL_CHAR_REGEX)) {
             throw new AppException(ErrorCode.PASSWORD_NO_SPECIAL_CHAR);
         }
-        if (newPassword.contains(" ")) {
+        if (newPassword.contains(CommonConstants.SPACE)) {
             throw new AppException(ErrorCode.PASSWORD_CONTAINS_SPACE);
         }
     }
