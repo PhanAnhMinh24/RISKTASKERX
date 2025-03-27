@@ -68,29 +68,4 @@ public class CustomerServiceImpl implements ICustomerService {
                 customer.getDateOfBirth()
         );
     }
-
-    @Override
-    public CustomerResponse updateCustomer(int id, CustomerRequest customerRequest) {
-        Customer customer = findById(id);
-
-        customer.setFullName(customerRequest.getFullName());
-        customer.setDateOfBirth(customerRequest.getDateOfBirth());
-        customer.setAddress(customerRequest.getAddress());
-        customer.setPhoneNumber(customerRequest.getPhoneNumber());
-        customer.setEmail(customerRequest.getEmail());
-        customer.setIsActive(customerRequest.getIsActive());
-
-        customerRepository.save(customer);
-
-        return new CustomerResponse(
-                customer.getId(),
-                customer.getFullName(),
-                customer.getEmail(),
-                customer.getAddress(),
-                customer.getPhoneNumber(),
-                customer.getIsActive(),
-                customer.getTier(),
-                customer.getDateOfBirth()
-        );
-    }
 }
