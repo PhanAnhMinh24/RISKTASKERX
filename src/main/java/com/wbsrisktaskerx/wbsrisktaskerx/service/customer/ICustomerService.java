@@ -13,8 +13,5 @@ public interface ICustomerService {
     List<Customer> getAllCustomers();
     Page<CustomerResponse> searchAndFilterCustomers(PagingRequest<SearchFilterCustomersRequest> request);
     boolean updateIsActive(CustomerRequest request);
-
-    Customer getCustomerById(int id);
-
+    CustomerResponse getCustomerById(int id);
 }
-
