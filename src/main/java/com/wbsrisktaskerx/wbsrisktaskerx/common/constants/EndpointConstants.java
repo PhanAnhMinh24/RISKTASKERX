@@ -26,5 +26,5 @@ public class EndpointConstants {
     public static final String SEARCH_FILTER = "/search-and-filter";
     public static final String STATUS = "/status";
 
-    public static final String ID = "/{id}";
+    public static final String ID = "/customer-details/{id}";
 }
