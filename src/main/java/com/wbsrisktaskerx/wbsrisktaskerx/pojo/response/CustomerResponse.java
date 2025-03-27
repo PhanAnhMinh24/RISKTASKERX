@@ -20,12 +20,13 @@ public class CustomerResponse {
     String dateOfBirth;
 
     @QueryProjection
-    public CustomerResponse(Integer id, String fullName, String email, String phoneNumber, Boolean isActive, Tier tier) {
+    public CustomerResponse(Integer id, String fullName, String email, String phoneNumber, Boolean isActive, Tier tier, String dateOfBirth) {
         this.id = id;
         this.fullName = fullName;
         this.email = email;
         this.phoneNumber = phoneNumber;
         this.isActive = isActive;
         this.tier = tier;
+        this.dateOfBirth = dateOfBirth;
     }
 }

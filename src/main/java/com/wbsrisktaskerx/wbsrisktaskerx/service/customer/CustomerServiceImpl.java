@@ -11,7 +11,6 @@ import com.wbsrisktaskerx.wbsrisktaskerx.repository.CustomerJpaQueryRepository;
 import com.wbsrisktaskerx.wbsrisktaskerx.repository.CustomerRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
-import com.wbsrisktaskerx.wbsrisktaskerx.repository.CustomerDetailsRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,10 +18,9 @@ import java.util.Optional;
 
 @Service
 public class CustomerServiceImpl implements ICustomerService {
-    private final CustomerDetailsRepository customerDetailsRepository;
+    private final CustomerRepository customerRepository;
+    private final CustomerJpaQueryRepository customerJpaQueryRepository;
 
-    public CustomerServiceImpl(CustomerDetailsRepository customerDetailsRepository) {
-        this.customerDetailsRepository = customerDetailsRepository;
     public CustomerServiceImpl(CustomerRepository customerRepository, CustomerJpaQueryRepository customerJpaQueryRepository) {
         this.customerRepository = customerRepository;
         this.customerJpaQueryRepository = customerJpaQueryRepository;
@@ -57,9 +55,7 @@ public class CustomerServiceImpl implements ICustomerService {
 
         @Override
         public CustomerResponse getCustomerById(int id) {
-            Customer customer = customerDetailsRepository.findById(id)
-                    .orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
-
+            Customer customer = findById(id);
             return new CustomerResponse(
                     customer.getId(),
                     customer.getFullName(),
