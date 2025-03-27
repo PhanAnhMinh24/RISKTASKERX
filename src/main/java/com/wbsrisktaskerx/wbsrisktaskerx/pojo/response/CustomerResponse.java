@@ -21,7 +21,7 @@ public class CustomerResponse {
     String dateOfBirth;
 
     @QueryProjection
-    public CustomerResponse(Integer id, String fullName, String email, String address, String phoneNumber, Boolean isActive, Tier tier,  String dateOfBirth) {
+    public CustomerResponse(Integer id, String fullName, String email, String address, String phoneNumber, Boolean isActive, Tier tier, String dateOfBirth) {
         this.id = id;
         this.fullName = fullName;
         this.email = email;
