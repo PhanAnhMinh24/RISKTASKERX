@@ -4,6 +4,7 @@ import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.wbsrisktaskerx.wbsrisktaskerx.common.constants.CommonConstants;
 import com.wbsrisktaskerx.wbsrisktaskerx.common.constants.ExportConstants;
+import com.wbsrisktaskerx.wbsrisktaskerx.entity.QCustomer;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.PagingRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.SearchFilterCustomersRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.CustomerResponse;
@@ -11,25 +12,23 @@ import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.ExportCustomerResponse;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.QCustomerResponse;
 import com.wbsrisktaskerx.wbsrisktaskerx.repository.CustomerJpaQueryRepository;
 import com.wbsrisktaskerx.wbsrisktaskerx.utils.ExcelUtils;
+import com.wbsrisktaskerx.wbsrisktaskerx.utils.PasswordExport;
 import io.micrometer.common.util.StringUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.math.NumberUtils;
-import org.springframework.core.io.InputStreamResource;
 import org.springframework.stereotype.Service;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.wbsrisktaskerx.wbsrisktaskerx.entity.QCustomer.customer;
-
 @Service
 public class ExportService implements IExportService{
     private final CustomerJpaQueryRepository customerJpaQueryRepository;
     private final JPAQueryFactory jpaQueryFactory;
+    private final QCustomer customer = QCustomer.customer;
 
     public ExportService (CustomerJpaQueryRepository customerJpaQueryRepository, JPAQueryFactory jpaQueryFactory){
         this.customerJpaQueryRepository =customerJpaQueryRepository;
@@ -81,12 +80,10 @@ public class ExportService implements IExportService{
                 .where(builder)
                 .fetch();
 
-        ByteArrayInputStream inputStream = ExcelUtils.customerToExcel(content);
-        InputStreamResource response = new InputStreamResource(inputStream);
-
+        String password = PasswordExport.generatePassword();
         String currentDate = LocalDate.now().format(DateTimeFormatter.ofPattern(ExportConstants.DATE_TIME));
         String fileName = ExportConstants.FILENAME + currentDate + ExportConstants.XLSX;
 
-        return new ExportCustomerResponse(response, fileName);
+        return ExcelUtils.customerToExcel(content, password, fileName);
     }
 }
