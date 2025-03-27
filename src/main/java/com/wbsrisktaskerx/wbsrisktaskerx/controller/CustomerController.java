@@ -10,8 +10,6 @@ import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.CustomerResponse;
 import com.wbsrisktaskerx.wbsrisktaskerx.service.customer.ICustomerService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -46,5 +44,11 @@ public class CustomerController {
     @GetMapping(EndpointConstants.ID)
     public ResponseEntity<ApiResult<CustomerResponse>> getCustomerDetail(@PathVariable int id) {
         return ResponseEntity.ok(ApiResult.success(customerService.getCustomerById(id)));
+    }
+
+    @PutMapping(EndpointConstants.ID)
+    public ResponseEntity<ApiResult<CustomerResponse>> updateCustomer(@PathVariable int id, @RequestBody CustomerRequest customerRequest) {
+        CustomerResponse customerResponse = customerService.updateCustomer(id, customerRequest);
+        return ResponseEntity.ok(ApiResult.success(customerResponse));
     }
 }
