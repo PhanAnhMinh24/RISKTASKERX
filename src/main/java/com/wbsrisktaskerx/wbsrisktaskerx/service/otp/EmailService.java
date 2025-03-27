@@ -8,4 +8,3 @@ import java.util.Map;
 public interface EmailService {
     boolean sendEmail(String to, String templatePath, Map<String, String> placeholders) throws MessagingException, IOException;
 }
-
