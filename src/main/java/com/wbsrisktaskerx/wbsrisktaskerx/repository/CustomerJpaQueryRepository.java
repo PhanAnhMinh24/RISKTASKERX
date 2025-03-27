@@ -67,8 +67,8 @@ public class CustomerJpaQueryRepository {
                                 customer.id,
                                 customer.fullName,
                                 customer.email,
-                                customer.phoneNumber,
                                 customer.address,
+                                customer.phoneNumber,
                                 customer.isActive,
                                 customer.tier,
                                 customer.dateOfBirth
@@ -117,8 +117,8 @@ public class CustomerJpaQueryRepository {
                                 customer.id,
                                 customer.fullName,
                                 customer.email,
-                                customer.phoneNumber,
                                 customer.address,
+                                customer.phoneNumber,
                                 customer.isActive,
                                 customer.tier,
                                 customer.dateOfBirth
