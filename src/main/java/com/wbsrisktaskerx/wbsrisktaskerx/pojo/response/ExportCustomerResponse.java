@@ -2,7 +2,6 @@ package com.wbsrisktaskerx.wbsrisktaskerx.pojo.response;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import org.springframework.core.io.InputStreamResource;
 
 @Getter
 @Setter
@@ -11,6 +10,7 @@ import org.springframework.core.io.InputStreamResource;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ExportCustomerResponse {
-    InputStreamResource response;
+    byte[] response;
     String fileName;
+    String password;
 }
