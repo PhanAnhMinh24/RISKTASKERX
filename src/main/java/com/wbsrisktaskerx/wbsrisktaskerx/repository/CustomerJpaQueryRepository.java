@@ -56,7 +56,7 @@ public class CustomerJpaQueryRepository {
         }
 
         if (!ObjectUtils.isEmpty(filter.getTier())) {
-            builder.and(customer.tier.eq(filter.getTier()));
+            builder.and(customer.tier.in(filter.getTier()));
         }
         if (!ObjectUtils.isEmpty(filter.getIsActive())) {
             builder.and(customer.isActive.eq(filter.getIsActive()));
@@ -106,7 +106,7 @@ public class CustomerJpaQueryRepository {
         }
 
         if (!ObjectUtils.isEmpty(filter.getTier())) {
-            builder.and(customer.tier.eq(filter.getTier()));
+            builder.and(customer.tier.in(filter.getTier()));
         }
         if (!ObjectUtils.isEmpty(filter.getIsActive())) {
             builder.and(customer.isActive.eq(filter.getIsActive()));
