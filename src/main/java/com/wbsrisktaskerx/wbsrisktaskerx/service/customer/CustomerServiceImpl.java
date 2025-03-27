@@ -36,22 +36,6 @@ public class CustomerServiceImpl implements ICustomerService {
     }
 
     @Override
-    public CustomerResponse getCustomerById(int id) {
-        Customer customer = customerRepository.findById(id)
-                .orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
-
-        return new CustomerResponse(
-                customer.getId(),
-                customer.getFullName(),
-                customer.getEmail(),
-                customer.getPhoneNumber(),
-                customer.getIsActive(),
-                customer.getTier(),
-                customer.getDateOfBirth()
-        );
-    }
-
-    @Override
     public Page<CustomerResponse> searchAndFilterCustomers(PagingRequest<SearchFilterCustomersRequest> request) {
         return customerJpaQueryRepository.searchedAndFilteredCustomers(request);
     }
@@ -72,4 +56,18 @@ public class CustomerServiceImpl implements ICustomerService {
         }
         return customer.get();
     }
+
+        @Override
+        public CustomerResponse getCustomerById(int id) {
+            Customer customer = findById(id);
+            return new CustomerResponse(
+                    customer.getId(),
+                    customer.getFullName(),
+                    customer.getEmail(),
+                    customer.getPhoneNumber(),
+                    customer.getIsActive(),
+                    customer.getTier(),
+                    customer.getDateOfBirth()
+            );
+        }
 }

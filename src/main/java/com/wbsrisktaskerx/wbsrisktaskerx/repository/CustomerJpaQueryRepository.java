@@ -68,7 +68,8 @@ public class CustomerJpaQueryRepository {
                                 customer.phoneNumber,
                                 customer.address,
                                 customer.isActive,
-                                customer.tier
+                                customer.tier,
+                                customer.dateOfBirth
                         ))
                 .from(customer)
                 .where(builder)
