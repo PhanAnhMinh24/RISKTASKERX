@@ -21,7 +21,7 @@ public class HistoryController {
         this.customerService = customerService;
     }
 
-    @GetMapping(EndpointConstants.ID)
+    @GetMapping(EndpointConstants.ID + EndpointConstants.HISTORY)
     public ResponseEntity<List<PurchaseHistory>> getPurchaseHistory(@PathVariable int id) {
         List<PurchaseHistory> purchaseHistoryList = customerService.getPurchaseHistoryById(id);
         if(purchaseHistoryList.isEmpty()) {

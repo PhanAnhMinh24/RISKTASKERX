@@ -73,6 +73,6 @@ public class CustomerServiceImpl implements ICustomerService {
     }
 
     public List<PurchaseHistory> getPurchaseHistoryById(int id) {
-        return purchaseHistoryRepository.getCustomerById(id);
+        return purchaseHistoryRepository.getPurchaseHistoryByCustomerId(id);
     }
 }
