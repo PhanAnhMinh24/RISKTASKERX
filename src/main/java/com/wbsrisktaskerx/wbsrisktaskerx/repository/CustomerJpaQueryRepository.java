@@ -66,7 +66,8 @@ public class CustomerJpaQueryRepository {
                                 customer.fullName,
                                 customer.email,
                                 customer.phoneNumber,
-                                customer.phoneNumber, customer.isActive,
+                                customer.address,
+                                customer.isActive,
                                 customer.tier
                         ))
                 .from(customer)
