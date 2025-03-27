@@ -60,6 +60,7 @@ public class CustomerServiceImpl implements ICustomerService {
                     customer.getId(),
                     customer.getFullName(),
                     customer.getEmail(),
+                    customer.getAddress(),
                     customer.getPhoneNumber(),
                     customer.getIsActive(),
                     customer.getTier(),
