@@ -6,6 +6,7 @@ import com.wbsrisktaskerx.wbsrisktaskerx.pojo.ApiResult;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.PagingRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.CustomerRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.SearchFilterCustomersRequest;
+import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.CustomerFullResponse;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.CustomerResponse;
 import com.wbsrisktaskerx.wbsrisktaskerx.service.customer.ICustomerService;
 import org.springframework.data.domain.Page;
@@ -45,4 +46,11 @@ public class CustomerController {
     public ResponseEntity<ApiResult<CustomerResponse>> getCustomerDetail(@PathVariable int id) {
         return ResponseEntity.ok(ApiResult.success(customerService.getCustomerById(id)));
     }
+
+    @PostMapping(EndpointConstants.FULL_SEARCH_FILTER)
+    public ResponseEntity<ApiResult<Page<CustomerFullResponse>>> fullSearchFilterCustomers(@RequestBody PagingRequest<SearchFilterCustomersRequest> request) {
+        Page<CustomerFullResponse> pageResult = customerService.fullSearchAndFilterCustomers(request);
+        return ResponseEntity.ok(ApiResult.success(pageResult));
+    }
+
 }
