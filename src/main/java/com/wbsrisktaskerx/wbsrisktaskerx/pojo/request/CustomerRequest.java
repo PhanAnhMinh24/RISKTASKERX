@@ -1,14 +1,20 @@
 package com.wbsrisktaskerx.wbsrisktaskerx.pojo.request;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
-import lombok.AccessLevel;
 
+@Getter
+@Setter
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CustomerRequest {
     Integer id;
     Boolean isActive;
+    String fullName;
+    String email;
+    String phoneNumber;
+    String dateOfBirth;
+    String address;
 }

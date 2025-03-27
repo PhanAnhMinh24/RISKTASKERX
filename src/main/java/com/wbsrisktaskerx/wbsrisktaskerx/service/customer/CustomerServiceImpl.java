@@ -1,5 +1,6 @@
 package com.wbsrisktaskerx.wbsrisktaskerx.service.customer;
 
+import com.wbsrisktaskerx.wbsrisktaskerx.controller.CustomerController;
 import com.wbsrisktaskerx.wbsrisktaskerx.entity.Customer;
 import com.wbsrisktaskerx.wbsrisktaskerx.exception.AppException;
 import com.wbsrisktaskerx.wbsrisktaskerx.exception.ErrorCode;
@@ -9,10 +10,6 @@ import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.SearchFilterCustomersReque
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.CustomerResponse;
 import com.wbsrisktaskerx.wbsrisktaskerx.repository.CustomerJpaQueryRepository;
 import com.wbsrisktaskerx.wbsrisktaskerx.repository.CustomerRepository;
-import jakarta.transaction.Transactional;
-import org.springframework.data.domain.Page;
-import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.CustomerResponse;
-import com.wbsrisktaskerx.wbsrisktaskerx.repository.CustomerDetailsRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
@@ -57,18 +54,43 @@ public class CustomerServiceImpl implements ICustomerService {
         return customer.get();
     }
 
-        @Override
-        public CustomerResponse getCustomerById(int id) {
-            Customer customer = findById(id);
-            return new CustomerResponse(
-                    customer.getId(),
-                    customer.getFullName(),
-                    customer.getEmail(),
-                    customer.getAddress(),
-                    customer.getPhoneNumber(),
-                    customer.getIsActive(),
-                    customer.getTier(),
-                    customer.getDateOfBirth()
-            );
-        }
+    @Override
+    public CustomerResponse getCustomerById(int id) {
+        Customer customer = findById(id);
+        return new CustomerResponse(
+                customer.getId(),
+                customer.getFullName(),
+                customer.getEmail(),
+                customer.getAddress(),
+                customer.getPhoneNumber(),
+                customer.getIsActive(),
+                customer.getTier(),
+                customer.getDateOfBirth()
+        );
+    }
+
+    @Override
+    public CustomerResponse updateCustomer(int id, CustomerRequest customerRequest) {
+        Customer customer = findById(id);
+
+        customer.setFullName(customerRequest.getFullName());
+        customer.setDateOfBirth(customerRequest.getDateOfBirth());
+        customer.setAddress(customerRequest.getAddress());
+        customer.setPhoneNumber(customerRequest.getPhoneNumber());
+        customer.setEmail(customerRequest.getEmail());
+        customer.setIsActive(customerRequest.getIsActive());
+
+        customerRepository.save(customer);
+
+        return new CustomerResponse(
+                customer.getId(),
+                customer.getFullName(),
+                customer.getEmail(),
+                customer.getAddress(),
+                customer.getPhoneNumber(),
+                customer.getIsActive(),
+                customer.getTier(),
+                customer.getDateOfBirth()
+        );
+    }
 }

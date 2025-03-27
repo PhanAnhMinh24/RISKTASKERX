@@ -47,4 +47,10 @@ public class CustomerController {
     public ResponseEntity<ApiResult<CustomerResponse>> getCustomerDetail(@PathVariable int id) {
         return ResponseEntity.ok(ApiResult.success(customerService.getCustomerById(id)));
     }
+
+    @PutMapping(EndpointConstants.ID)
+    public ResponseEntity<ApiResult<CustomerResponse>> updateCustomer(@PathVariable int id, @RequestBody CustomerRequest customerRequest) {
+        CustomerResponse customerResponse = customerService.updateCustomer(id, customerRequest);
+        return ResponseEntity.ok(ApiResult.success(customerResponse));
+    }
 }
