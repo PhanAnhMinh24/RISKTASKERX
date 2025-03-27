@@ -1,22 +1,29 @@
 package com.wbsrisktaskerx.wbsrisktaskerx.utils;
 
-import com.wbsrisktaskerx.wbsrisktaskerx.entity.Customer;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.CustomerResponse;
+import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.ExportCustomerResponse;
+import org.apache.commons.compress.utils.IOUtils;
+import org.apache.poi.poifs.crypt.EncryptionInfo;
+import org.apache.poi.poifs.crypt.EncryptionMode;
+import org.apache.poi.poifs.crypt.Encryptor;
+import org.apache.poi.poifs.filesystem.DirectoryEntry;
+import org.apache.poi.poifs.filesystem.DirectoryNode;
+import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.List;
 
 public class ExcelUtils {
     public static String[] HEADER = {"Customer ID", "Customer Name", "Phone number", "Address", "Email", "Tier", "Actions"};
-    public static String SHEET_NAME = "Sheet1";
 
-    public static ByteArrayInputStream customerToExcel(List<CustomerResponse> customerList) throws IOException {
-        try (Workbook workbook = new XSSFWorkbook(); ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
-            Sheet sheet = workbook.createSheet(SHEET_NAME);
+    public static ExportCustomerResponse customerToExcel(List<CustomerResponse> customerList, String password, String fileName) throws IOException {
+        try (Workbook workbook = new XSSFWorkbook()) {
+            Sheet sheet = workbook.createSheet("Sheet1");
             createHeader(sheet, workbook, HEADER);
 
             int rowIndex = 1;
@@ -36,16 +43,46 @@ public class ExcelUtils {
                 sheet.autoSizeColumn(i);
             }
 
-            workbook.write(byteArrayOutputStream);
-            return new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
-        } catch (IOException e) {
+            ByteArrayOutputStream encryptedBaos = encryptExcelFile(workbook, password);
+
+            return ExportCustomerResponse.builder()
+                    .fileName(fileName)
+                    .password(password)
+                    .response(encryptedBaos.toByteArray())
+                    .build();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static ByteArrayOutputStream encryptExcelFile(Workbook workbook, String password) throws IOException {
+        try (POIFSFileSystem fs = new POIFSFileSystem()) {
+            EncryptionInfo info = new EncryptionInfo(EncryptionMode.agile);
+            Encryptor enc = info.getEncryptor();
+            enc.confirmPassword(password);
+
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            workbook.write(baos);
+            workbook.close();
+
+            ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
+
+            DirectoryEntry root = fs.getRoot();
+            OutputStream os = enc.getDataStream((DirectoryNode) root);
+            IOUtils.copy(bais, os);
+            os.close();
+
+            ByteArrayOutputStream encryptedBaos = new ByteArrayOutputStream();
+            fs.writeFilesystem(encryptedBaos);
+
+            return encryptedBaos;
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
     private static void createHeader(Sheet sheet, Workbook workbook, String[] headers) {
         Row headerRow = sheet.createRow(0);
-
         CellStyle headerStyle = workbook.createCellStyle();
         Font font = workbook.createFont();
         font.setBold(true);
