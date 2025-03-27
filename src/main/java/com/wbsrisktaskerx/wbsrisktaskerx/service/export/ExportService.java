@@ -63,7 +63,7 @@ public class ExportService implements IExportService{
         List<CustomerResponse> content;
         content = customerJpaQueryRepository.getAll().stream()
                 .map(c -> new CustomerResponse(c.getId(), c.getFullName(), c.getEmail(),
-                        c.getAddress(), c.getPhoneNumber(), c.getIsActive(), c.getTier()))
+                        c.getAddress(), c.getPhoneNumber(), c.getIsActive(), c.getTier(), c.getDateOfBirth()))
                 .collect(Collectors.toList());
 
         content = jpaQueryFactory.select(
@@ -74,7 +74,8 @@ public class ExportService implements IExportService{
                                 customer.address,
                                 customer.phoneNumber,
                                 customer.isActive,
-                                customer.tier
+                                customer.tier,
+                                customer.dateOfBirth
                         ))
                 .from(customer)
                 .where(builder)
