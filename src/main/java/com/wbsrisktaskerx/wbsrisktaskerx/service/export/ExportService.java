@@ -56,7 +56,7 @@ public class ExportService implements IExportService{
             builder.and(customer.tier.in(filter.getTier()));
         }
         if (!ObjectUtils.isEmpty(filter.getIsActive())) {
-            builder.and(customer.isActive.eq(filter.getIsActive()));
+            builder.and(customer.isActive.in(filter.getIsActive()));
         }
 
         List<CustomerResponse> content;
