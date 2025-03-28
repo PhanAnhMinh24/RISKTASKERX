@@ -5,6 +5,7 @@ import com.wbsrisktaskerx.wbsrisktaskerx.entity.PurchaseHistory;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.PagingRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.CustomerRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.SearchFilterCustomersRequest;
+import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.CustomerFullResponse;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.CustomerResponse;
 import org.springframework.data.domain.Page;
 
@@ -15,4 +16,8 @@ public interface ICustomerService {
     Page<CustomerResponse> searchAndFilterCustomers(PagingRequest<SearchFilterCustomersRequest> request);
     boolean updateIsActive(CustomerRequest request);
     CustomerResponse getCustomerById(int id);
+
+    Page<CustomerFullResponse> fullSearchAndFilterCustomers(PagingRequest<SearchFilterCustomersRequest> request);
+
+
 }
