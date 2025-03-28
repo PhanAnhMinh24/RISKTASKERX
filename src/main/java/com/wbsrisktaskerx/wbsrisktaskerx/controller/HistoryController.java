@@ -2,6 +2,7 @@ package com.wbsrisktaskerx.wbsrisktaskerx.controller;
 
 import com.wbsrisktaskerx.wbsrisktaskerx.common.constants.EndpointConstants;
 import com.wbsrisktaskerx.wbsrisktaskerx.entity.PurchaseHistory;
+import com.wbsrisktaskerx.wbsrisktaskerx.entity.WarrantyHistory;
 import com.wbsrisktaskerx.wbsrisktaskerx.service.customer.CustomerServiceImpl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,5 +29,14 @@ public class HistoryController {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(purchaseHistoryList);
+    }
+
+    @GetMapping(EndpointConstants.WARRANTY + EndpointConstants.ID)
+    public ResponseEntity<List<WarrantyHistory>> getWarrantyHistory(@PathVariable int id) {
+        List<WarrantyHistory> warrantyHistoryList = customerService.getWarrantyHistoryById(id);
+        if(warrantyHistoryList.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(warrantyHistoryList);
     }
 }
