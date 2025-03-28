@@ -41,7 +41,7 @@ public class CustomerController {
         return ResponseEntity.ok(ApiResult.success(result));
     }
 
-    @GetMapping(EndpointConstants.CUSTOMER_DETAILS + EndpointConstants.ID)
+    @GetMapping(EndpointConstants.ID)
     public ResponseEntity<ApiResult<CustomerResponse>> getCustomerDetail(@PathVariable int id) {
         return ResponseEntity.ok(ApiResult.success(customerService.getCustomerById(id)));
     }

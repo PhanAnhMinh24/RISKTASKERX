@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping(EndpointConstants.CUSTOMERS)
+@RequestMapping(EndpointConstants.HISTORY)
 public class HistoryController {
 
     private final CustomerServiceImpl customerService;
@@ -21,7 +21,7 @@ public class HistoryController {
         this.customerService = customerService;
     }
 
-    @GetMapping(EndpointConstants.ID + EndpointConstants.HISTORY)
+    @GetMapping(EndpointConstants.PURCHASE + EndpointConstants.ID)
     public ResponseEntity<List<PurchaseHistory>> getPurchaseHistory(@PathVariable int id) {
         List<PurchaseHistory> purchaseHistoryList = customerService.getPurchaseHistoryById(id);
         if(purchaseHistoryList.isEmpty()) {
