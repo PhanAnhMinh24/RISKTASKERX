@@ -25,20 +25,23 @@ public class PurchaseHistory {
     @JoinColumn(name = "customer_id", nullable = false)
     Customer customer;
 
+    @Column(name = "vehicle_identification_number", length = 20, nullable = false, unique = true)
+    String vehicleIdentificationNumber;
+
     @Column(name = "car_model", length = 50, nullable = false)
     String carModel;
 
     @Column(name = "purchase_date", nullable = false)
     @Temporal(TemporalType.DATE)
-    private Date purchaseDate;
+    Date purchaseDate;
 
     @Column(name = "payment_method", nullable = false)
-    private String paymentMethod;
+    String paymentMethod;
 
     @Column(name = "price", nullable = false)
-    private Long price;
+    Long price;
 
     @Column(name = "warranty_months", nullable = false)
-    private Integer warrantyMonths;
+    Integer warrantyMonths;
 
 }
