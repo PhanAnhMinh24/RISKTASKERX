@@ -12,5 +12,5 @@ import java.util.List;
 public class SearchFilterCustomersRequest {
     String searchKey;
     List<Tier> tier;
-    Boolean isActive;
+    List<Boolean> isActive;
 }
