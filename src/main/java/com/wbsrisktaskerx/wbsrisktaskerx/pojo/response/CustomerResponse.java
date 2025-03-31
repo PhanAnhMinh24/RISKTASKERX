@@ -11,10 +11,11 @@ import com.wbsrisktaskerx.wbsrisktaskerx.serializer.MaskingPhoneNumberSerializer
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.time.OffsetDateTime;
+
 @Getter
 @Setter
 @NoArgsConstructor
-@Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CustomerResponse {
     Integer id;
@@ -35,10 +36,10 @@ public class CustomerResponse {
     Tier tier;
 
     @JsonSerialize(using = MaskingDateOfBirthSerializer.class)
-    String dateOfBirth;
+    OffsetDateTime dateOfBirth;
 
     @QueryProjection
-    public CustomerResponse(Integer id, String fullName, String email, String address, String phoneNumber, Boolean isActive, Tier tier, String dateOfBirth) {
+    public CustomerResponse(Integer id, String fullName, String email, String address, String phoneNumber, Boolean isActive, Tier tier, OffsetDateTime dateOfBirth) {
         this.id = id;
         this.fullName = fullName;
         this.email = email;

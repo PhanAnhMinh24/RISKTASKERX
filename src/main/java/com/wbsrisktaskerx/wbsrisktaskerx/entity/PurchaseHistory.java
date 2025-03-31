@@ -7,7 +7,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.util.Date;
+import java.time.OffsetDateTime;
 
 @Entity
 @Getter
@@ -33,14 +33,13 @@ public class PurchaseHistory {
     String carModel;
 
     @Column(name = "purchase_date", nullable = false)
-    @Temporal(TemporalType.DATE)
-    Date purchaseDate;
+    OffsetDateTime purchaseDate;
 
     @Column(name = "payment_method", nullable = false)
     String paymentMethod;
 
     @Column(name = "price", nullable = false)
-    Long price;
+    Float price;
 
     @Column(name = "warranty_months", nullable = false)
     Integer warrantyMonths;

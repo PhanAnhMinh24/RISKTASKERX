@@ -5,6 +5,8 @@ import com.wbsrisktaskerx.wbsrisktaskerx.pojo.data.Tier;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.time.OffsetDateTime;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -18,10 +20,10 @@ public class CustomerFullResponse {
     String phoneNumber;
     Boolean isActive;
     Tier tier;
-    String dateOfBirth;
+    OffsetDateTime dateOfBirth;
 
     @QueryProjection
-    public CustomerFullResponse(Integer id, String fullName, String email, String address, String phoneNumber, Boolean isActive, Tier tier, String dateOfBirth) {
+    public CustomerFullResponse(Integer id, String fullName, String email, String address, String phoneNumber, Boolean isActive, Tier tier, OffsetDateTime dateOfBirth) {
         this.id = id;
         this.fullName = fullName;
         this.email = email;

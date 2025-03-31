@@ -68,9 +68,9 @@ public class CustomerServiceImpl implements ICustomerService {
     }
 
     @Override
-    public CustomerResponse getCustomerById(int id) {
+    public CustomerFullResponse getCustomerById(int id) {
         Customer customer = findById(id);
-        return new CustomerResponse(
+        return new CustomerFullResponse(
                 customer.getId(),
                 customer.getFullName(),
                 customer.getEmail(),

@@ -1,12 +1,11 @@
 package com.wbsrisktaskerx.wbsrisktaskerx.entity;
 
 import com.wbsrisktaskerx.wbsrisktaskerx.common.constants.EntityConstant;
-import com.wbsrisktaskerx.wbsrisktaskerx.pojo.data.ServiceCenter;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.util.Date;
+import java.time.OffsetDateTime;
 
 @Entity
 @Getter
@@ -38,10 +37,9 @@ public class WarrantyHistory {
     String serviceCenter;
 
     @Column(name = "service_date", nullable = false)
-    @Temporal(TemporalType.DATE)
-    Date serviceDate;
+    OffsetDateTime serviceDate;
 
     @Column(name = "service_cost", nullable = false)
-    Long serviceCost;
+    Float serviceCost;
 
 }
