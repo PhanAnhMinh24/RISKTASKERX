@@ -12,9 +12,4 @@ import lombok.experimental.FieldDefaults;
 public class CustomerRequest {
     Integer id;
     Boolean isActive;
-    String fullName;
-    String email;
-    String phoneNumber;
-    String dateOfBirth;
-    String address;
 }
