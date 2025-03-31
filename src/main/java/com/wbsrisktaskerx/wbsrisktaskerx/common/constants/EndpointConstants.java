@@ -28,6 +28,7 @@ public class EndpointConstants {
     public static final String STATUS = "/status";
     public static final String HISTORY = "/history";
     public static final String PURCHASE = "/purchase";
+    public static final String WARRANTY = "/warranty";
 
     public static final String ID = "/{id}";
 }
