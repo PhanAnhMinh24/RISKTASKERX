@@ -1,7 +1,6 @@
 package com.wbsrisktaskerx.wbsrisktaskerx.service.customer;
 
 import com.wbsrisktaskerx.wbsrisktaskerx.entity.Customer;
-import com.wbsrisktaskerx.wbsrisktaskerx.entity.PurchaseHistory;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.PagingRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.CustomerRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.SearchFilterCustomersRequest;
@@ -16,8 +15,6 @@ public interface ICustomerService {
     Page<CustomerResponse> searchAndFilterCustomers(PagingRequest<SearchFilterCustomersRequest> request);
     boolean updateIsActive(CustomerRequest request);
     CustomerResponse getCustomerById(int id);
-
     Page<CustomerFullResponse> fullSearchAndFilterCustomers(PagingRequest<SearchFilterCustomersRequest> request);
-
-
+    CustomerResponse findOneById(Integer customerId);
 }
