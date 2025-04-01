@@ -85,7 +85,7 @@ public class ExportService implements IExportService{
                 .fetch();
 
         ExportDetails details = generateExportDetails();
-        String fileName = String.format(ExportConstants.FILENAME_FORMAT, ExportConstants.FILENAME, details.currentDate, ExportConstants.XLSX);
+        String fileName = String.format(ExportConstants.FILE_FORMAT, ExportConstants.FILENAME, details.currentDate, ExportConstants.XLSX);
         return ExcelUtils.customerToExcel(content, details.password, fileName);
     }
 

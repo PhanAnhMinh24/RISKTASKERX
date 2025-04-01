@@ -33,15 +33,15 @@ public class ExcelUtils {
 
             int rowIndex = 1;
             for (CustomerResponse c : customerList) {
-                Row row1 = sheet.createRow(rowIndex);
+                Row row = sheet.createRow(rowIndex);
                 rowIndex++;
-                row1.createCell(0).setCellValue(c.getId());
-                row1.createCell(1).setCellValue(c.getFullName());
-                row1.createCell(2).setCellValue(c.getPhoneNumber());
-                row1.createCell(3).setCellValue(c.getAddress());
-                row1.createCell(4).setCellValue(c.getEmail());
-                row1.createCell(5).setCellValue(c.getTier().toString());
-                row1.createCell(6).setCellValue(c.getIsActive());
+                row.createCell(0).setCellValue(c.getId());
+                row.createCell(1).setCellValue(c.getFullName());
+                row.createCell(2).setCellValue(c.getPhoneNumber());
+                row.createCell(3).setCellValue(c.getAddress());
+                row.createCell(4).setCellValue(c.getEmail());
+                row.createCell(5).setCellValue(c.getTier().toString());
+                row.createCell(6).setCellValue(c.getIsActive());
             }
 
             for (int i = 0; i < HEADER.length; i++) {
@@ -67,20 +67,20 @@ public class ExcelUtils {
 
             int rowIndex = 1;
             for (PurchaseHistoryResponse p : purchaseHistory) {
-                Row row1 = sheet.createRow(rowIndex);
+                Row row = sheet.createRow(rowIndex);
                 rowIndex++;
-                row1.createCell(0).setCellValue(p.getCustomer().getFullName());
-                row1.createCell(1).setCellValue(p.getCustomer().getId());
-                row1.createCell(2).setCellValue(p.getCustomer().getIsActive());
-                row1.createCell(3).setCellValue(p.getCustomer().getDateOfBirth());
-                row1.createCell(4).setCellValue(p.getCustomer().getPhoneNumber());
-                row1.createCell(5).setCellValue(p.getCustomer().getEmail());
-                row1.createCell(6).setCellValue(p.getCustomer().getAddress());
-                row1.createCell(7).setCellValue(p.getCarModel());
-                row1.createCell(8).setCellValue(p.getVehicleIdentificationNumber());
-                row1.createCell(9).setCellValue(p.getPrice());
-                row1.createCell(10).setCellValue(p.getPaymentMethod());
-                row1.createCell(11).setCellValue(p.getPurchaseDate());
+                row.createCell(0).setCellValue(p.getCustomer().getFullName());
+                row.createCell(1).setCellValue(p.getCustomer().getId());
+                row.createCell(2).setCellValue(p.getCustomer().getIsActive());
+                row.createCell(3).setCellValue(p.getCustomer().getDateOfBirth());
+                row.createCell(4).setCellValue(p.getCustomer().getPhoneNumber());
+                row.createCell(5).setCellValue(p.getCustomer().getEmail());
+                row.createCell(6).setCellValue(p.getCustomer().getAddress());
+                row.createCell(7).setCellValue(p.getCarModel());
+                row.createCell(8).setCellValue(p.getVehicleIdentificationNumber());
+                row.createCell(9).setCellValue(p.getPrice());
+                row.createCell(10).setCellValue(p.getPaymentMethod());
+                row.createCell(11).setCellValue(p.getPurchaseDate());
             }
 
             for (int i = 0; i < HEADER.length; i++) {
@@ -106,21 +106,21 @@ public class ExcelUtils {
 
             int rowIndex = 1;
             for (WarrantyHistoryResponse w : warrantyHistory) {
-                Row row1 = sheet.createRow(rowIndex);
+                Row row = sheet.createRow(rowIndex);
                 rowIndex++;
-                row1.createCell(0).setCellValue(w.getCustomer().getFullName());
-                row1.createCell(1).setCellValue(w.getCustomer().getId());
-                row1.createCell(2).setCellValue(w.getCustomer().getIsActive());
-                row1.createCell(3).setCellValue(w.getCustomer().getDateOfBirth());
-                row1.createCell(4).setCellValue(w.getCustomer().getPhoneNumber());
-                row1.createCell(5).setCellValue(w.getCustomer().getEmail());
-                row1.createCell(6).setCellValue(w.getCustomer().getAddress());
-                row1.createCell(7).setCellValue(w.getCarModel());
-                row1.createCell(8).setCellValue(w.getLicensePlate());
-                row1.createCell(9).setCellValue(w.getServiceType());
-                row1.createCell(10).setCellValue(w.getServiceCenter());
-                row1.createCell(11).setCellValue(w.getServiceDate());
-                row1.createCell(12).setCellValue(w.getServiceCost());
+                row.createCell(0).setCellValue(w.getCustomer().getFullName());
+                row.createCell(1).setCellValue(w.getCustomer().getId());
+                row.createCell(2).setCellValue(w.getCustomer().getIsActive());
+                row.createCell(3).setCellValue(w.getCustomer().getDateOfBirth());
+                row.createCell(4).setCellValue(w.getCustomer().getPhoneNumber());
+                row.createCell(5).setCellValue(w.getCustomer().getEmail());
+                row.createCell(6).setCellValue(w.getCustomer().getAddress());
+                row.createCell(7).setCellValue(w.getCarModel());
+                row.createCell(8).setCellValue(w.getLicensePlate());
+                row.createCell(9).setCellValue(w.getServiceType());
+                row.createCell(10).setCellValue(w.getServiceCenter());
+                row.createCell(11).setCellValue(w.getServiceDate());
+                row.createCell(12).setCellValue(w.getServiceCost());
             }
 
             for (int i = 0; i < HEADER.length; i++) {

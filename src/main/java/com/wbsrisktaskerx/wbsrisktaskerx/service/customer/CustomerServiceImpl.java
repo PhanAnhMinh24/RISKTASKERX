@@ -98,22 +98,22 @@ public class CustomerServiceImpl implements ICustomerService {
         return warrantyHistoryRepository.getWarrantyHistoryByCustomerId(id);
     }
 
+    @Override
     public CustomerResponse findOneById(Integer customerId) {
-        CustomerResponse customerResponse = jpaQueryFactory.select(
-                        new QCustomerResponse(
-                                customer.id,
-                                customer.fullName,
-                                customer.email,
-                                customer.address,
-                                customer.phoneNumber,
-                                customer.isActive,
-                                customer.tier,
-                                customer.dateOfBirth
-                        ))
-                .from(customer)
-                .where(customer.id.eq(customerId))
-                .fetchOne();
-        return Optional.ofNullable(customerResponse)
-                .orElseThrow(() -> new AppException(ErrorCode.CUSTOMER_NOT_FOUND));
+        Optional<Customer> customer = customerRepository.findById(customerId);
+        if (customer.isEmpty()) {
+            throw new AppException(ErrorCode.CUSTOMER_NOT_FOUND);
+        }
+        Customer c = customer.get();
+        return new CustomerResponse(
+                c.getId(),
+                c.getFullName(),
+                c.getEmail(),
+                c.getAddress(),
+                c.getPhoneNumber(),
+                c.getIsActive(),
+                c.getTier(),
+                c.getDateOfBirth()
+        );
     }
 }
