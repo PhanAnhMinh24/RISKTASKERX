@@ -37,24 +37,6 @@ public class CustomerJpaQueryRepository {
         return jpaQueryFactory.selectFrom(customer).fetch();
     }
 
-    public CustomerResponse findById(Integer customerId) {
-        CustomerResponse customerResponse = jpaQueryFactory.select(
-                        new QCustomerResponse(
-                                customer.id,
-                                customer.fullName,
-                                customer.email,
-                                customer.address,
-                                customer.phoneNumber,
-                                customer.isActive,
-                                customer.tier,
-                                customer.dateOfBirth
-                        ))
-                .from(customer)
-                .where(customer.id.eq(customerId))
-                .fetchOne();
-        return customerResponse;
-    }
-
     public Page<CustomerResponse> searchedAndFilteredCustomers(PagingRequest<SearchFilterCustomersRequest> request) {
         SearchFilterCustomersRequest filter = request.getFilters();
         Pageable pageable = PageService.getPageRequest(request);

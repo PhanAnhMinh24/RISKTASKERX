@@ -9,6 +9,7 @@ import com.wbsrisktaskerx.wbsrisktaskerx.pojo.PagingRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.SearchFilterCustomersRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.*;
 import com.wbsrisktaskerx.wbsrisktaskerx.repository.CustomerJpaQueryRepository;
+import com.wbsrisktaskerx.wbsrisktaskerx.service.customer.CustomerServiceImpl;
 import com.wbsrisktaskerx.wbsrisktaskerx.utils.ExcelUtils;
 import com.wbsrisktaskerx.wbsrisktaskerx.utils.PasswordExport;
 import io.micrometer.common.util.StringUtils;
@@ -30,10 +31,12 @@ public class ExportService implements IExportService{
     private final CustomerJpaQueryRepository customerJpaQueryRepository;
     private final JPAQueryFactory jpaQueryFactory;
     private final QCustomer customer = QCustomer.customer;
+    private final CustomerServiceImpl customerService;
 
-    public ExportService (CustomerJpaQueryRepository customerJpaQueryRepository, JPAQueryFactory jpaQueryFactory){
+    public ExportService (CustomerJpaQueryRepository customerJpaQueryRepository, JPAQueryFactory jpaQueryFactory, CustomerServiceImpl customerService){
         this.customerJpaQueryRepository =customerJpaQueryRepository;
         this.jpaQueryFactory = jpaQueryFactory;
+        this.customerService = customerService;
     }
 
     @Override
@@ -81,16 +84,14 @@ public class ExportService implements IExportService{
                 .where(builder)
                 .fetch();
 
-        String password = PasswordExport.generatePassword();
-        String currentDate = LocalDate.now().format(DateTimeFormatter.ofPattern(ExportConstants.DATE_TIME));
-        String fileName = ExportConstants.FILENAME + currentDate + ExportConstants.XLSX;
-
-        return ExcelUtils.customerToExcel(content, password, fileName);
+        ExportDetails details = generateExportDetails();
+        String fileName = String.format(ExportConstants.FILENAME_FORMAT, ExportConstants.FILENAME, details.currentDate, ExportConstants.XLSX);
+        return ExcelUtils.customerToExcel(content, details.password, fileName);
     }
 
     @Override
     public ExportCustomerResponse exportCustomerPurchaseHistory(Integer customerId) throws IOException {
-        CustomerResponse customerResponse = customerJpaQueryRepository.findById(customerId);
+        CustomerResponse customerResponse = customerService.findOneById(customerId);
         List<PurchaseHistoryResponse> purchaseHistories = jpaQueryFactory.selectFrom(purchaseHistory)
                 .where(purchaseHistory.customer.id.eq(customerId))
                 .fetch()
@@ -108,7 +109,7 @@ public class ExportService implements IExportService{
                 .collect(Collectors.toList());
 
         ExportDetails details = generateExportDetails();
-        String fileName = ExportConstants.PURCHASE_HISTORY_CUSTOMER + customerId + "_" + details.currentDate + ExportConstants.XLSX;
+        String fileName = String.format(ExportConstants.ID_FILE_FORMAT, ExportConstants.PURCHASE_HISTORY_CUSTOMER, customerId, details.currentDate, ExportConstants.XLSX);
         ExportCustomerResponse response = ExcelUtils.purchaseHistoryToExcel(purchaseHistories, details.password, fileName);
 
         return response;
@@ -116,7 +117,7 @@ public class ExportService implements IExportService{
 
     @Override
     public ExportCustomerResponse exportCustomerWarrantyHistory(Integer customerId) throws IOException {
-        CustomerResponse customerResponse = customerJpaQueryRepository.findById(customerId);
+        CustomerResponse customerResponse = customerService.findOneById(customerId);
         List<WarrantyHistoryResponse> warrantyHistoryResponses = jpaQueryFactory.selectFrom(warrantyHistory)
                 .where(warrantyHistory.customer.id.eq(customerId))
                 .fetch()
@@ -134,20 +135,10 @@ public class ExportService implements IExportService{
                 .collect(Collectors.toList());
 
         ExportDetails details = generateExportDetails();
-        String fileName = ExportConstants.WARRANTY_HISTORY_CUSTOMER + customerId + "_" + details.currentDate + ExportConstants.XLSX;
+        String fileName = String.format(ExportConstants.ID_FILE_FORMAT, ExportConstants.WARRANTY_HISTORY_CUSTOMER, customerId, details.currentDate, ExportConstants.XLSX);
         ExportCustomerResponse response = ExcelUtils.warrantyHistoryToExcel(warrantyHistoryResponses, details.password, fileName);
 
         return response;
-    }
-
-    private static class ExportDetails {
-        String password;
-        String currentDate;
-
-        ExportDetails(String password, String currentDate) {
-            this.password = password;
-            this.currentDate = currentDate;
-        }
     }
 
     private ExportDetails generateExportDetails() {
