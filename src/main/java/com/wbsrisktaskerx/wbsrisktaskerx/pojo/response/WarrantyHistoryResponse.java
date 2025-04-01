@@ -3,6 +3,7 @@ package com.wbsrisktaskerx.wbsrisktaskerx.pojo.response;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.time.OffsetDateTime;
 import java.util.Date;
 
 @Getter
@@ -18,6 +19,6 @@ public class WarrantyHistoryResponse {
     String licensePlate;
     String serviceType;
     String serviceCenter;
-    Date serviceDate;
-    Long serviceCost;
+    OffsetDateTime serviceDate;
+    Float serviceCost;
 }

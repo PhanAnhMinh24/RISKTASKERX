@@ -1,5 +1,5 @@
 package com.wbsrisktaskerx.wbsrisktaskerx.pojo.data;
 
 public enum PaymentMethods {
-    credit_card, bank_transfer, cash, installment
+    Credit_card, Bank_transfer, Cash, Installment;
 }

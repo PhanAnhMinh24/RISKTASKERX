@@ -35,8 +35,9 @@ public class PurchaseHistory {
     @Column(name = "purchase_date", nullable = false)
     OffsetDateTime purchaseDate;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "payment_method", nullable = false)
-    String paymentMethod;
+    PaymentMethods paymentMethod;
 
     @Column(name = "price", nullable = false)
     Float price;

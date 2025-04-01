@@ -1,8 +1,10 @@
 package com.wbsrisktaskerx.wbsrisktaskerx.pojo.response;
 
+import com.wbsrisktaskerx.wbsrisktaskerx.pojo.data.PaymentMethods;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.time.OffsetDateTime;
 import java.util.Date;
 
 @Getter
@@ -16,8 +18,8 @@ public class PurchaseHistoryResponse {
     CustomerResponse customer;
     String vehicleIdentificationNumber;
     String carModel;
-    Date purchaseDate;
-    String paymentMethod;
-    Long price;
+    OffsetDateTime purchaseDate;
+    PaymentMethods paymentMethod;
+    Float price;
     Integer warrantyMonths;
 }
