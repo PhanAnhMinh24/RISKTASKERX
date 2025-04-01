@@ -90,21 +90,7 @@ public class ExportService implements IExportService{
 
     @Override
     public ExportCustomerResponse exportCustomerPurchaseHistory(Integer customerId) throws IOException {
-        CustomerResponse customerResponse = jpaQueryFactory.select(
-                        new QCustomerResponse(
-                                customer.id,
-                                customer.fullName,
-                                customer.email,
-                                customer.address,
-                                customer.phoneNumber,
-                                customer.isActive,
-                                customer.tier,
-                                customer.dateOfBirth
-                        ))
-                .from(customer)
-                .where(customer.id.eq(customerId))
-                .fetchOne();
-
+        CustomerResponse customerResponse = customerJpaQueryRepository.findById(customerId);
         List<PurchaseHistoryResponse> purchaseHistories = jpaQueryFactory.selectFrom(purchaseHistory)
                 .where(purchaseHistory.customer.id.eq(customerId))
                 .fetch()
@@ -121,31 +107,16 @@ public class ExportService implements IExportService{
                         .build())
                 .collect(Collectors.toList());
 
-        String password = PasswordExport.generatePassword();
-        String currentDate = LocalDate.now().format(DateTimeFormatter.ofPattern(ExportConstants.DATE_TIME));
-        String fileName = ExportConstants.PURCHASE_HISTORY_CUSTOMER + customerId + "_" + currentDate + ExportConstants.XLSX;
-        ExportCustomerResponse response = ExcelUtils.purchaseHistoryToExcel(purchaseHistories, password, fileName);
+        ExportDetails details = generateExportDetails();
+        String fileName = ExportConstants.PURCHASE_HISTORY_CUSTOMER + customerId + "_" + details.currentDate + ExportConstants.XLSX;
+        ExportCustomerResponse response = ExcelUtils.purchaseHistoryToExcel(purchaseHistories, details.password, fileName);
 
         return response;
     }
 
     @Override
     public ExportCustomerResponse exportCustomerWarrantyHistory(Integer customerId) throws IOException {
-        CustomerResponse customerResponse = jpaQueryFactory.select(
-                        new QCustomerResponse(
-                                customer.id,
-                                customer.fullName,
-                                customer.email,
-                                customer.address,
-                                customer.phoneNumber,
-                                customer.isActive,
-                                customer.tier,
-                                customer.dateOfBirth
-                        ))
-                .from(customer)
-                .where(customer.id.eq(customerId))
-                .fetchOne();
-
+        CustomerResponse customerResponse = customerJpaQueryRepository.findById(customerId);
         List<WarrantyHistoryResponse> warrantyHistoryResponses = jpaQueryFactory.selectFrom(warrantyHistory)
                 .where(warrantyHistory.customer.id.eq(customerId))
                 .fetch()
@@ -162,11 +133,26 @@ public class ExportService implements IExportService{
                         .build())
                 .collect(Collectors.toList());
 
-        String password = PasswordExport.generatePassword();
-        String currentDate = LocalDate.now().format(DateTimeFormatter.ofPattern(ExportConstants.DATE_TIME));
-        String fileName = ExportConstants.WARRANTY_HISTORY_CUSTOMER + customerId + "_" + currentDate + ExportConstants.XLSX;
-        ExportCustomerResponse response = ExcelUtils.warrantyHistoryToExcel(warrantyHistoryResponses, password, fileName);
+        ExportDetails details = generateExportDetails();
+        String fileName = ExportConstants.WARRANTY_HISTORY_CUSTOMER + customerId + "_" + details.currentDate + ExportConstants.XLSX;
+        ExportCustomerResponse response = ExcelUtils.warrantyHistoryToExcel(warrantyHistoryResponses, details.password, fileName);
 
         return response;
+    }
+
+    private static class ExportDetails {
+        String password;
+        String currentDate;
+
+        ExportDetails(String password, String currentDate) {
+            this.password = password;
+            this.currentDate = currentDate;
+        }
+    }
+
+    private ExportDetails generateExportDetails() {
+        String password = PasswordExport.generatePassword();
+        String currentDate = LocalDate.now().format(DateTimeFormatter.ofPattern(ExportConstants.DATE_TIME));
+        return new ExportDetails(password, currentDate);
     }
 }

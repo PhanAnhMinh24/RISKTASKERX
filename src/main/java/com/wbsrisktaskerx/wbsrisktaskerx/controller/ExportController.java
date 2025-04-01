@@ -26,13 +26,13 @@ public class ExportController {
         return ResponseEntity.ok().body(exportResponse);
     }
 
-    @GetMapping(EndpointConstants.CUSTOMERS + EndpointConstants.HISTORY + EndpointConstants.PURCHASE + EndpointConstants.ID)
+    @GetMapping(EndpointConstants.CUSTOMERS + EndpointConstants.PURCHASE + EndpointConstants.ID)
     public ResponseEntity<ExportCustomerResponse> exportPurchaseHistory(@PathVariable int id) throws IOException {
         ExportCustomerResponse exportResponse = exportService.exportCustomerPurchaseHistory(id);
         return ResponseEntity.ok().body(exportResponse);
     }
 
-    @GetMapping(EndpointConstants.CUSTOMERS + EndpointConstants.HISTORY + EndpointConstants.WARRANTY + EndpointConstants.ID)
+    @GetMapping(EndpointConstants.CUSTOMERS + EndpointConstants.WARRANTY + EndpointConstants.ID)
     public ResponseEntity<ExportCustomerResponse> exportWarrantyHistory(@PathVariable int id) throws IOException {
         ExportCustomerResponse exportResponse = exportService.exportCustomerWarrantyHistory(id);
         return ResponseEntity.ok().body(exportResponse);
