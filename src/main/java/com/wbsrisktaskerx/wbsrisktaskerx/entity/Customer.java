@@ -6,6 +6,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.time.OffsetDateTime;
+
 @Entity
 @Getter
 @Setter
@@ -40,5 +42,5 @@ public class Customer {
     Boolean  isActive = false;
 
     @Column(name = "date_of_birth", nullable = false)
-    String dateOfBirth;
+    OffsetDateTime dateOfBirth;
 }

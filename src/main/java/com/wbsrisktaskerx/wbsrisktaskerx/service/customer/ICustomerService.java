@@ -14,7 +14,8 @@ public interface ICustomerService {
     List<Customer> getAllCustomers();
     Page<CustomerResponse> searchAndFilterCustomers(PagingRequest<SearchFilterCustomersRequest> request);
     boolean updateIsActive(CustomerRequest request);
-    CustomerResponse getCustomerById(int id);
+    CustomerFullResponse getCustomerById(int id);
+
     Page<CustomerFullResponse> fullSearchAndFilterCustomers(PagingRequest<SearchFilterCustomersRequest> request);
     CustomerResponse findOneById(Integer customerId);
 }
