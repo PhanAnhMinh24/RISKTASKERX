@@ -5,7 +5,6 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.OffsetDateTime;
-import java.util.Date;
 
 @Getter
 @Setter

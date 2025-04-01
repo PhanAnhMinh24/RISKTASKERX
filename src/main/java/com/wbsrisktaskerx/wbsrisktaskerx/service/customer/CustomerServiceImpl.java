@@ -9,12 +9,15 @@ import com.wbsrisktaskerx.wbsrisktaskerx.exception.ErrorCode;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.PagingRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.CustomerRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.SearchFilterCustomersRequest;
+import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.WarrantyHistoryRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.CustomerFullResponse;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.CustomerResponse;
+import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.WarrantyHistoryResponse;
 import com.wbsrisktaskerx.wbsrisktaskerx.repository.CustomerJpaQueryRepository;
 import com.wbsrisktaskerx.wbsrisktaskerx.repository.CustomerRepository;
 import com.wbsrisktaskerx.wbsrisktaskerx.repository.PurchaseHistoryRepository;
 import com.wbsrisktaskerx.wbsrisktaskerx.repository.WarrantyHistoryRepository;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
@@ -108,5 +111,26 @@ public class CustomerServiceImpl implements ICustomerService {
                 c.getTier(),
                 c.getDateOfBirth()
         );
+    }
+
+    @Override
+    public void addWarrantyHistory(WarrantyHistoryRequest warrantyHistoryRequest) {
+        Optional<Customer> customer = customerRepository.findById(warrantyHistoryRequest.getCustomerId());
+        if (customer.isEmpty()) {
+            throw new AppException(ErrorCode.CUSTOMER_NOT_FOUND);
+        }
+        Customer c = customer.get();
+
+        WarrantyHistory warrantyHistory = WarrantyHistory.builder()
+                .customer(c)
+                .carModel(warrantyHistoryRequest.getCarModel())
+                .licensePlate(warrantyHistoryRequest.getLicensePlate())
+                .serviceType(warrantyHistoryRequest.getServiceType())
+                .serviceCenter(warrantyHistoryRequest.getServiceCenter())
+                .serviceDate(warrantyHistoryRequest.getServiceDate())
+                .serviceCost(warrantyHistoryRequest.getServiceCost())
+                .build();
+
+        warrantyHistoryRepository.save(warrantyHistory);
     }
 }

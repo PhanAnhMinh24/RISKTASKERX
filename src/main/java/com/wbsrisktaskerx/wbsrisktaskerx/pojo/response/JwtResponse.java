@@ -3,8 +3,6 @@ package com.wbsrisktaskerx.wbsrisktaskerx.pojo.response;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.util.List;
-
 @Getter
 @Setter
 @NoArgsConstructor

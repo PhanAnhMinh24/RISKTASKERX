@@ -6,6 +6,7 @@ import com.wbsrisktaskerx.wbsrisktaskerx.pojo.ApiResult;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.PagingRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.CustomerRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.SearchFilterCustomersRequest;
+import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.WarrantyHistoryRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.CustomerFullResponse;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.CustomerResponse;
 import com.wbsrisktaskerx.wbsrisktaskerx.service.customer.ICustomerService;
@@ -51,6 +52,12 @@ public class CustomerController {
     public ResponseEntity<ApiResult<Page<CustomerFullResponse>>> fullSearchFilterCustomers(@RequestBody PagingRequest<SearchFilterCustomersRequest> request) {
         Page<CustomerFullResponse> pageResult = customerService.fullSearchAndFilterCustomers(request);
         return ResponseEntity.ok(ApiResult.success(pageResult));
+    }
+
+    @PostMapping(EndpointConstants.ADD + EndpointConstants.WARRANTY + EndpointConstants.ID)
+    public ResponseEntity<ApiResult<Boolean>> addWarranty(@RequestBody WarrantyHistoryRequest warrantyHistoryRequest) {
+        customerService.addWarrantyHistory(warrantyHistoryRequest);
+        return ResponseEntity.ok().body(ApiResult.success(Boolean.TRUE));
     }
 
 }
