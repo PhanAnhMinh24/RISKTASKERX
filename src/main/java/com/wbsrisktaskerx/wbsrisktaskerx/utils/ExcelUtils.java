@@ -72,15 +72,15 @@ public class ExcelUtils {
                 row.createCell(0).setCellValue(p.getCustomer().getFullName());
                 row.createCell(1).setCellValue(p.getCustomer().getId());
                 row.createCell(2).setCellValue(p.getCustomer().getIsActive());
-                row.createCell(3).setCellValue(p.getCustomer().getDateOfBirth());
+                row.createCell(3).setCellValue(p.getCustomer().getDateOfBirth().toLocalDate().toString());
                 row.createCell(4).setCellValue(p.getCustomer().getPhoneNumber());
                 row.createCell(5).setCellValue(p.getCustomer().getEmail());
                 row.createCell(6).setCellValue(p.getCustomer().getAddress());
                 row.createCell(7).setCellValue(p.getCarModel());
                 row.createCell(8).setCellValue(p.getVehicleIdentificationNumber());
                 row.createCell(9).setCellValue(p.getPrice());
-                row.createCell(10).setCellValue(p.getPaymentMethod());
-                row.createCell(11).setCellValue(p.getPurchaseDate());
+                row.createCell(10).setCellValue(String.valueOf(p.getPaymentMethod()));
+                row.createCell(11).setCellValue(p.getPurchaseDate().toLocalDate().toString());
             }
 
             for (int i = 0; i < HEADER.length; i++) {
@@ -111,7 +111,7 @@ public class ExcelUtils {
                 row.createCell(0).setCellValue(w.getCustomer().getFullName());
                 row.createCell(1).setCellValue(w.getCustomer().getId());
                 row.createCell(2).setCellValue(w.getCustomer().getIsActive());
-                row.createCell(3).setCellValue(w.getCustomer().getDateOfBirth());
+                row.createCell(3).setCellValue(w.getCustomer().getDateOfBirth().toLocalDate().toString());
                 row.createCell(4).setCellValue(w.getCustomer().getPhoneNumber());
                 row.createCell(5).setCellValue(w.getCustomer().getEmail());
                 row.createCell(6).setCellValue(w.getCustomer().getAddress());
@@ -119,7 +119,7 @@ public class ExcelUtils {
                 row.createCell(8).setCellValue(w.getLicensePlate());
                 row.createCell(9).setCellValue(w.getServiceType());
                 row.createCell(10).setCellValue(w.getServiceCenter());
-                row.createCell(11).setCellValue(w.getServiceDate());
+                row.createCell(11).setCellValue(w.getServiceDate().toLocalDate().toString());
                 row.createCell(12).setCellValue(w.getServiceCost());
             }
 
