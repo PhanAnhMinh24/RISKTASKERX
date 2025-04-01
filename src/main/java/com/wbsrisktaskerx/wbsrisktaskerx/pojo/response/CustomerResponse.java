@@ -10,7 +10,6 @@ import com.wbsrisktaskerx.wbsrisktaskerx.serializer.MaskingFullNameSerializer;
 import com.wbsrisktaskerx.wbsrisktaskerx.serializer.MaskingPhoneNumberSerializer;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
 import java.time.OffsetDateTime;
 
 @Getter
