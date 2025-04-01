@@ -2,6 +2,8 @@ package com.wbsrisktaskerx.wbsrisktaskerx.utils;
 
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.CustomerResponse;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.ExportCustomerResponse;
+import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.PurchaseHistoryResponse;
+import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.WarrantyHistoryResponse;
 import org.apache.commons.compress.utils.IOUtils;
 import org.apache.poi.poifs.crypt.EncryptionInfo;
 import org.apache.poi.poifs.crypt.EncryptionMode;
@@ -20,7 +22,10 @@ import java.util.List;
 
 public class ExcelUtils {
     public static String[] HEADER = {"Customer ID", "Customer Name", "Phone number", "Address", "Email", "Tier", "Actions"};
-
+    public static String[] PURCHASE_HISTORY_HEADER = {"Customer Name", "Customer ID", "Active Status", "Date of Birth",
+            "Phone Number", "Email", "Address", "Car Model", "Vehicle Identification Number", "Price", "Payment Method", "Purchase Date"};
+    public static String[] WARRANTY_HISTORY_HEADER = {"Customer Name", "Customer ID", "Active Status", "Date of Birth",
+            "Phone Number", "Email", "Address", "Car model", "License Plate", "Service Type", "Service Center", "Service Date", "Service Cost"};
     public static ExportCustomerResponse customerToExcel(List<CustomerResponse> customerList, String password, String fileName) throws IOException {
         try (Workbook workbook = new XSSFWorkbook()) {
             Sheet sheet = workbook.createSheet("Sheet1");
@@ -28,15 +33,94 @@ public class ExcelUtils {
 
             int rowIndex = 1;
             for (CustomerResponse c : customerList) {
-                Row row1 = sheet.createRow(rowIndex);
+                Row row = sheet.createRow(rowIndex);
                 rowIndex++;
-                row1.createCell(0).setCellValue(c.getId());
-                row1.createCell(1).setCellValue(c.getFullName());
-                row1.createCell(2).setCellValue(c.getPhoneNumber());
-                row1.createCell(3).setCellValue(c.getAddress());
-                row1.createCell(4).setCellValue(c.getEmail());
-                row1.createCell(5).setCellValue(c.getTier().toString());
-                row1.createCell(6).setCellValue(c.getIsActive());
+                row.createCell(0).setCellValue(c.getId());
+                row.createCell(1).setCellValue(c.getFullName());
+                row.createCell(2).setCellValue(c.getPhoneNumber());
+                row.createCell(3).setCellValue(c.getAddress());
+                row.createCell(4).setCellValue(c.getEmail());
+                row.createCell(5).setCellValue(c.getTier().toString());
+                row.createCell(6).setCellValue(c.getIsActive());
+            }
+
+            for (int i = 0; i < HEADER.length; i++) {
+                sheet.autoSizeColumn(i);
+            }
+
+            ByteArrayOutputStream encryptedBaos = encryptExcelFile(workbook, password);
+
+            return ExportCustomerResponse.builder()
+                    .fileName(fileName)
+                    .password(password)
+                    .response(encryptedBaos.toByteArray())
+                    .build();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static ExportCustomerResponse purchaseHistoryToExcel(List<PurchaseHistoryResponse> purchaseHistory, String password, String fileName) throws IOException {
+        try (Workbook workbook = new XSSFWorkbook()) {
+            Sheet sheet = workbook.createSheet("Sheet1");
+            createHeader(sheet, workbook, PURCHASE_HISTORY_HEADER);
+
+            int rowIndex = 1;
+            for (PurchaseHistoryResponse p : purchaseHistory) {
+                Row row = sheet.createRow(rowIndex);
+                rowIndex++;
+                row.createCell(0).setCellValue(p.getCustomer().getFullName());
+                row.createCell(1).setCellValue(p.getCustomer().getId());
+                row.createCell(2).setCellValue(p.getCustomer().getIsActive());
+                row.createCell(3).setCellValue(p.getCustomer().getDateOfBirth());
+                row.createCell(4).setCellValue(p.getCustomer().getPhoneNumber());
+                row.createCell(5).setCellValue(p.getCustomer().getEmail());
+                row.createCell(6).setCellValue(p.getCustomer().getAddress());
+                row.createCell(7).setCellValue(p.getCarModel());
+                row.createCell(8).setCellValue(p.getVehicleIdentificationNumber());
+                row.createCell(9).setCellValue(p.getPrice());
+                row.createCell(10).setCellValue(p.getPaymentMethod());
+                row.createCell(11).setCellValue(p.getPurchaseDate());
+            }
+
+            for (int i = 0; i < HEADER.length; i++) {
+                sheet.autoSizeColumn(i);
+            }
+
+            ByteArrayOutputStream encryptedBaos = encryptExcelFile(workbook, password);
+
+            return ExportCustomerResponse.builder()
+                    .fileName(fileName)
+                    .password(password)
+                    .response(encryptedBaos.toByteArray())
+                    .build();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static ExportCustomerResponse warrantyHistoryToExcel(List<WarrantyHistoryResponse> warrantyHistory, String password, String fileName) throws IOException {
+        try (Workbook workbook = new XSSFWorkbook()) {
+            Sheet sheet = workbook.createSheet("Sheet1");
+            createHeader(sheet, workbook, WARRANTY_HISTORY_HEADER);
+
+            int rowIndex = 1;
+            for (WarrantyHistoryResponse w : warrantyHistory) {
+                Row row = sheet.createRow(rowIndex);
+                rowIndex++;
+                row.createCell(0).setCellValue(w.getCustomer().getFullName());
+                row.createCell(1).setCellValue(w.getCustomer().getId());
+                row.createCell(2).setCellValue(w.getCustomer().getIsActive());
+                row.createCell(3).setCellValue(w.getCustomer().getDateOfBirth());
+                row.createCell(4).setCellValue(w.getCustomer().getPhoneNumber());
+                row.createCell(5).setCellValue(w.getCustomer().getEmail());
+                row.createCell(6).setCellValue(w.getCustomer().getAddress());
+                row.createCell(7).setCellValue(w.getCarModel());
+                row.createCell(8).setCellValue(w.getLicensePlate());
+                row.createCell(9).setCellValue(w.getServiceType());
+                row.createCell(10).setCellValue(w.getServiceCenter());
+                row.createCell(11).setCellValue(w.getServiceDate());
+                row.createCell(12).setCellValue(w.getServiceCost());
             }
 
             for (int i = 0; i < HEADER.length; i++) {
