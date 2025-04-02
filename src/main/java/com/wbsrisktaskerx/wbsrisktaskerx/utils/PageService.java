@@ -5,7 +5,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 
-public class PagingService {
+public class PageService {
     public static <T> PageRequest getPageRequest(PagingRequest<T> requestPaging) {
         int pageIndex = (requestPaging.getPage() != null && requestPaging.getPage() > 0)
                 ? requestPaging.getPage() - 1 : 0;
