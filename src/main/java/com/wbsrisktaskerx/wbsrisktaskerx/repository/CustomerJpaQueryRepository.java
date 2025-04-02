@@ -89,11 +89,12 @@ public class CustomerJpaQueryRepository {
                 .limit(pageable.getPageSize())
                 .fetch();
         content.forEach(cr -> {
-            cr.setFullName(MaskUtils.mask(cr.getFullName(), 3));
-            cr.setEmail(MaskUtils.mask(cr.getEmail(), 4));
-            cr.setAddress(MaskUtils.mask(cr.getAddress(), 4));
-            cr.setPhoneNumber(MaskUtils.mask(cr.getPhoneNumber(), 3));
+            cr.setFullName(MaskUtils.mask(cr.getFullName()));
+            cr.setEmail(MaskUtils.mask(cr.getEmail()));
+            cr.setAddress(MaskUtils.mask(cr.getAddress()));
+            cr.setPhoneNumber(MaskUtils.mask(cr.getPhoneNumber()));
         });
+
 
         long total = Optional.ofNullable(
                 jpaQueryFactory.select(customer.id.count())
