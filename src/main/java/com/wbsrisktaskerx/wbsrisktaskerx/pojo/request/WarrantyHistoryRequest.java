@@ -1,5 +1,6 @@
-package com.wbsrisktaskerx.wbsrisktaskerx.pojo.response;
+package com.wbsrisktaskerx.wbsrisktaskerx.pojo.request;
 
+import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.CustomerResponse;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -11,9 +12,9 @@ import java.time.OffsetDateTime;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class WarrantyHistoryResponse {
+public class WarrantyHistoryRequest {
     Integer id;
-    CustomerResponse customer;
+    Integer customerId;
     String carModel;
     String licensePlate;
     String serviceType;
