@@ -6,4 +6,5 @@ public class EntityConstant {
     public static final String CUSTOMERS_TABLE = "customers";
     public static final String HISTORY_PURCHASE_TABLE = "history_purchase";
     public static final String HISTORY_WARRANTY_TABLE = "history_warranty";
+    public static final String ROLE_TABLE = "role";
 }
