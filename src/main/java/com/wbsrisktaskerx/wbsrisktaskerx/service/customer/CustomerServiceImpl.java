@@ -95,12 +95,16 @@ public class CustomerServiceImpl implements ICustomerService {
         return warrantyHistoryRepository.getWarrantyHistoryByCustomerId(id);
     }
 
-    public CustomerResponse findOneById(Integer customerId) {
+    private Customer findCustomerById(Integer customerId) {
         Optional<Customer> customer = customerRepository.findById(customerId);
         if (customer.isEmpty()) {
             throw new AppException(ErrorCode.CUSTOMER_NOT_FOUND);
         }
-        Customer c = customer.get();
+        return customer.get();
+    }
+
+    public CustomerResponse findOneById(Integer customerId) {
+        Customer c = findCustomerById(customerId);
         return new CustomerResponse(
                 c.getId(),
                 c.getFullName(),
@@ -115,12 +119,7 @@ public class CustomerServiceImpl implements ICustomerService {
 
     @Override
     public void addWarrantyHistory(WarrantyHistoryRequest warrantyHistoryRequest) {
-        Optional<Customer> customer = customerRepository.findById(warrantyHistoryRequest.getCustomerId());
-        if (customer.isEmpty()) {
-            throw new AppException(ErrorCode.CUSTOMER_NOT_FOUND);
-        }
-        Customer c = customer.get();
-
+        Customer c = findCustomerById(warrantyHistoryRequest.getCustomerId());
         WarrantyHistory warrantyHistory = WarrantyHistory.builder()
                 .customer(c)
                 .carModel(warrantyHistoryRequest.getCarModel())
@@ -130,7 +129,6 @@ public class CustomerServiceImpl implements ICustomerService {
                 .serviceDate(warrantyHistoryRequest.getServiceDate())
                 .serviceCost(warrantyHistoryRequest.getServiceCost())
                 .build();
-
         warrantyHistoryRepository.save(warrantyHistory);
     }
 }

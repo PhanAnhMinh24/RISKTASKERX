@@ -54,7 +54,7 @@ public class CustomerController {
         return ResponseEntity.ok(ApiResult.success(pageResult));
     }
 
-    @PostMapping(EndpointConstants.ADD + EndpointConstants.WARRANTY + EndpointConstants.ID)
+    @PostMapping(EndpointConstants.WARRANTY + EndpointConstants.ID)
     public ResponseEntity<ApiResult<Boolean>> addWarranty(@RequestBody WarrantyHistoryRequest warrantyHistoryRequest) {
         customerService.addWarrantyHistory(warrantyHistoryRequest);
         return ResponseEntity.ok().body(ApiResult.success(Boolean.TRUE));
