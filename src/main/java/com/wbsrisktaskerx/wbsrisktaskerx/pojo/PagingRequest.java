@@ -11,8 +11,9 @@ import org.springframework.data.domain.Sort;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class PagingRequest<T> {
     String sortKey;
-    T filters;
     Integer page;
     Integer size;
     Sort.Direction sortBy;
+    T filters;
+
 }

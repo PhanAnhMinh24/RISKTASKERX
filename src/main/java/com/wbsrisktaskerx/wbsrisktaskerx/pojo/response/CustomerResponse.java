@@ -1,7 +1,10 @@
 package com.wbsrisktaskerx.wbsrisktaskerx.pojo.response;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.querydsl.core.annotations.QueryProjection;
+import com.wbsrisktaskerx.wbsrisktaskerx.common.constants.CommonConstants;
+import com.wbsrisktaskerx.wbsrisktaskerx.entity.Customer;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.data.Tier;
 import com.wbsrisktaskerx.wbsrisktaskerx.serializer.MaskingAddressSerializer;
 import com.wbsrisktaskerx.wbsrisktaskerx.serializer.MaskingDateOfBirthSerializer;
@@ -36,6 +39,7 @@ public class CustomerResponse {
     Tier tier;
 
     @JsonSerialize(using = MaskingDateOfBirthSerializer.class)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = CommonConstants.DATE_FORMAT)
     OffsetDateTime dateOfBirth;
 
     @QueryProjection

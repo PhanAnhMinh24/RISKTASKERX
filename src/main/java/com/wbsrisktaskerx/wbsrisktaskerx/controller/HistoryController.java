@@ -3,12 +3,14 @@ package com.wbsrisktaskerx.wbsrisktaskerx.controller;
 import com.wbsrisktaskerx.wbsrisktaskerx.common.constants.EndpointConstants;
 import com.wbsrisktaskerx.wbsrisktaskerx.entity.PurchaseHistory;
 import com.wbsrisktaskerx.wbsrisktaskerx.entity.WarrantyHistory;
+import com.wbsrisktaskerx.wbsrisktaskerx.pojo.PagingRequest;
+import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.HistoryPagingRequest;
+import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.PurchaseHistoryResponse;
+import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.WarrantyHistoryResponse;
 import com.wbsrisktaskerx.wbsrisktaskerx.service.customer.CustomerServiceImpl;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -22,21 +24,21 @@ public class HistoryController {
         this.customerService = customerService;
     }
 
-    @GetMapping(EndpointConstants.PURCHASE + EndpointConstants.ID)
-    public ResponseEntity<List<PurchaseHistory>> getPurchaseHistory(@PathVariable int id) {
-        List<PurchaseHistory> purchaseHistoryList = customerService.getPurchaseHistoryById(id);
-        if(purchaseHistoryList.isEmpty()) {
+    @PostMapping(EndpointConstants.PURCHASE + EndpointConstants.ID)
+    public ResponseEntity<Page<PurchaseHistoryResponse>> getPurchaseHistory(@RequestBody PagingRequest<HistoryPagingRequest> request, @PathVariable int id) {
+        Page<PurchaseHistoryResponse> purchaseHistoryResponses = customerService.getPurchaseHistoryById(request, id);
+        if(purchaseHistoryResponses.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.ok(purchaseHistoryList);
+        return ResponseEntity.ok(purchaseHistoryResponses);
     }
 
-    @GetMapping(EndpointConstants.WARRANTY + EndpointConstants.ID)
-    public ResponseEntity<List<WarrantyHistory>> getWarrantyHistory(@PathVariable int id) {
-        List<WarrantyHistory> warrantyHistoryList = customerService.getWarrantyHistoryById(id);
-        if(warrantyHistoryList.isEmpty()) {
+    @PostMapping(EndpointConstants.WARRANTY + EndpointConstants.ID)
+    public ResponseEntity<Page<WarrantyHistoryResponse>> getWarrantyHistory(@RequestBody PagingRequest<HistoryPagingRequest> request, @PathVariable int id) {
+        Page<WarrantyHistoryResponse> warrantyHistoryResponses = customerService.getWarrantyHistoryById(request, id);
+        if(warrantyHistoryResponses.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.ok(warrantyHistoryList);
+        return ResponseEntity.ok(warrantyHistoryResponses);
     }
 }

@@ -11,7 +11,7 @@ import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.CustomerFullResponse;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.CustomerResponse;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.QCustomerFullResponse;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.QCustomerResponse;
-import com.wbsrisktaskerx.wbsrisktaskerx.utils.PageService;
+import com.wbsrisktaskerx.wbsrisktaskerx.utils.PagingService;
 import io.micrometer.common.util.StringUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.math.NumberUtils;
@@ -39,7 +39,7 @@ public class CustomerJpaQueryRepository {
 
     public Page<CustomerResponse> searchedAndFilteredCustomers(PagingRequest<SearchFilterCustomersRequest> request) {
         SearchFilterCustomersRequest filter = request.getFilters();
-        Pageable pageable = PageService.getPageRequest(request);
+        Pageable pageable = PagingService.getPageRequest(request);
         String searchKey = filter.getSearchKey();
 
         BooleanBuilder builder = new BooleanBuilder();
@@ -89,7 +89,7 @@ public class CustomerJpaQueryRepository {
     }
     public Page<CustomerFullResponse> fullSearchAndFilterCustomers(PagingRequest<SearchFilterCustomersRequest> request) {
         SearchFilterCustomersRequest filter = request.getFilters();
-        Pageable pageable = PageService.getPageRequest(request);
+        Pageable pageable = PagingService.getPageRequest(request);
         String searchKey = filter.getSearchKey();
 
         BooleanBuilder builder = new BooleanBuilder();

@@ -2,6 +2,7 @@ package com.wbsrisktaskerx.wbsrisktaskerx.entity;
 
 import com.wbsrisktaskerx.wbsrisktaskerx.common.constants.EntityConstant;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.data.Tier;
+import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.CustomerResponse;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -16,7 +17,7 @@ import java.time.OffsetDateTime;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Table(name = EntityConstant.CUSTOMERS_TABLE)
-public class Customer {
+public class Customer extends CustomerResponse {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
