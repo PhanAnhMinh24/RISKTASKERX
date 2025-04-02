@@ -84,9 +84,6 @@ public class CustomerJpaQueryRepository {
                                 customer.dateOfBirth
                         ))
                 .from(customer)
-                .where(builder)
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
                 .fetch();
         content.forEach(cr -> {
             cr.setFullName(MaskUtils.mask(cr.getFullName()));
@@ -140,5 +137,13 @@ public class CustomerJpaQueryRepository {
                 .from(customer)
                 .where(builder)
                 .fetch();
+
+        long total = Optional.ofNullable(
+                jpaQueryFactory.select(customer.id.count())
+                        .from(customer)
+                        .where(builder)
+                        .fetchOne()
+        ).orElse(0L);
+        return new PageImpl<>(content, pageable, total);
     }
 }
