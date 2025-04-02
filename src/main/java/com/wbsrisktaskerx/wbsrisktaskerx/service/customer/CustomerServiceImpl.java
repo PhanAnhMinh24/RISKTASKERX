@@ -9,7 +9,7 @@ import com.wbsrisktaskerx.wbsrisktaskerx.pojo.PagingRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.CustomerRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.HistoryPagingRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.SearchFilterCustomersRequest;
-import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.CustomerFullResponse;
+import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.WarrantyHistoryRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.CustomerResponse;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.PurchaseHistoryResponse;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.WarrantyHistoryResponse;
@@ -42,10 +42,6 @@ public class CustomerServiceImpl implements ICustomerService {
         this.warrantyHistoryRepository = warrantyHistoryRepository;
     }
 
-    @Override
-    public List<Customer> getAllCustomers() {
-        return customerJpaQueryRepository.getAll();
-    }
 
     @Override
     public Page<CustomerResponse> searchAndFilterCustomers(PagingRequest<SearchFilterCustomersRequest> request) {
@@ -53,9 +49,20 @@ public class CustomerServiceImpl implements ICustomerService {
     }
 
     @Override
-    public Page<CustomerFullResponse> fullSearchAndFilterCustomers(PagingRequest<SearchFilterCustomersRequest> request) {
-        return customerJpaQueryRepository.fullSearchAndFilterCustomers(request);
+    public CustomerResponse getCustomerById(int id) {
+        Customer customer = findCustomerById(id);
+        return new CustomerResponse(
+                customer.getId(),
+                customer.getFullName(),
+                customer.getEmail(),
+                customer.getAddress(),
+                customer.getPhoneNumber(),
+                customer.getIsActive(),
+                customer.getTier(),
+                customer.getDateOfBirth()
+        );
     }
+
 
     @Override
     @Transactional
@@ -74,20 +81,7 @@ public class CustomerServiceImpl implements ICustomerService {
         return customer.get();
     }
 
-    @Override
-    public CustomerFullResponse getCustomerById(int id) {
-        Customer customer = findById(id);
-        return new CustomerFullResponse(
-                customer.getId(),
-                customer.getFullName(),
-                customer.getEmail(),
-                customer.getAddress(),
-                customer.getPhoneNumber(),
-                customer.getIsActive(),
-                customer.getTier(),
-                customer.getDateOfBirth()
-        );
-    }
+
 
     public Page<PurchaseHistoryResponse> getPurchaseHistoryById(PagingRequest<HistoryPagingRequest> request, int id) {
         int page = request.getPage() != null ? request.getPage() : 1;
@@ -132,12 +126,16 @@ public class CustomerServiceImpl implements ICustomerService {
         ));
     }
 
-    public CustomerResponse findOneById(Integer customerId) {
+    private Customer findCustomerById(Integer customerId) {
         Optional<Customer> customer = customerRepository.findById(customerId);
         if (customer.isEmpty()) {
             throw new AppException(ErrorCode.CUSTOMER_NOT_FOUND);
         }
-        Customer c = customer.get();
+        return customer.get();
+    }
+
+    public CustomerResponse findOneById(Integer customerId) {
+        Customer c = findCustomerById(customerId);
         return new CustomerResponse(
                 c.getId(),
                 c.getFullName(),
@@ -148,5 +146,20 @@ public class CustomerServiceImpl implements ICustomerService {
                 c.getTier(),
                 c.getDateOfBirth()
         );
+    }
+
+    @Override
+    public void addWarrantyHistory(WarrantyHistoryRequest warrantyHistoryRequest) {
+        Customer c = findCustomerById(warrantyHistoryRequest.getCustomerId());
+        WarrantyHistory warrantyHistory = WarrantyHistory.builder()
+                .customer(c)
+                .carModel(warrantyHistoryRequest.getCarModel())
+                .licensePlate(warrantyHistoryRequest.getLicensePlate())
+                .serviceType(warrantyHistoryRequest.getServiceType())
+                .serviceCenter(warrantyHistoryRequest.getServiceCenter())
+                .serviceDate(warrantyHistoryRequest.getServiceDate())
+                .serviceCost(warrantyHistoryRequest.getServiceCost())
+                .build();
+        warrantyHistoryRepository.save(warrantyHistory);
     }
 }

@@ -42,6 +42,8 @@ public enum  ErrorCode {
     PASSWORD_MATCHES_OLD_PASSWORD("password-matches-old-password", HttpStatus.BAD_REQUEST),
     INVALID_NUMERIC_VALUE("invalid-numeric-value", HttpStatus.BAD_REQUEST),
 
+    WARRANTY_HISTORY_NOT_FOUND("waranty-history-not-found", HttpStatus.BAD_REQUEST),
+
 
     INVALID_REQUEST("invalid-request", HttpStatus.BAD_REQUEST),
     REQUEST_NOT_FOUND("request-not-found", HttpStatus.BAD_REQUEST),
