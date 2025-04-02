@@ -1,11 +1,11 @@
 package com.wbsrisktaskerx.wbsrisktaskerx.utils;
 
-import com.querydsl.core.util.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 public class MaskUtils {
 
     public static String mask(String value) {
-        if (StringUtils.isNullOrEmpty(value)) {
+        if (StringUtils.isBlank(value)) {
             return value;
         }
         int length = value.length();
