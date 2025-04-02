@@ -4,13 +4,11 @@ import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.wbsrisktaskerx.wbsrisktaskerx.common.constants.CommonConstants;
 import com.wbsrisktaskerx.wbsrisktaskerx.common.constants.StringConstants;
-import com.wbsrisktaskerx.wbsrisktaskerx.entity.Customer;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.PagingRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.SearchFilterCustomersRequest;
-import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.CustomerFullResponse;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.CustomerResponse;
-import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.QCustomerFullResponse;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.QCustomerResponse;
+import com.wbsrisktaskerx.wbsrisktaskerx.utils.MaskUtils;
 import com.wbsrisktaskerx.wbsrisktaskerx.utils.PageService;
 import io.micrometer.common.util.StringUtils;
 import org.apache.commons.lang3.ObjectUtils;
@@ -33,8 +31,20 @@ public class CustomerJpaQueryRepository {
         this.jpaQueryFactory = jpaQueryFactory;
     }
 
-    public List<Customer> getAll() {
-        return jpaQueryFactory.selectFrom(customer).fetch();
+    public List<CustomerResponse> getAll() {
+        return jpaQueryFactory.select(
+                        new QCustomerResponse(
+                                customer.id,
+                                customer.fullName,
+                                customer.email,
+                                customer.address,
+                                customer.phoneNumber,
+                                customer.isActive,
+                                customer.tier,
+                                customer.dateOfBirth
+                        ))
+                .from(customer)
+                .fetch();
     }
 
     public Page<CustomerResponse> searchedAndFilteredCustomers(PagingRequest<SearchFilterCustomersRequest> request) {
@@ -78,56 +88,13 @@ public class CustomerJpaQueryRepository {
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
+        content.forEach(cr -> {
+            cr.setFullName(MaskUtils.mask(cr.getFullName()));
+            cr.setEmail(MaskUtils.mask(cr.getEmail()));
+            cr.setAddress(MaskUtils.mask(cr.getAddress()));
+            cr.setPhoneNumber(MaskUtils.mask(cr.getPhoneNumber()));
+        });
 
-        long total = Optional.ofNullable(
-                jpaQueryFactory.select(customer.id.count())
-                        .from(customer)
-                        .where(builder)
-                        .fetchOne()
-        ).orElse(0L);
-        return new PageImpl<>(content, pageable, total);
-    }
-    public Page<CustomerFullResponse> fullSearchAndFilterCustomers(PagingRequest<SearchFilterCustomersRequest> request) {
-        SearchFilterCustomersRequest filter = request.getFilters();
-        Pageable pageable = PageService.getPageRequest(request);
-        String searchKey = filter.getSearchKey();
-
-        BooleanBuilder builder = new BooleanBuilder();
-        if (StringUtils.isNotBlank(searchKey)) {
-            BooleanBuilder searchBuilder = new BooleanBuilder();
-            searchBuilder.or(customer.fullName.like(
-                    String.format(StringConstants.PERCENT, CommonConstants.WILDCARD, searchKey, CommonConstants.WILDCARD)
-            ));
-            if (NumberUtils.isCreatable(searchKey)) {
-                Integer idValue = Integer.valueOf(searchKey);
-                searchBuilder.or(customer.id.eq(idValue));
-            }
-            builder.and(searchBuilder);
-        }
-
-        if (!ObjectUtils.isEmpty(filter.getTier())) {
-            builder.and(customer.tier.in(filter.getTier()));
-        }
-        if (!ObjectUtils.isEmpty(filter.getIsActive())) {
-            builder.and(customer.isActive.in(filter.getIsActive()));
-        }
-
-        List<CustomerFullResponse> content = jpaQueryFactory.select(
-                        new QCustomerFullResponse(
-                                customer.id,
-                                customer.fullName,
-                                customer.email,
-                                customer.address,
-                                customer.phoneNumber,
-                                customer.isActive,
-                                customer.tier,
-                                customer.dateOfBirth
-                        ))
-                .from(customer)
-                .where(builder)
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
-                .fetch();
 
         long total = Optional.ofNullable(
                 jpaQueryFactory.select(customer.id.count())

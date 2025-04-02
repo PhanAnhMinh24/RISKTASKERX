@@ -1,6 +1,5 @@
 package com.wbsrisktaskerx.wbsrisktaskerx.service.customer;
 
-import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.wbsrisktaskerx.wbsrisktaskerx.entity.Customer;
 import com.wbsrisktaskerx.wbsrisktaskerx.entity.PurchaseHistory;
 import com.wbsrisktaskerx.wbsrisktaskerx.entity.WarrantyHistory;
@@ -10,14 +9,11 @@ import com.wbsrisktaskerx.wbsrisktaskerx.pojo.PagingRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.CustomerRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.SearchFilterCustomersRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.WarrantyHistoryRequest;
-import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.CustomerFullResponse;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.CustomerResponse;
-import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.WarrantyHistoryResponse;
 import com.wbsrisktaskerx.wbsrisktaskerx.repository.CustomerJpaQueryRepository;
 import com.wbsrisktaskerx.wbsrisktaskerx.repository.CustomerRepository;
 import com.wbsrisktaskerx.wbsrisktaskerx.repository.PurchaseHistoryRepository;
 import com.wbsrisktaskerx.wbsrisktaskerx.repository.WarrantyHistoryRepository;
-import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
@@ -40,10 +36,6 @@ public class CustomerServiceImpl implements ICustomerService {
         this.warrantyHistoryRepository = warrantyHistoryRepository;
     }
 
-    @Override
-    public List<Customer> getAllCustomers() {
-        return customerJpaQueryRepository.getAll();
-    }
 
     @Override
     public Page<CustomerResponse> searchAndFilterCustomers(PagingRequest<SearchFilterCustomersRequest> request) {
@@ -51,9 +43,20 @@ public class CustomerServiceImpl implements ICustomerService {
     }
 
     @Override
-    public Page<CustomerFullResponse> fullSearchAndFilterCustomers(PagingRequest<SearchFilterCustomersRequest> request) {
-        return customerJpaQueryRepository.fullSearchAndFilterCustomers(request);
+    public CustomerResponse getCustomerById(int id) {
+        Customer customer = findCustomerById(id);
+        return new CustomerResponse(
+                customer.getId(),
+                customer.getFullName(),
+                customer.getEmail(),
+                customer.getAddress(),
+                customer.getPhoneNumber(),
+                customer.getIsActive(),
+                customer.getTier(),
+                customer.getDateOfBirth()
+        );
     }
+
 
     @Override
     @Transactional
@@ -72,20 +75,7 @@ public class CustomerServiceImpl implements ICustomerService {
         return customer.get();
     }
 
-    @Override
-    public CustomerFullResponse getCustomerById(int id) {
-        Customer customer = findById(id);
-        return new CustomerFullResponse(
-                customer.getId(),
-                customer.getFullName(),
-                customer.getEmail(),
-                customer.getAddress(),
-                customer.getPhoneNumber(),
-                customer.getIsActive(),
-                customer.getTier(),
-                customer.getDateOfBirth()
-        );
-    }
+
 
     public List<PurchaseHistory> getPurchaseHistoryById(int id) {
         return purchaseHistoryRepository.getPurchaseHistoryByCustomerId(id);

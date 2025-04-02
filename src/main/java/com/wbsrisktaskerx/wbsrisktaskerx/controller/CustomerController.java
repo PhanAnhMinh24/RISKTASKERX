@@ -7,7 +7,6 @@ import com.wbsrisktaskerx.wbsrisktaskerx.pojo.PagingRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.CustomerRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.SearchFilterCustomersRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.WarrantyHistoryRequest;
-import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.CustomerFullResponse;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.CustomerResponse;
 import com.wbsrisktaskerx.wbsrisktaskerx.service.customer.ICustomerService;
 import org.springframework.data.domain.Page;
@@ -26,10 +25,6 @@ public class CustomerController {
         this.customerService = customerService;
     }
 
-    @GetMapping(EndpointConstants.LIST_CUSTOMERS)
-    public ResponseEntity<ApiResult<List<Customer>>> getAllCustomers() {
-        return ResponseEntity.ok(ApiResult.success(customerService.getAllCustomers()));
-    }
 
     @PostMapping(EndpointConstants.SEARCH_FILTER)
     public ResponseEntity<ApiResult<Page<CustomerResponse>>> searchFilterCustomers(@RequestBody PagingRequest<SearchFilterCustomersRequest> request) {
@@ -44,14 +39,8 @@ public class CustomerController {
     }
 
     @GetMapping(EndpointConstants.ID)
-    public ResponseEntity<ApiResult<CustomerFullResponse>> getCustomerDetail(@PathVariable int id) {
+    public ResponseEntity<ApiResult<CustomerResponse>> getCustomerDetail(@PathVariable int id) {
         return ResponseEntity.ok(ApiResult.success(customerService.getCustomerById(id)));
-    }
-
-    @PostMapping(EndpointConstants.FULL_SEARCH_FILTER)
-    public ResponseEntity<ApiResult<Page<CustomerFullResponse>>> fullSearchFilterCustomers(@RequestBody PagingRequest<SearchFilterCustomersRequest> request) {
-        Page<CustomerFullResponse> pageResult = customerService.fullSearchAndFilterCustomers(request);
-        return ResponseEntity.ok(ApiResult.success(pageResult));
     }
 
     @PostMapping(EndpointConstants.WARRANTY + EndpointConstants.ID)
