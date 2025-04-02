@@ -84,9 +84,6 @@ public class CustomerJpaQueryRepository {
                                 customer.dateOfBirth
                         ))
                 .from(customer)
-                .where(builder)
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
                 .fetch();
         content.forEach(cr -> {
             cr.setFullName(MaskUtils.mask(cr.getFullName()));
@@ -103,5 +100,42 @@ public class CustomerJpaQueryRepository {
                         .fetchOne()
         ).orElse(0L);
         return new PageImpl<>(content, pageable, total);
+    }
+
+    public List<CustomerResponse> findCustomersByFilter(SearchFilterCustomersRequest filter) {
+        String searchKey = filter.getSearchKey();
+
+        BooleanBuilder builder = new BooleanBuilder();
+        if (StringUtils.isNotBlank(searchKey)) {
+            BooleanBuilder searchBuilder = new BooleanBuilder();
+            searchBuilder.or(customer.fullName.like(CommonConstants.WILDCARD + searchKey + CommonConstants.WILDCARD));
+            if (NumberUtils.isCreatable(searchKey)) {
+                Integer idValue = Integer.valueOf(searchKey);
+                searchBuilder.or(customer.id.eq(idValue));
+            }
+            builder.and(searchBuilder);
+        }
+
+        if (!ObjectUtils.isEmpty(filter.getTier())) {
+            builder.and(customer.tier.in(filter.getTier()));
+        }
+        if (!ObjectUtils.isEmpty(filter.getIsActive())) {
+            builder.and(customer.isActive.in(filter.getIsActive()));
+        }
+
+        return jpaQueryFactory.select(
+                        new QCustomerResponse(
+                                customer.id,
+                                customer.fullName,
+                                customer.email,
+                                customer.address,
+                                customer.phoneNumber,
+                                customer.isActive,
+                                customer.tier,
+                                customer.dateOfBirth
+                        ))
+                .from(customer)
+                .where(builder)
+                .fetch();
     }
 }
