@@ -2,7 +2,7 @@ package com.wbsrisktaskerx.wbsrisktaskerx.controller;
 
 import com.wbsrisktaskerx.wbsrisktaskerx.common.constants.EndpointConstants;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.PagingRequest;
-import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.HistoryPagingRequest;
+import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.HistoryRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.PurchaseHistoryResponse;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.WarrantyHistoryResponse;
 import com.wbsrisktaskerx.wbsrisktaskerx.repository.HistoryQueryRepository;
@@ -22,20 +22,14 @@ public class HistoryController {
     }
 
     @PostMapping(EndpointConstants.PURCHASE + EndpointConstants.ID)
-    public ResponseEntity<Page<PurchaseHistoryResponse>> getPurchaseHistory(@RequestBody PagingRequest<HistoryPagingRequest> request) {
+    public ResponseEntity<Page<PurchaseHistoryResponse>> getPurchaseHistory(@RequestBody PagingRequest<HistoryRequest> request) {
         Page<PurchaseHistoryResponse> purchaseHistoryResponses = historyQueryRepository.getPurchaseHistory(request);
-        if(purchaseHistoryResponses.isEmpty()) {
-            return ResponseEntity.noContent().build();
-        }
         return ResponseEntity.ok(purchaseHistoryResponses);
     }
 
     @PostMapping(EndpointConstants.WARRANTY + EndpointConstants.ID)
-    public ResponseEntity<Page<WarrantyHistoryResponse>> getWarrantyHistory(@RequestBody PagingRequest<HistoryPagingRequest> request) {
+    public ResponseEntity<Page<WarrantyHistoryResponse>> getWarrantyHistory(@RequestBody PagingRequest<HistoryRequest> request) {
         Page<WarrantyHistoryResponse> warrantyHistoryResponses = historyQueryRepository.getWarrantyHistory(request);
-        if(warrantyHistoryResponses.isEmpty()) {
-            return ResponseEntity.noContent().build();
-        }
         return ResponseEntity.ok(warrantyHistoryResponses);
     }
 }

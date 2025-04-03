@@ -10,8 +10,8 @@ import org.springframework.data.domain.Sort;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class PagingRequest<T> {
-    T filters;
     String sortKey;
+    T filters;
     Integer page;
     Integer size;
     Sort.Direction sortBy;

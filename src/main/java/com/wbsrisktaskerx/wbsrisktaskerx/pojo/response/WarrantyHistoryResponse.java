@@ -22,7 +22,9 @@ public class WarrantyHistoryResponse {
     Float serviceCost;
 
     @QueryProjection
-    public WarrantyHistoryResponse(Integer id, CustomerResponse customer, String carModel, String licensePlate, String serviceType, String serviceCenter, OffsetDateTime serviceDate, Float serviceCost) {
+    public WarrantyHistoryResponse(Integer id, CustomerResponse customer, String carModel, String licensePlate,
+                                   String serviceType, String serviceCenter, OffsetDateTime serviceDate,
+                                   Float serviceCost) {
         this.id = id;
         this.customer = customer;
         this.carModel = carModel;

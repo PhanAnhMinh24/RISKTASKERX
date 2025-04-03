@@ -23,7 +23,9 @@ public class PurchaseHistoryResponse {
     Integer warrantyMonths;
 
     @QueryProjection
-    public PurchaseHistoryResponse(Integer id, CustomerResponse customer, String vehicleIdentificationNumber, String carModel, OffsetDateTime purchaseDate, PaymentMethods paymentMethod, Float price, Integer warrantyMonths) {
+    public PurchaseHistoryResponse(Integer id, CustomerResponse customer, String vehicleIdentificationNumber,
+                                   String carModel, OffsetDateTime purchaseDate, PaymentMethods paymentMethod,
+                                   Float price, Integer warrantyMonths) {
         this.id = id;
         this.customer = customer;
         this.vehicleIdentificationNumber = vehicleIdentificationNumber;

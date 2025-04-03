@@ -1,17 +1,14 @@
 package com.wbsrisktaskerx.wbsrisktaskerx.repository;
 
 import com.querydsl.core.BooleanBuilder;
-import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.wbsrisktaskerx.wbsrisktaskerx.entity.Customer;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.PagingRequest;
-import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.HistoryPagingRequest;
-import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.CustomerResponse;
-import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.PurchaseHistoryResponse;
-import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.WarrantyHistoryResponse;
+import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.HistoryRequest;
+import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.*;
 import com.wbsrisktaskerx.wbsrisktaskerx.service.customer.CustomerServiceImpl;
 import com.wbsrisktaskerx.wbsrisktaskerx.utils.PageService;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Component;
 
@@ -32,37 +29,28 @@ public class HistoryQueryRepository {
         this.customerService = customerService;
     }
 
-    public Page<PurchaseHistoryResponse> getPurchaseHistory(PagingRequest<HistoryPagingRequest> request) {
-        HistoryPagingRequest filter = request.getFilters();
+    public Page<PurchaseHistoryResponse> getPurchaseHistory(PagingRequest<HistoryRequest> request) {
+        HistoryRequest filter = request.getFilters();
         Pageable pageable = PageService.getPageRequest(request);
         Integer id = filter.getCustomerId();
-        Customer customer = customerService.findById(id);
+        Customer customer = customerService.findCustomerById(id);
 
         BooleanBuilder builder = new BooleanBuilder();
-        if (customer != null) {
+        if (ObjectUtils.isNotEmpty(customer)) {
             builder.and(purchaseHistory.customer.id.eq(id));
         }
 
         List<PurchaseHistoryResponse> content = jpaQueryFactory
-                .select(Projections.constructor(PurchaseHistoryResponse.class,
+                .select(new QPurchaseHistoryResponse(
                         purchaseHistory.id,
-                        Projections.constructor(CustomerResponse.class,
-                                purchaseHistory.customer.id,
-                                purchaseHistory.customer.fullName,
-                                purchaseHistory.customer.email,
-                                purchaseHistory.customer.address,
-                                purchaseHistory.customer.phoneNumber,
-                                purchaseHistory.customer.isActive,
-                                purchaseHistory.customer.tier,
-                                purchaseHistory.customer.dateOfBirth
-                        ),
+                        purchaseHistory.customer,
                         purchaseHistory.vehicleIdentificationNumber,
                         purchaseHistory.carModel,
                         purchaseHistory.purchaseDate,
                         purchaseHistory.paymentMethod,
                         purchaseHistory.price,
                         purchaseHistory.warrantyMonths
-                ))
+                        ))
                 .from(purchaseHistory)
                 .where(builder)
                 .offset(pageable.getOffset())
@@ -80,37 +68,28 @@ public class HistoryQueryRepository {
     }
 
 
-    public Page<WarrantyHistoryResponse> getWarrantyHistory(PagingRequest<HistoryPagingRequest> request) {
-        HistoryPagingRequest filter = request.getFilters();
+    public Page<WarrantyHistoryResponse> getWarrantyHistory(PagingRequest<HistoryRequest> request) {
+        HistoryRequest filter = request.getFilters();
         Pageable pageable = PageService.getPageRequest(request);
         Integer id = filter.getCustomerId();
-        Customer customer = customerService.findById(id);
+        CustomerResponse customer = customerService.findOneById(id);
 
         BooleanBuilder builder = new BooleanBuilder();
-        if (customer != null) {
+        if (ObjectUtils.isNotEmpty(customer)) {
             builder.and(warrantyHistory.customer.id.eq(id));
         }
 
         List<WarrantyHistoryResponse> content = jpaQueryFactory
-                .select(Projections.constructor(WarrantyHistoryResponse.class,
-                        warrantyHistory.id,
-                        Projections.constructor(CustomerResponse.class,
-                                warrantyHistory.customer.id,
-                                warrantyHistory.customer.fullName,
-                                warrantyHistory.customer.email,
-                                warrantyHistory.customer.address,
-                                warrantyHistory.customer.phoneNumber,
-                                warrantyHistory.customer.isActive,
-                                warrantyHistory.customer.tier,
-                                warrantyHistory.customer.dateOfBirth
-                        ),
-                        warrantyHistory.carModel,
-                        warrantyHistory.licensePlate,
-                        warrantyHistory.serviceType,
-                        warrantyHistory.serviceCenter,
-                        warrantyHistory.serviceDate,
-                        warrantyHistory.serviceCost
-                ))
+                .select(new QWarrantyHistoryResponse(
+                                warrantyHistory.id,
+                                warrantyHistory.customer,
+                                warrantyHistory.carModel,
+                                warrantyHistory.licensePlate,
+                                warrantyHistory.serviceType,
+                                warrantyHistory.serviceCenter,
+                                warrantyHistory.serviceDate,
+                                warrantyHistory.serviceCost
+                        ))
                 .from(warrantyHistory)
                 .where(builder)
                 .offset(pageable.getOffset())

@@ -79,7 +79,7 @@ public class CustomerServiceImpl implements ICustomerService {
     }
 
 
-    private Customer findCustomerById(Integer customerId) {
+    public Customer findCustomerById(Integer customerId) {
         Optional<Customer> customer = customerRepository.findById(customerId);
         if (customer.isEmpty()) {
             throw new AppException(ErrorCode.CUSTOMER_NOT_FOUND);
@@ -115,4 +115,5 @@ public class CustomerServiceImpl implements ICustomerService {
                 .build();
         warrantyHistoryRepository.save(warrantyHistory);
     }
+
 }
