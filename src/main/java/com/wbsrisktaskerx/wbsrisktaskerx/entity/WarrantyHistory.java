@@ -1,7 +1,6 @@
 package com.wbsrisktaskerx.wbsrisktaskerx.entity;
 
 import com.wbsrisktaskerx.wbsrisktaskerx.common.constants.EntityConstant;
-import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.CustomerResponse;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;

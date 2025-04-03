@@ -12,5 +12,5 @@ public class CommonConstants {
     public static final String AUTHORIZATION = "authorization";
     public static final String WILDCARD = "%";
     public static final String SPACE = " ";
-    public static final String DATE_FORMAT = "yyyy-MM-dd";
+    public static final String DD_MM_YYYY = "dd-MM-yyyy";
 }
