@@ -13,8 +13,8 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Table(name = EntityConstant.ROLES_TABLE)
-public class Role extends BaseTimeEntity {
+@Table(name = EntityConstant.PERMISSION_TABLE)
+public class Permission extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,9 +23,6 @@ public class Role extends BaseTimeEntity {
     @Column(name = "name", length = 100, nullable = false, unique = true)
     String name;
 
-    @OneToMany(mappedBy = "role", cascade = CascadeType.ALL)
-    List<Admin> admins;
-
-    @OneToMany(mappedBy = "role", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "permission", cascade = CascadeType.ALL)
     List<RolePermission> rolePermissions;
 }
