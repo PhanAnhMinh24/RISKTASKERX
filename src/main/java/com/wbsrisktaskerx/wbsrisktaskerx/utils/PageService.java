@@ -1,6 +1,5 @@
 package com.wbsrisktaskerx.wbsrisktaskerx.utils;
 
-import com.querydsl.jpa.impl.JPAQuery;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.PagingRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.PageRequest;

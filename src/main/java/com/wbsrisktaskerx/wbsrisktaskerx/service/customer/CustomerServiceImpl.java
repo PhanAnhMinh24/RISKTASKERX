@@ -1,7 +1,6 @@
 package com.wbsrisktaskerx.wbsrisktaskerx.service.customer;
 
 import com.wbsrisktaskerx.wbsrisktaskerx.entity.Customer;
-import com.wbsrisktaskerx.wbsrisktaskerx.entity.PurchaseHistory;
 import com.wbsrisktaskerx.wbsrisktaskerx.entity.WarrantyHistory;
 import com.wbsrisktaskerx.wbsrisktaskerx.exception.AppException;
 import com.wbsrisktaskerx.wbsrisktaskerx.exception.ErrorCode;
@@ -12,28 +11,24 @@ import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.WarrantyHistoryRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.CustomerResponse;
 import com.wbsrisktaskerx.wbsrisktaskerx.repository.CustomerJpaQueryRepository;
 import com.wbsrisktaskerx.wbsrisktaskerx.repository.CustomerRepository;
-import com.wbsrisktaskerx.wbsrisktaskerx.repository.PurchaseHistoryRepository;
 import com.wbsrisktaskerx.wbsrisktaskerx.repository.WarrantyHistoryRepository;
 import com.wbsrisktaskerx.wbsrisktaskerx.utils.MaskUtils;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
 public class CustomerServiceImpl implements ICustomerService {
     private final CustomerRepository customerRepository;
     private final CustomerJpaQueryRepository customerJpaQueryRepository;
-    private final PurchaseHistoryRepository purchaseHistoryRepository;
     private final WarrantyHistoryRepository warrantyHistoryRepository;
 
     public CustomerServiceImpl(CustomerRepository customerRepository, CustomerJpaQueryRepository customerJpaQueryRepository,
-                               PurchaseHistoryRepository purchaseHistoryRepository, WarrantyHistoryRepository warrantyHistoryRepository) {
+                                WarrantyHistoryRepository warrantyHistoryRepository) {
         this.customerRepository = customerRepository;
         this.customerJpaQueryRepository = customerJpaQueryRepository;
-        this.purchaseHistoryRepository = purchaseHistoryRepository;
         this.warrantyHistoryRepository = warrantyHistoryRepository;
     }
 
@@ -75,7 +70,7 @@ public class CustomerServiceImpl implements ICustomerService {
         return Boolean.TRUE;
     }
 
-    private Customer findById(Integer id){
+    public Customer findById(Integer id){
         Optional<Customer> customer = customerRepository.findById(id);
         if(customer.isEmpty()){
             throw new AppException(ErrorCode.CUSTOMER_NOT_FOUND);
@@ -84,16 +79,7 @@ public class CustomerServiceImpl implements ICustomerService {
     }
 
 
-
-    public List<PurchaseHistory> getPurchaseHistoryById(int id) {
-        return purchaseHistoryRepository.getPurchaseHistoryByCustomerId(id);
-    }
-
-    public List<WarrantyHistory> getWarrantyHistoryById(int id) {
-        return warrantyHistoryRepository.getWarrantyHistoryByCustomerId(id);
-    }
-
-    private Customer findCustomerById(Integer customerId) {
+    public Customer findCustomerById(Integer customerId) {
         Optional<Customer> customer = customerRepository.findById(customerId);
         if (customer.isEmpty()) {
             throw new AppException(ErrorCode.CUSTOMER_NOT_FOUND);
@@ -129,4 +115,5 @@ public class CustomerServiceImpl implements ICustomerService {
                 .build();
         warrantyHistoryRepository.save(warrantyHistory);
     }
+
 }
