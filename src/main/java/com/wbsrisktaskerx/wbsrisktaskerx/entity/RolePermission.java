@@ -4,7 +4,6 @@ import com.wbsrisktaskerx.wbsrisktaskerx.common.constants.EntityConstant;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import java.util.List;
 
 @Entity
 @Getter
@@ -13,19 +12,17 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Table(name = EntityConstant.ROLES_TABLE)
-public class Role extends BaseTimeEntity {
-
+@Table(name = EntityConstant.ROLE_PERMISSION_TABLE)
+public class RolePermission extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
 
-    @Column(name = "name", length = 100, nullable = false, unique = true)
-    String name;
+    @ManyToOne
+    @JoinColumn(name = "role_id", nullable = false)
+    Role role;
 
-    @OneToMany(mappedBy = "role", cascade = CascadeType.ALL)
-    List<Admin> admins;
-
-    @OneToMany(mappedBy = "role", cascade = CascadeType.ALL)
-    List<RolePermission> rolePermissions;
+    @ManyToOne
+    @JoinColumn(name = "permission_id", nullable = false)
+    Permission permission;
 }
