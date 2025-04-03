@@ -1,5 +1,6 @@
 package com.wbsrisktaskerx.wbsrisktaskerx.utils;
 
+import com.wbsrisktaskerx.wbsrisktaskerx.common.constants.ExportConstants;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.CustomerResponse;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.ExportCustomerResponse;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.PurchaseHistoryResponse;
@@ -18,7 +19,9 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.text.NumberFormat;
 import java.util.List;
+import java.util.Locale;
 
 public class ExcelUtils {
     public static String[] HEADER = {"Customer ID", "Customer Name", "Phone number", "Address", "Email", "Tier", "Actions"};
@@ -78,7 +81,8 @@ public class ExcelUtils {
                 row.createCell(6).setCellValue(p.getCustomer().getAddress());
                 row.createCell(7).setCellValue(p.getCarModel());
                 row.createCell(8).setCellValue(p.getVehicleIdentificationNumber());
-                row.createCell(9).setCellValue(p.getPrice());
+                NumberFormat nf = NumberFormat.getNumberInstance(Locale.forLanguageTag(ExportConstants.VI_VN));
+                row.createCell(9).setCellValue(nf.format(p.getPrice()) + ExportConstants.VND);
                 row.createCell(10).setCellValue(String.valueOf(p.getPaymentMethod()));
                 row.createCell(11).setCellValue(p.getPurchaseDate().toLocalDate().toString());
             }
@@ -120,7 +124,8 @@ public class ExcelUtils {
                 row.createCell(9).setCellValue(w.getServiceType());
                 row.createCell(10).setCellValue(w.getServiceCenter());
                 row.createCell(11).setCellValue(w.getServiceDate().toLocalDate().toString());
-                row.createCell(12).setCellValue(w.getServiceCost());
+                NumberFormat nf = NumberFormat.getNumberInstance(Locale.forLanguageTag(ExportConstants.VI_VN));
+                row.createCell(12).setCellValue(nf.format(w.getServiceCost()) + ExportConstants.VND);
             }
 
             for (int i = 0; i < HEADER.length; i++) {

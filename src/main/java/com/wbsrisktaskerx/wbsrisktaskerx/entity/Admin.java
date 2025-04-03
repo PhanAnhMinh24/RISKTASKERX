@@ -40,11 +40,10 @@ public class Admin extends BaseTimeEntity  {
     @Column(name = "is_active", nullable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")
     Boolean isActive = true;
 
-    @Column(name = "role_id", nullable = false)
+    @Column(name = "role_id", insertable = false, updatable = false, nullable = false)
     Integer roleId;
 
-
-    @OneToMany(mappedBy = "admin", cascade = CascadeType.ALL, orphanRemoval = true)
-    List<AdminOtp> otp;
-
+    @ManyToOne
+    @JoinColumn(name = "role_id", nullable = false)
+    Role role;
 }
