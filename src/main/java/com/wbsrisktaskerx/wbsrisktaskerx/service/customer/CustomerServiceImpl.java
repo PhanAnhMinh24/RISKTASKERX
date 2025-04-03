@@ -14,6 +14,7 @@ import com.wbsrisktaskerx.wbsrisktaskerx.repository.CustomerJpaQueryRepository;
 import com.wbsrisktaskerx.wbsrisktaskerx.repository.CustomerRepository;
 import com.wbsrisktaskerx.wbsrisktaskerx.repository.PurchaseHistoryRepository;
 import com.wbsrisktaskerx.wbsrisktaskerx.repository.WarrantyHistoryRepository;
+import com.wbsrisktaskerx.wbsrisktaskerx.utils.MaskUtils;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
@@ -39,7 +40,14 @@ public class CustomerServiceImpl implements ICustomerService {
 
     @Override
     public Page<CustomerResponse> searchAndFilterCustomers(PagingRequest<SearchFilterCustomersRequest> request) {
-        return customerJpaQueryRepository.searchedAndFilteredCustomers(request);
+        return customerJpaQueryRepository.searchedAndFilteredCustomers(request)
+                .map(cr -> {
+            cr.setFullName(MaskUtils.mask(cr.getFullName()));
+            cr.setEmail(MaskUtils.mask(cr.getEmail()));
+            cr.setAddress(MaskUtils.mask(cr.getAddress()));
+            cr.setPhoneNumber(MaskUtils.mask(cr.getPhoneNumber()));
+            return cr;
+        });
     }
 
     @Override

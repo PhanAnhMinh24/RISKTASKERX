@@ -84,14 +84,10 @@ public class CustomerJpaQueryRepository {
                                 customer.dateOfBirth
                         ))
                 .from(customer)
+                .where(builder)
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
                 .fetch();
-        content.forEach(cr -> {
-            cr.setFullName(MaskUtils.mask(cr.getFullName()));
-            cr.setEmail(MaskUtils.mask(cr.getEmail()));
-            cr.setAddress(MaskUtils.mask(cr.getAddress()));
-            cr.setPhoneNumber(MaskUtils.mask(cr.getPhoneNumber()));
-        });
-
 
         long total = Optional.ofNullable(
                 jpaQueryFactory.select(customer.id.count())
