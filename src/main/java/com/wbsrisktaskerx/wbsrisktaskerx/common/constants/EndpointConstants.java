@@ -9,7 +9,7 @@ public class EndpointConstants {
     public static final String SWAGGER_API_DOCS = SWAGGER_VER + "/api-docs";
     public static final String SWAGGER_CONFIG = "/swagger-config";
     public static final String API = "/api";
-    public static final String ACCOUNT = "/account";
+    public static final String ADMIN = "/admin";
 
     // 🔹 Auth Endpoints
     public static final String AUTH = "/auth";
