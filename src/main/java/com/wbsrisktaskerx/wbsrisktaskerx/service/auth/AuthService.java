@@ -61,6 +61,7 @@ public class AuthService implements IAuthService {
                 .profileImg(signupRequest.getProfileImg())
                 .roleId(signupRequest.getRoleId())
                 .isActive(true)
+                .departmentName(signupRequest.getDepartmentName())
                 .build();
 
         Admin savedAdmin = adminRepository.save(newAdmin);
