@@ -1,5 +1,6 @@
 package com.wbsrisktaskerx.wbsrisktaskerx.pojo.request;
 
+import com.wbsrisktaskerx.wbsrisktaskerx.pojo.data.DepartmentName;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import lombok.AccessLevel;
@@ -16,4 +17,5 @@ public class SignupRequest {
     String password;
     String profileImg; // Có thể null nếu không cung cấp
     Integer roleId;
+    DepartmentName departmentName;
 }
