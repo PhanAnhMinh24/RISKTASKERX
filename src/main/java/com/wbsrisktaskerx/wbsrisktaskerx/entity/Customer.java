@@ -17,7 +17,7 @@ import java.time.OffsetDateTime;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Table(name = EntityConstant.CUSTOMERS_TABLE)
-public class Customer extends CustomerResponse{
+public class Customer {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

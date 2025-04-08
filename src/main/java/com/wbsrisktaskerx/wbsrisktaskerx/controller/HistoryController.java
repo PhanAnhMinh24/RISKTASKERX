@@ -21,13 +21,13 @@ public class HistoryController {
         this.historyQueryRepository = historyQueryRepository;
     }
 
-    @PostMapping(EndpointConstants.PURCHASE + EndpointConstants.ID)
+    @PostMapping(EndpointConstants.PURCHASE)
     public ResponseEntity<Page<PurchaseHistoryResponse>> getPurchaseHistory(@RequestBody PagingRequest<HistoryRequest> request) {
         Page<PurchaseHistoryResponse> purchaseHistoryResponses = historyQueryRepository.getPurchaseHistory(request);
         return ResponseEntity.ok(purchaseHistoryResponses);
     }
 
-    @PostMapping(EndpointConstants.WARRANTY + EndpointConstants.ID)
+    @PostMapping(EndpointConstants.WARRANTY)
     public ResponseEntity<Page<WarrantyHistoryResponse>> getWarrantyHistory(@RequestBody PagingRequest<HistoryRequest> request) {
         Page<WarrantyHistoryResponse> warrantyHistoryResponses = historyQueryRepository.getWarrantyHistory(request);
         return ResponseEntity.ok(warrantyHistoryResponses);

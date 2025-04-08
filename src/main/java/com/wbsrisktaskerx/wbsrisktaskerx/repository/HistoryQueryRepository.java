@@ -2,7 +2,6 @@ package com.wbsrisktaskerx.wbsrisktaskerx.repository;
 
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.wbsrisktaskerx.wbsrisktaskerx.entity.Customer;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.PagingRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.HistoryRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.*;
@@ -14,6 +13,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static com.wbsrisktaskerx.wbsrisktaskerx.entity.QPurchaseHistory.purchaseHistory;
 import static com.wbsrisktaskerx.wbsrisktaskerx.entity.QWarrantyHistory.warrantyHistory;
@@ -33,29 +33,29 @@ public class HistoryQueryRepository {
         HistoryRequest filter = request.getFilters();
         Pageable pageable = PageService.getPageRequest(request);
         Integer id = filter.getCustomerId();
-        Customer customer = customerService.findCustomerById(id);
+        CustomerResponse customerResponse = customerService.findOneById(id);
 
         BooleanBuilder builder = new BooleanBuilder();
-        if (ObjectUtils.isNotEmpty(customer)) {
+        if (ObjectUtils.isNotEmpty(customerResponse)) {
             builder.and(purchaseHistory.customer.id.eq(id));
         }
 
-        List<PurchaseHistoryResponse> content = jpaQueryFactory
-                .select(new QPurchaseHistoryResponse(
-                        purchaseHistory.id,
-                        purchaseHistory.customer,
-                        purchaseHistory.vehicleIdentificationNumber,
-                        purchaseHistory.carModel,
-                        purchaseHistory.purchaseDate,
-                        purchaseHistory.paymentMethod,
-                        purchaseHistory.price,
-                        purchaseHistory.warrantyMonths
-                        ))
-                .from(purchaseHistory)
+        List<PurchaseHistoryResponse> purchaseHistoryResponses = jpaQueryFactory
+                .selectFrom(purchaseHistory)
                 .where(builder)
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
-                .fetch();
+                .fetch()
+                .stream()
+                .map(p -> PurchaseHistoryResponse.builder()
+                        .id(p.getId())
+                        .customer(customerResponse)
+                        .carModel(p.getCarModel())
+                        .vehicleIdentificationNumber(p.getVehicleIdentificationNumber())
+                        .purchaseDate(p.getPurchaseDate())
+                        .paymentMethod(p.getPaymentMethod())
+                        .price(p.getPrice())
+                        .warrantyMonths(p.getWarrantyMonths())
+                        .build())
+                .collect(Collectors.toList());
 
         long total = Optional.ofNullable(
                 jpaQueryFactory.select(purchaseHistory.count())
@@ -64,7 +64,7 @@ public class HistoryQueryRepository {
                         .fetchOne()
         ).orElse(0L);
 
-        return new PageImpl<>(content, pageable, total);
+        return new PageImpl<>(purchaseHistoryResponses, pageable, total);
     }
 
 
@@ -72,29 +72,29 @@ public class HistoryQueryRepository {
         HistoryRequest filter = request.getFilters();
         Pageable pageable = PageService.getPageRequest(request);
         Integer id = filter.getCustomerId();
-        CustomerResponse customer = customerService.findOneById(id);
+        CustomerResponse customerResponse = customerService.findOneById(id);
 
         BooleanBuilder builder = new BooleanBuilder();
-        if (ObjectUtils.isNotEmpty(customer)) {
+        if (ObjectUtils.isNotEmpty(customerResponse)) {
             builder.and(warrantyHistory.customer.id.eq(id));
         }
 
-        List<WarrantyHistoryResponse> content = jpaQueryFactory
-                .select(new QWarrantyHistoryResponse(
-                                warrantyHistory.id,
-                                warrantyHistory.customer,
-                                warrantyHistory.carModel,
-                                warrantyHistory.licensePlate,
-                                warrantyHistory.serviceType,
-                                warrantyHistory.serviceCenter,
-                                warrantyHistory.serviceDate,
-                                warrantyHistory.serviceCost
-                        ))
-                .from(warrantyHistory)
+        List<WarrantyHistoryResponse> warrantyHistoryResponses = jpaQueryFactory
+                .selectFrom(warrantyHistory)
                 .where(builder)
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
-                .fetch();
+                .fetch()
+                .stream()
+                .map(w -> WarrantyHistoryResponse.builder()
+                        .id(w.getId())
+                        .customer(customerResponse)
+                        .carModel(w.getCarModel())
+                        .licensePlate(w.getLicensePlate())
+                        .serviceType(w.getServiceType())
+                        .serviceCenter(w.getServiceCenter())
+                        .serviceDate(w.getServiceDate())
+                        .serviceCost(w.getServiceCost())
+                        .build())
+                .collect(Collectors.toList());
 
         long total = Optional.ofNullable(
                 jpaQueryFactory.select(warrantyHistory.count())
@@ -103,6 +103,6 @@ public class HistoryQueryRepository {
                         .fetchOne()
         ).orElse(0L);
 
-        return new PageImpl<>(content, pageable, total);
+        return new PageImpl<>(warrantyHistoryResponses, pageable, total);
     }
 }
