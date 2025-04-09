@@ -1,6 +1,5 @@
 package com.wbsrisktaskerx.wbsrisktaskerx.config;
 
-
 import com.wbsrisktaskerx.wbsrisktaskerx.service.admin.AdminDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -13,7 +12,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -30,20 +28,21 @@ import java.util.Arrays;
 @RequiredArgsConstructor
 public class SecurityConfiguration {
 
-    private UserDetailsService userDetailsService;
     private final AuthTokenFilter authTokenFilter;
 
     private final String[] WHITE_LIST = {
-            "/**",
+            "/auth/sign-in",
+            "/auth/sign-up",
+            "/admin/otp/**",
+            "/otp/**",
             "/v3/api-docs",
             "/v3/api-docs/**",
             "/swagger-resources",
             "/swagger-resources/**",
-            "/configuration/ui",
-            "/configuration/security",
             "/swagger-ui/**",
-            "/webjars/**",
             "/swagger-ui.html",
+            "/webjars/**",
+            "/actuator/**"
     };
 
     @Bean
@@ -91,7 +90,4 @@ public class SecurityConfiguration {
         authProvider.setPasswordEncoder(passwordEncoder);
         return authProvider;
     }
-
-
-
 }
