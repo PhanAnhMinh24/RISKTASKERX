@@ -5,6 +5,7 @@ import com.wbsrisktaskerx.wbsrisktaskerx.entity.Role;
 import com.wbsrisktaskerx.wbsrisktaskerx.entity.RolePermission;
 import com.wbsrisktaskerx.wbsrisktaskerx.exception.AppException;
 import com.wbsrisktaskerx.wbsrisktaskerx.exception.ErrorCode;
+import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.ActiveRoleRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.RoleRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.RoleResponse;
 import com.wbsrisktaskerx.wbsrisktaskerx.repository.PermissionRepository;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -27,6 +29,14 @@ public class RoleService implements IRoleService {
         this.roleRepository = roleRepository;
         this.permissionRepository = permissionRepository;
         this.rolePermissionRepository = rolePermissionRepository;
+    }
+
+    private Role findById(Integer id){
+        Optional<Role> role = roleRepository.findById(id);
+        if(role.isEmpty()){
+            throw new AppException(ErrorCode.ROLE_NOT_FOUND);
+        }
+        return role.get();
     }
 
     @Override
@@ -60,5 +70,14 @@ public class RoleService implements IRoleService {
                 .name(role.getName())
                 .isActive(role.getIsActive())
                 .build();
+    }
+
+    @Override
+    @jakarta.transaction.Transactional
+    public boolean updateIsActive(ActiveRoleRequest request) {
+        Role role = findById(request.getId());
+        role.setIsActive(request.getIsActive());
+        roleRepository.save(role);
+        return Boolean.TRUE;
     }
 }
