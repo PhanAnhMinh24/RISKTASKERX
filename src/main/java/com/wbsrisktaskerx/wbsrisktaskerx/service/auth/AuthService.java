@@ -9,6 +9,7 @@ import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.LoginRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.SignupRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.JwtResponse;
 import com.wbsrisktaskerx.wbsrisktaskerx.repository.AdminRepository;
+import com.wbsrisktaskerx.wbsrisktaskerx.service.admintoken.IAdminTokenService;
 import com.wbsrisktaskerx.wbsrisktaskerx.utils.JwtUtils;
 import com.wbsrisktaskerx.wbsrisktaskerx.utils.PasswordUtils;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +24,7 @@ public class AuthService implements IAuthService {
     private final AdminRepository adminRepository;
     private final JwtUtils jwtUtils;
     private final BCryptPasswordEncoder passwordEncoder;
+    private final IAdminTokenService adminTokenService;
 
     @Override
     public JwtResponse login(LoginRequest loginRequest) {
@@ -34,6 +36,8 @@ public class AuthService implements IAuthService {
         }
 
         String token = jwtUtils.generateToken(admin.getEmail());
+
+        adminTokenService.saveToken(admin, token);
 
         return new JwtResponse(
                 token,
@@ -61,6 +65,7 @@ public class AuthService implements IAuthService {
                 .profileImg(signupRequest.getProfileImg())
                 .roleId(signupRequest.getRoleId())
                 .isActive(true)
+                .departmentName(signupRequest.getDepartmentName())
                 .build();
 
         Admin savedAdmin = adminRepository.save(newAdmin);

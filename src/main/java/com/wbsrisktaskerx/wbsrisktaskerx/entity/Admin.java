@@ -1,10 +1,13 @@
 package com.wbsrisktaskerx.wbsrisktaskerx.entity;
 
 import com.wbsrisktaskerx.wbsrisktaskerx.common.constants.EntityConstant;
+import com.wbsrisktaskerx.wbsrisktaskerx.pojo.data.DepartmentName;
+import com.wbsrisktaskerx.wbsrisktaskerx.pojo.data.Tier;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 
 @Entity
@@ -40,11 +43,20 @@ public class Admin extends BaseTimeEntity  {
     @Column(name = "is_active", nullable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")
     Boolean isActive = true;
 
-    @Column(name = "role_id", nullable = false)
+    @Column(name = "role_id", insertable = false, updatable = false, nullable = false)
     Integer roleId;
 
+    @Column(name = "last_login", nullable = false)
+    OffsetDateTime lastLogin;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "department_name", nullable = false, length = 10)
+    DepartmentName departmentName;
+
+    @ManyToOne
+    @JoinColumn(name = "role_id", nullable = false)
+    Role role;
 
     @OneToMany(mappedBy = "admin", cascade = CascadeType.ALL, orphanRemoval = true)
     List<AdminOtp> otp;
-
 }

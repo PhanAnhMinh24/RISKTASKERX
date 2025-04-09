@@ -1,6 +1,8 @@
 package com.wbsrisktaskerx.wbsrisktaskerx.service.customer;
 
+import com.wbsrisktaskerx.wbsrisktaskerx.entity.AdminToken;
 import com.wbsrisktaskerx.wbsrisktaskerx.entity.Customer;
+import com.wbsrisktaskerx.wbsrisktaskerx.entity.PurchaseHistory;
 import com.wbsrisktaskerx.wbsrisktaskerx.entity.WarrantyHistory;
 import com.wbsrisktaskerx.wbsrisktaskerx.exception.AppException;
 import com.wbsrisktaskerx.wbsrisktaskerx.exception.ErrorCode;
@@ -9,32 +11,56 @@ import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.CustomerRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.SearchFilterCustomersRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.WarrantyHistoryRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.CustomerResponse;
-import com.wbsrisktaskerx.wbsrisktaskerx.repository.CustomerJpaQueryRepository;
-import com.wbsrisktaskerx.wbsrisktaskerx.repository.CustomerRepository;
-import com.wbsrisktaskerx.wbsrisktaskerx.repository.WarrantyHistoryRepository;
+import com.wbsrisktaskerx.wbsrisktaskerx.repository.*;
+import com.wbsrisktaskerx.wbsrisktaskerx.utils.MaskUtils;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+import java.util.List;
 import java.util.Optional;
 
 @Service
 public class CustomerServiceImpl implements ICustomerService {
     private final CustomerRepository customerRepository;
     private final CustomerJpaQueryRepository customerJpaQueryRepository;
+    private final PurchaseHistoryRepository purchaseHistoryRepository;
     private final WarrantyHistoryRepository warrantyHistoryRepository;
+    private final AdminTokenRepository adminTokenRepository;
 
-    public CustomerServiceImpl(CustomerRepository customerRepository, CustomerJpaQueryRepository customerJpaQueryRepository,
-                                WarrantyHistoryRepository warrantyHistoryRepository) {
+    public CustomerServiceImpl(CustomerRepository customerRepository,
+                               CustomerJpaQueryRepository customerJpaQueryRepository,
+                               PurchaseHistoryRepository purchaseHistoryRepository,
+                               WarrantyHistoryRepository warrantyHistoryRepository,
+                               AdminTokenRepository adminTokenRepository) {
         this.customerRepository = customerRepository;
         this.customerJpaQueryRepository = customerJpaQueryRepository;
+        this.purchaseHistoryRepository = purchaseHistoryRepository;
         this.warrantyHistoryRepository = warrantyHistoryRepository;
+        this.adminTokenRepository = adminTokenRepository;
     }
 
 
+
+    private void validateToken(String accessToken) {
+        Optional<AdminToken> token = adminTokenRepository.findByAccessToken(accessToken);
+        if (token.isEmpty() || token.get().getExpiresAt().isBefore(OffsetDateTime.now(ZoneOffset.UTC))) {
+            throw new AppException(ErrorCode.UNAUTHORIZED);
+        }
+    }
     @Override
     public Page<CustomerResponse> searchAndFilterCustomers(PagingRequest<SearchFilterCustomersRequest> request) {
-        return customerJpaQueryRepository.searchedAndFilteredCustomers(request);
+        return customerJpaQueryRepository.searchedAndFilteredCustomers(request)
+                .map(cr -> {
+                    cr.setFullName(MaskUtils.mask(cr.getFullName()));
+                    cr.setEmail(MaskUtils.mask(cr.getEmail()));
+                    cr.setAddress(MaskUtils.mask(cr.getAddress()));
+                    cr.setPhoneNumber(MaskUtils.mask(cr.getPhoneNumber()));
+                    return cr;
+                });
     }
 
     @Override
@@ -62,7 +88,7 @@ public class CustomerServiceImpl implements ICustomerService {
         return Boolean.TRUE;
     }
 
-    public Customer findById(Integer id){
+    private Customer findById(Integer id){
         Optional<Customer> customer = customerRepository.findById(id);
         if(customer.isEmpty()){
             throw new AppException(ErrorCode.CUSTOMER_NOT_FOUND);
@@ -70,6 +96,13 @@ public class CustomerServiceImpl implements ICustomerService {
         return customer.get();
     }
 
+    public List<PurchaseHistory> getPurchaseHistoryById(int id) {
+        return purchaseHistoryRepository.getPurchaseHistoryByCustomerId(id);
+    }
+
+    public List<WarrantyHistory> getWarrantyHistoryById(int id) {
+        return warrantyHistoryRepository.getWarrantyHistoryByCustomerId(id);
+    }
 
     private Customer findCustomerById(Integer customerId) {
         Optional<Customer> customer = customerRepository.findById(customerId);

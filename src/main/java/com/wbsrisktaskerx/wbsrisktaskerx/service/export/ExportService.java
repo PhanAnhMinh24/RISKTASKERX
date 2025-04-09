@@ -41,49 +41,8 @@ public class ExportService implements IExportService{
 
     @Override
     public ExportCustomerResponse getCustomerList(PagingRequest<SearchFilterCustomersRequest> request) throws IOException {
-
         SearchFilterCustomersRequest filter = request.getFilters();
-        String searchKey = filter.getSearchKey();
-
-        BooleanBuilder builder = new BooleanBuilder();
-        if (StringUtils.isNotBlank(searchKey)) {
-            BooleanBuilder searchBuilder = new BooleanBuilder();
-            searchBuilder.or(customer.fullName.like(CommonConstants.WILDCARD + searchKey + CommonConstants.WILDCARD));
-            if (NumberUtils.isCreatable(searchKey)) {
-                Integer idValue = Integer.valueOf(searchKey);
-                searchBuilder.or(customer.id.eq(idValue));
-            }
-            builder.and(searchBuilder);
-        }
-
-        if (!ObjectUtils.isEmpty(filter.getTier())) {
-            builder.and(customer.tier.in(filter.getTier()));
-        }
-        if (!ObjectUtils.isEmpty(filter.getIsActive())) {
-            builder.and(customer.isActive.in(filter.getIsActive()));
-        }
-
-        List<CustomerResponse> content;
-        content = customerJpaQueryRepository.getAll().stream()
-                .map(c -> new CustomerResponse(c.getId(), c.getFullName(), c.getEmail(),
-                        c.getAddress(), c.getPhoneNumber(), c.getIsActive(), c.getTier(), c.getDateOfBirth()))
-                .collect(Collectors.toList());
-
-        content = jpaQueryFactory.select(
-                new QCustomerResponse(
-                                customer.id,
-                                customer.fullName,
-                                customer.email,
-                                customer.address,
-                                customer.phoneNumber,
-                                customer.isActive,
-                                customer.tier,
-                                customer.dateOfBirth
-                        ))
-                .from(customer)
-                .where(builder)
-                .fetch();
-
+        List<CustomerResponse> content = customerJpaQueryRepository.findCustomersByFilter(filter);
         ExportDetails details = generateExportDetails();
         String fileName = String.format(ExportConstants.FILE_FORMAT, ExportConstants.FILENAME, details.currentDate, ExportConstants.XLSX);
         return ExcelUtils.customerToExcel(content, details.password, fileName);

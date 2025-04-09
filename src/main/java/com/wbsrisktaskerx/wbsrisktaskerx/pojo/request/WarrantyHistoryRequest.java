@@ -13,7 +13,6 @@ import java.time.OffsetDateTime;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class WarrantyHistoryRequest {
-    Integer id;
     Integer customerId;
     String carModel;
     String licensePlate;
