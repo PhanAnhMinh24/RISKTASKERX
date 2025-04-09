@@ -24,6 +24,10 @@ public class Role extends BaseTimeEntity {
     @Column(name = "name", length = 100, nullable = false, unique = true)
     String name;
 
+    @Builder.Default
+    @Column(name = "is_active", nullable = false, columnDefinition = "BOOLEAN DEFAULT FALSE")
+    Boolean isActive = false;
+
     @OneToMany(mappedBy = "role", cascade = CascadeType.ALL)
     @JsonIgnore
     List<Admin> admins;
