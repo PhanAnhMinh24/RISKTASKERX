@@ -43,8 +43,6 @@ public class CustomerServiceImpl implements ICustomerService {
         this.adminTokenRepository = adminTokenRepository;
     }
 
-
-
     private void validateToken(String accessToken) {
         Optional<AdminToken> token = adminTokenRepository.findByAccessToken(accessToken);
         if (token.isEmpty() || token.get().getExpiresAt().isBefore(OffsetDateTime.now(ZoneOffset.UTC))) {

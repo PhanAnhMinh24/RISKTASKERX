@@ -14,7 +14,6 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class RoleRequest {
     String name;
-
     @Schema(defaultValue = "false")
     Boolean isActive = false;
     List<Integer> permissionId;
