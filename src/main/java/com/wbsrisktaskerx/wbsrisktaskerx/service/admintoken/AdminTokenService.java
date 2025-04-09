@@ -13,8 +13,10 @@ import java.util.UUID;
 @Service
 public class AdminTokenService implements IAdminTokenService {
 
-    @Autowired
-    private AdminTokenRepository adminTokenRepository;
+    final AdminTokenRepository adminTokenRepository;
+    public AdminTokenService(AdminTokenRepository adminTokenRepository) {
+        this.adminTokenRepository = adminTokenRepository;
+    }
 
     @Override
     public AdminToken saveToken(Admin admin, String token) {
