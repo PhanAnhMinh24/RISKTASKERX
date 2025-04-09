@@ -46,6 +46,7 @@ public enum  ErrorCode {
 
     ROLE_ALREADY_EXISTS("role-already-exists", HttpStatus.BAD_REQUEST),
     PERMISSION_NOT_FOUND("permission-not-found", HttpStatus.BAD_REQUEST),
+    ROLE_NOT_FOUND("role-not-found", HttpStatus.BAD_REQUEST),
 
 
     INVALID_REQUEST("invalid-request", HttpStatus.BAD_REQUEST),
