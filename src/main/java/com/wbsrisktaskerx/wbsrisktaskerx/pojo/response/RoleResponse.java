@@ -4,6 +4,8 @@ import com.querydsl.core.annotations.QueryProjection;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.time.OffsetDateTime;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -13,11 +15,13 @@ public class RoleResponse {
     Integer id;
     String name;
     Boolean isActive;
+    OffsetDateTime updateAt;
 
     @QueryProjection
-    public RoleResponse(Integer id, String name, Boolean isActive) {
+    public RoleResponse(Integer id, String name, Boolean isActive, OffsetDateTime updateAt) {
         this.id = id;
         this.name = name;
         this.isActive = isActive;
+        this.updateAt = updateAt;
     }
 }
