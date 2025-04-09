@@ -2,7 +2,7 @@ package com.wbsrisktaskerx.wbsrisktaskerx.controller;
 
 import com.wbsrisktaskerx.wbsrisktaskerx.common.constants.EndpointConstants;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.ApiResult;
-import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.AddRoleRequest;
+import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.RoleRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.RoleResponse;
 import com.wbsrisktaskerx.wbsrisktaskerx.service.role.IRoleService;
 import jakarta.validation.Valid;
@@ -21,8 +21,8 @@ public class RoleController {
         this.roleService = roleService;
     }
 
-    @PostMapping(EndpointConstants.ADD)
-    public ResponseEntity<ApiResult<RoleResponse>> addRole(@Valid @RequestBody AddRoleRequest request) {
+    @PostMapping
+    public ResponseEntity<ApiResult<RoleResponse>> addRole(@Valid @RequestBody RoleRequest request) {
         RoleResponse response = roleService.addRole(request);
         return ResponseEntity.ok(ApiResult.success(response));
     }

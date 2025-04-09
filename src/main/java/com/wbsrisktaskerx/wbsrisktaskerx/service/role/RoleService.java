@@ -5,7 +5,7 @@ import com.wbsrisktaskerx.wbsrisktaskerx.entity.Role;
 import com.wbsrisktaskerx.wbsrisktaskerx.entity.RolePermission;
 import com.wbsrisktaskerx.wbsrisktaskerx.exception.AppException;
 import com.wbsrisktaskerx.wbsrisktaskerx.exception.ErrorCode;
-import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.AddRoleRequest;
+import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.RoleRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.RoleResponse;
 import com.wbsrisktaskerx.wbsrisktaskerx.repository.PermissionRepository;
 import com.wbsrisktaskerx.wbsrisktaskerx.repository.RolePermissionRepository;
@@ -31,7 +31,7 @@ public class RoleService implements IRoleService {
 
     @Override
     @Transactional
-    public RoleResponse addRole(AddRoleRequest request) {
+    public RoleResponse addRole(RoleRequest request) {
         if (roleRepository.existsByName(request.getName())) {
             throw new AppException(ErrorCode.ROLE_ALREADY_EXISTS);
         }

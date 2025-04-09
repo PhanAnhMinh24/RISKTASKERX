@@ -11,7 +11,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class AddRoleRequest {
+public class RoleRequest {
     String name;
     Boolean isActive = false;
     List<Integer> permissionId;

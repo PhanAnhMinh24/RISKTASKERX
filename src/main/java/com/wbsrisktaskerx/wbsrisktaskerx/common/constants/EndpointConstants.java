@@ -24,7 +24,6 @@ public class EndpointConstants {
     public static final String CUSTOMERS = "/customers";
     public static final String EXPORT = "/export";
     public static final String SEARCH_FILTER = "/search-and-filter";
-    public static final String FULL_SEARCH_FILTER = "/full-search-and-filter";
     public static final String STATUS = "/status";
     public static final String HISTORY = "/history";
     public static final String PURCHASE = "/purchase";
@@ -34,5 +33,4 @@ public class EndpointConstants {
 
     //Roles
     public static final String ROLES = "/roles";
-    public static final String ADD = "/add";
 }
