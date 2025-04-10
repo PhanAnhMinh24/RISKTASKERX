@@ -6,6 +6,7 @@ import com.wbsrisktaskerx.wbsrisktaskerx.exception.ErrorCode;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.PermissionResponse;
 import com.wbsrisktaskerx.wbsrisktaskerx.repository.PermissionRepository;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -40,7 +41,7 @@ public class PermissionService implements IPermissionService {
 
         for (Permission p : allPermissions) {
             PermissionResponse current = map.get(p.getId());
-            if (p.getParentId() == null) {
+            if (ObjectUtils.isEmpty(p.getParentId())) {
                 roots.add(current);
             } else {
                 PermissionResponse parent = map.get(p.getParentId());
