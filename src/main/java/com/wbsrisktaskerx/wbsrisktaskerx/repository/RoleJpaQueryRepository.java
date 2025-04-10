@@ -1,8 +1,11 @@
 package com.wbsrisktaskerx.wbsrisktaskerx.repository;
 
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.Order;
+import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.wbsrisktaskerx.wbsrisktaskerx.common.constants.CommonConstants;
+import com.wbsrisktaskerx.wbsrisktaskerx.common.constants.RoleConstants;
 import com.wbsrisktaskerx.wbsrisktaskerx.common.constants.StringConstants;
 import com.wbsrisktaskerx.wbsrisktaskerx.entity.QRole;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.PagingRequest;
@@ -16,6 +19,7 @@ import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -54,7 +58,7 @@ public class RoleJpaQueryRepository {
             builder.and(role.isActive.in(filter.getIsActive()));
         }
 
-        List<RoleResponse> content = jpaQueryFactory.select(
+        var query = jpaQueryFactory.select(
                         new QRoleResponse(
                                 role.id,
                                 role.name,
@@ -64,8 +68,19 @@ public class RoleJpaQueryRepository {
                 .from(role)
                 .where(builder)
                 .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
-                .fetch();
+                .limit(pageable.getPageSize());
+
+        String sortKey = request.getSortKey();
+        Sort.Direction sortBy = request.getSortBy();
+
+        Order direction = sortBy.isDescending() ? Order.DESC : Order.ASC;
+        if (RoleConstants.UPDATE_AT.equalsIgnoreCase(sortKey)) {
+            query.orderBy(new OrderSpecifier<>(direction, role.updateAt));
+        } else {
+            query.orderBy(new OrderSpecifier<>(direction, role.id));
+        }
+
+        List<RoleResponse> content = query.fetch();
 
         long total = Optional.ofNullable(
                 jpaQueryFactory.select(role.id.count())
