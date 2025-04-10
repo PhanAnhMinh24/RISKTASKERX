@@ -8,6 +8,7 @@ import java.time.OffsetDateTime;
 
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CustomerResponse {

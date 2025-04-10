@@ -96,14 +96,6 @@ public class CustomerServiceImpl implements ICustomerService {
         return customer.get();
     }
 
-    public List<PurchaseHistory> getPurchaseHistoryById(int id) {
-        return purchaseHistoryRepository.getPurchaseHistoryByCustomerId(id);
-    }
-
-    public List<WarrantyHistory> getWarrantyHistoryById(int id) {
-        return warrantyHistoryRepository.getWarrantyHistoryByCustomerId(id);
-    }
-
     public Customer findCustomerById(Integer customerId) {
         Optional<Customer> customer = customerRepository.findById(customerId);
         if (customer.isEmpty()) {

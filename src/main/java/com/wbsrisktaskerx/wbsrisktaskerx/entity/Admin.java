@@ -57,6 +57,6 @@ public class Admin extends BaseTimeEntity  {
     @JoinColumn(name = "role_id", nullable = false)
     Role role;
 
-    @OneToMany(mappedBy = "admin", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "admin", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     List<AdminOtp> otp;
 }

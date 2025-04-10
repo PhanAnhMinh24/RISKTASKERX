@@ -1,7 +1,7 @@
 package com.wbsrisktaskerx.wbsrisktaskerx.pojo.response;
 
 import com.querydsl.core.annotations.QueryProjection;
-import com.wbsrisktaskerx.wbsrisktaskerx.pojo.data.PaymentMethods;
+import com.wbsrisktaskerx.wbsrisktaskerx.pojo.data.ServiceCenter;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -15,24 +15,27 @@ import java.time.OffsetDateTime;
 public class PurchaseHistoryResponse {
     Integer id;
     CustomerResponse customer;
+    CarResponse car;
+    PaymentResponse payment;
+    WarrantyResponse warranty;
     String vehicleIdentificationNumber;
-    String carModel;
     OffsetDateTime purchaseDate;
-    PaymentMethods paymentMethod;
-    Float price;
-    Integer warrantyMonths;
+    String salesRepresentative;
+    ServiceCenter serviceCenter;
 
     @QueryProjection
-    public PurchaseHistoryResponse(Integer id, CustomerResponse customer, String vehicleIdentificationNumber,
-                                   String carModel, OffsetDateTime purchaseDate, PaymentMethods paymentMethod,
-                                   Float price, Integer warrantyMonths) {
+    public PurchaseHistoryResponse(Integer id, CustomerResponse customer, CarResponse car, PaymentResponse payment,
+                                   WarrantyResponse warranty, String vehicleIdentificationNumber,
+                                   OffsetDateTime purchaseDate, String salesRepresentative,
+                                   ServiceCenter serviceCenter) {
         this.id = id;
         this.customer = customer;
+        this.car = car;
+        this.payment = payment;
+        this.warranty = warranty;
         this.vehicleIdentificationNumber = vehicleIdentificationNumber;
-        this.carModel = carModel;
         this.purchaseDate = purchaseDate;
-        this.paymentMethod = paymentMethod;
-        this.price = price;
-        this.warrantyMonths = warrantyMonths;
+        this.salesRepresentative = salesRepresentative;
+        this.serviceCenter = serviceCenter;
     }
 }
