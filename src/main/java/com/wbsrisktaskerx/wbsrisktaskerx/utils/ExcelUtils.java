@@ -1,6 +1,7 @@
 package com.wbsrisktaskerx.wbsrisktaskerx.utils;
 
 import com.wbsrisktaskerx.wbsrisktaskerx.common.constants.ExportConstants;
+import com.wbsrisktaskerx.wbsrisktaskerx.pojo.data.PaymentOptions;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.CustomerResponse;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.ExportCustomerResponse;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.PurchaseHistoryResponse;
@@ -24,12 +25,20 @@ import java.util.List;
 import java.util.Locale;
 
 public class ExcelUtils {
-    public static String[] HEADER = {"Customer ID", "Customer Name", "Phone number", "Address", "Email", "Tier", "Actions"};
-    public static String[] PURCHASE_HISTORY_HEADER = {"Customer Name", "Customer ID", "Active Status", "Date of Birth",
-            "Phone Number", "Email", "Address", "Car Model", "Vehicle Identification Number", "Price", "Payment Method", "Purchase Date"};
-    public static String[] WARRANTY_HISTORY_HEADER = {"Customer Name", "Customer ID", "Active Status", "Date of Birth",
-            "Phone Number", "Email", "Address", "Car model", "License Plate", "Service Type", "Service Center", "Service Date", "Service Cost"};
-    public static ExportCustomerResponse customerToExcel(List<CustomerResponse> customerList, String password, String fileName) throws IOException {
+    public static String[] HEADER = {"Customer ID", "Customer Name", "Phone number",
+            "Address", "Email", "Tier", "Actions"};
+    public static String[] PURCHASE_HISTORY_HEADER = {
+            "Customer Name", "Customer ID", "Active Status", "Date of Birth",
+            "Phone Number", "Email", "Address", "Sales Representative", "Service Center",
+            "Vehicle Identification Number", "Price", "Payment Method", "Invoice Number",
+            "Warranty Start Date", "Warranty Expired Date",
+            "Initial Payment", "Installment Amount", "Installment Plan", "Remaining Installment Months"
+    };
+    public static String[] WARRANTY_HISTORY_HEADER = {"Customer Name", "Customer ID", "Active Status",
+            "Date of Birth", "Phone Number", "Email", "Address", "Car model", "License Plate",
+            "Service Type", "Service Center", "Service Date", "Service Cost"};
+    public static ExportCustomerResponse customerToExcel(List<CustomerResponse> customerList,
+                                                         String password, String fileName) throws IOException {
         try (Workbook workbook = new XSSFWorkbook()) {
             Sheet sheet = workbook.createSheet("Sheet1");
             createHeader(sheet, workbook, HEADER);
@@ -63,7 +72,8 @@ public class ExcelUtils {
         }
     }
 
-    public static ExportCustomerResponse purchaseHistoryToExcel(List<PurchaseHistoryResponse> purchaseHistory, String password, String fileName) throws IOException {
+    public static ExportCustomerResponse purchaseHistoryToExcel(List<PurchaseHistoryResponse> purchaseHistory,
+                                                                String password, String fileName) throws IOException {
         try (Workbook workbook = new XSSFWorkbook()) {
             Sheet sheet = workbook.createSheet("Sheet1");
             createHeader(sheet, workbook, PURCHASE_HISTORY_HEADER);
@@ -79,12 +89,28 @@ public class ExcelUtils {
                 row.createCell(4).setCellValue(p.getCustomer().getPhoneNumber());
                 row.createCell(5).setCellValue(p.getCustomer().getEmail());
                 row.createCell(6).setCellValue(p.getCustomer().getAddress());
-                row.createCell(7).setCellValue(p.getCarModel());
-                row.createCell(8).setCellValue(p.getVehicleIdentificationNumber());
+                row.createCell(7).setCellValue(p.getSalesRepresentative());
+                row.createCell(8).setCellValue(String.valueOf(p.getServiceCenter()));
+                row.createCell(9).setCellValue(p.getVehicleIdentificationNumber());
                 NumberFormat nf = NumberFormat.getNumberInstance(Locale.forLanguageTag(ExportConstants.VI_VN));
-                row.createCell(9).setCellValue(nf.format(p.getPrice()) + ExportConstants.VND);
-                row.createCell(10).setCellValue(String.valueOf(p.getPaymentMethod()));
-                row.createCell(11).setCellValue(p.getPurchaseDate().toLocalDate().toString());
+                row.createCell(10).setCellValue(nf.format(p.getPayment().getPrice()) + ExportConstants.VND);
+                String strPaymentOption = String.valueOf(p.getPayment().getPaymentOption());
+                row.createCell(11).setCellValue(strPaymentOption);
+                row.createCell(12).setCellValue(p.getPayment().getInvoice());
+                row.createCell(13).setCellValue(p.getWarranty().getStartedDate().toLocalDate().toString());
+                row.createCell(14).setCellValue(p.getWarranty().getExpiredDate().toLocalDate().toString());
+
+                if (strPaymentOption.equals(String.valueOf(PaymentOptions.Installment))) {
+                    row.createCell(15).setCellValue(p.getPayment().getInitialPayment());
+                    row.createCell(16).setCellValue(p.getPayment().getInstallmentAmount());
+                    row.createCell(17).setCellValue(p.getPayment().getInstallmentPlan());
+                    row.createCell(18).setCellValue(p.getPayment().getRemainingInstallmentMonths());
+                } else {
+                    row.createCell(15).setCellValue(ExportConstants.N_A);
+                    row.createCell(16).setCellValue(ExportConstants.N_A);
+                    row.createCell(17).setCellValue(ExportConstants.N_A);
+                    row.createCell(18).setCellValue(ExportConstants.N_A);
+                }
             }
 
             for (int i = 0; i < HEADER.length; i++) {
@@ -103,7 +129,8 @@ public class ExcelUtils {
         }
     }
 
-    public static ExportCustomerResponse warrantyHistoryToExcel(List<WarrantyHistoryResponse> warrantyHistory, String password, String fileName) throws IOException {
+    public static ExportCustomerResponse warrantyHistoryToExcel(List<WarrantyHistoryResponse> warrantyHistory,
+                                                                String password, String fileName) throws IOException {
         try (Workbook workbook = new XSSFWorkbook()) {
             Sheet sheet = workbook.createSheet("Sheet1");
             createHeader(sheet, workbook, WARRANTY_HISTORY_HEADER);

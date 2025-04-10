@@ -1,20 +1,17 @@
 package com.wbsrisktaskerx.wbsrisktaskerx.service.export;
 
-import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.wbsrisktaskerx.wbsrisktaskerx.common.constants.CommonConstants;
 import com.wbsrisktaskerx.wbsrisktaskerx.common.constants.ExportConstants;
-import com.wbsrisktaskerx.wbsrisktaskerx.entity.QCustomer;
+import com.wbsrisktaskerx.wbsrisktaskerx.entity.*;
+import com.wbsrisktaskerx.wbsrisktaskerx.mapper.HistoryMapper;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.PagingRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.SearchFilterCustomersRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.*;
 import com.wbsrisktaskerx.wbsrisktaskerx.repository.CustomerJpaQueryRepository;
+import com.wbsrisktaskerx.wbsrisktaskerx.mapper.CarMapper;
 import com.wbsrisktaskerx.wbsrisktaskerx.service.customer.CustomerServiceImpl;
 import com.wbsrisktaskerx.wbsrisktaskerx.utils.ExcelUtils;
 import com.wbsrisktaskerx.wbsrisktaskerx.utils.PasswordExport;
-import io.micrometer.common.util.StringUtils;
-import org.apache.commons.lang3.ObjectUtils;
-import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -23,14 +20,12 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.wbsrisktaskerx.wbsrisktaskerx.entity.QPurchaseHistory.purchaseHistory;
 import static com.wbsrisktaskerx.wbsrisktaskerx.entity.QWarrantyHistory.warrantyHistory;
 
 @Service
 public class ExportService implements IExportService{
     private final CustomerJpaQueryRepository customerJpaQueryRepository;
     private final JPAQueryFactory jpaQueryFactory;
-    private final QCustomer customer = QCustomer.customer;
     private final CustomerServiceImpl customerService;
 
     public ExportService (CustomerJpaQueryRepository customerJpaQueryRepository, JPAQueryFactory jpaQueryFactory, CustomerServiceImpl customerService){
@@ -51,25 +46,29 @@ public class ExportService implements IExportService{
     @Override
     public ExportCustomerResponse exportCustomerPurchaseHistory(Integer customerId) throws IOException {
         CustomerResponse customerResponse = customerService.findOneById(customerId);
-        List<PurchaseHistoryResponse> purchaseHistories = jpaQueryFactory.selectFrom(purchaseHistory)
+        QPurchaseHistory purchaseHistory = QPurchaseHistory.purchaseHistory;
+        QCar car = QCar.car;
+        QCarBrand brand = QCarBrand.carBrand;
+        QCarCategory category = QCarCategory.carCategory;
+        QAdmin seller = QAdmin.admin;
+        QCustomer customer = QCustomer.customer;
+
+        List<PurchaseHistoryResponse> purchaseHistoryResponses = jpaQueryFactory
+                .selectFrom(purchaseHistory)
+                .innerJoin(purchaseHistory.car, car).fetchJoin()
+                .innerJoin(car.brand, brand).fetchJoin()
+                .innerJoin(car.category, category).fetchJoin()
+                .innerJoin(car.seller, seller).fetchJoin()
+                .innerJoin(purchaseHistory.customer, customer).fetchJoin()
                 .where(purchaseHistory.customer.id.eq(customerId))
                 .fetch()
                 .stream()
-                .map(p -> PurchaseHistoryResponse.builder()
-                        .id(p.getId())
-                        .customer(customerResponse)
-                        .carModel(p.getCarModel())
-                        .vehicleIdentificationNumber(p.getVehicleIdentificationNumber())
-                        .purchaseDate(p.getPurchaseDate())
-                        .paymentMethod(p.getPaymentMethod())
-                        .price(p.getPrice())
-                        .warrantyMonths(p.getWarrantyMonths())
-                        .build())
+                .map(HistoryMapper::purchaseHistoryMapper)
                 .collect(Collectors.toList());
 
         ExportDetails details = generateExportDetails();
         String fileName = String.format(ExportConstants.ID_FILE_FORMAT, ExportConstants.PURCHASE_HISTORY_CUSTOMER, customerId, details.currentDate, ExportConstants.XLSX);
-        ExportCustomerResponse response = ExcelUtils.purchaseHistoryToExcel(purchaseHistories, details.password, fileName);
+        ExportCustomerResponse response = ExcelUtils.purchaseHistoryToExcel(purchaseHistoryResponses, details.password, fileName);
 
         return response;
     }
@@ -81,16 +80,7 @@ public class ExportService implements IExportService{
                 .where(warrantyHistory.customer.id.eq(customerId))
                 .fetch()
                 .stream()
-                .map(w -> WarrantyHistoryResponse.builder()
-                        .id(w.getId())
-                        .customer(customerResponse)
-                        .carModel(w.getCarModel())
-                        .licensePlate(w.getLicensePlate())
-                        .serviceType(w.getServiceType())
-                        .serviceCenter(w.getServiceCenter())
-                        .serviceDate(w.getServiceDate())
-                        .serviceCost(w.getServiceCost())
-                        .build())
+                .map(HistoryMapper::warrantyHistoryMapper)
                 .collect(Collectors.toList());
 
         ExportDetails details = generateExportDetails();

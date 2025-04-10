@@ -94,7 +94,6 @@ public class CustomerServiceImpl implements ICustomerService {
         return customer.get();
     }
 
-
     public Customer findCustomerById(Integer customerId) {
         Optional<Customer> customer = customerRepository.findById(customerId);
         if (customer.isEmpty()) {

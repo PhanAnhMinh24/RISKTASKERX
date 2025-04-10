@@ -2,9 +2,13 @@ package com.wbsrisktaskerx.wbsrisktaskerx.repository;
 
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.wbsrisktaskerx.wbsrisktaskerx.entity.*;
+import com.wbsrisktaskerx.wbsrisktaskerx.mapper.HistoryMapper;
+import com.wbsrisktaskerx.wbsrisktaskerx.mapper.PaymentMapper;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.PagingRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.HistoryRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.*;
+import com.wbsrisktaskerx.wbsrisktaskerx.mapper.CarMapper;
 import com.wbsrisktaskerx.wbsrisktaskerx.service.customer.CustomerServiceImpl;
 import com.wbsrisktaskerx.wbsrisktaskerx.utils.PageService;
 import org.apache.commons.lang3.ObjectUtils;
@@ -20,7 +24,7 @@ import static com.wbsrisktaskerx.wbsrisktaskerx.entity.QWarrantyHistory.warranty
 
 @Component
 public class HistoryQueryRepository {
-    
+
     private final JPAQueryFactory jpaQueryFactory;
     private final CustomerServiceImpl customerService;
 
@@ -33,28 +37,28 @@ public class HistoryQueryRepository {
         HistoryRequest filter = request.getFilters();
         Pageable pageable = PageService.getPageRequest(request);
         Integer id = filter.getCustomerId();
-        CustomerResponse customerResponse = customerService.findOneById(id);
 
         BooleanBuilder builder = new BooleanBuilder();
-        if (ObjectUtils.isNotEmpty(customerResponse)) {
-            builder.and(purchaseHistory.customer.id.eq(id));
-        }
+        builder.and(purchaseHistory.customer.id.eq(id));
+
+        QPurchaseHistory purchaseHistory = QPurchaseHistory.purchaseHistory;
+        QCar car = QCar.car;
+        QCarBrand brand = QCarBrand.carBrand;
+        QCarCategory category = QCarCategory.carCategory;
+        QAdmin seller = QAdmin.admin;
+        QCustomer customer = QCustomer.customer;
 
         List<PurchaseHistoryResponse> purchaseHistoryResponses = jpaQueryFactory
                 .selectFrom(purchaseHistory)
+                .innerJoin(purchaseHistory.car, car).fetchJoin()
+                .innerJoin(car.brand, brand).fetchJoin()
+                .innerJoin(car.category, category).fetchJoin()
+                .innerJoin(car.seller, seller).fetchJoin()
+                .innerJoin(purchaseHistory.customer, customer).fetchJoin()
                 .where(builder)
                 .fetch()
                 .stream()
-                .map(p -> PurchaseHistoryResponse.builder()
-                        .id(p.getId())
-                        .customer(customerResponse)
-                        .carModel(p.getCarModel())
-                        .vehicleIdentificationNumber(p.getVehicleIdentificationNumber())
-                        .purchaseDate(p.getPurchaseDate())
-                        .paymentMethod(p.getPaymentMethod())
-                        .price(p.getPrice())
-                        .warrantyMonths(p.getWarrantyMonths())
-                        .build())
+                .map(HistoryMapper::purchaseHistoryMapper)
                 .collect(Collectors.toList());
 
         long total = Optional.ofNullable(
@@ -84,16 +88,7 @@ public class HistoryQueryRepository {
                 .where(builder)
                 .fetch()
                 .stream()
-                .map(w -> WarrantyHistoryResponse.builder()
-                        .id(w.getId())
-                        .customer(customerResponse)
-                        .carModel(w.getCarModel())
-                        .licensePlate(w.getLicensePlate())
-                        .serviceType(w.getServiceType())
-                        .serviceCenter(w.getServiceCenter())
-                        .serviceDate(w.getServiceDate())
-                        .serviceCost(w.getServiceCost())
-                        .build())
+                .map(HistoryMapper::warrantyHistoryMapper)
                 .collect(Collectors.toList());
 
         long total = Optional.ofNullable(
