@@ -36,7 +36,6 @@ public class EndpointConstants {
 
     //Permission
     public static final String PERMISSION = "/permissions";
-    public static final String LIST_PERMISSION = "/list";
     public static final String PERMISSION_ID = "/{id}";
 
 
