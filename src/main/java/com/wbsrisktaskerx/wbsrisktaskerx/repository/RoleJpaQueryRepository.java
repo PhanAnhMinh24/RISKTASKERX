@@ -1,8 +1,11 @@
 package com.wbsrisktaskerx.wbsrisktaskerx.repository;
 
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.Order;
+import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.wbsrisktaskerx.wbsrisktaskerx.common.constants.CommonConstants;
+import com.wbsrisktaskerx.wbsrisktaskerx.common.constants.RoleConstants;
 import com.wbsrisktaskerx.wbsrisktaskerx.common.constants.StringConstants;
 import com.wbsrisktaskerx.wbsrisktaskerx.entity.QRole;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.PagingRequest;
@@ -54,6 +57,11 @@ public class RoleJpaQueryRepository {
             builder.and(role.isActive.in(filter.getIsActive()));
         }
 
+        Order direction = Optional.of(pageable.getSort())
+                .map(sort -> sort.getOrderFor(RoleConstants.UPDATE_AT))
+                .map(order -> order.isDescending() ? Order.DESC : Order.ASC)
+                .orElse(Order.ASC);
+
         List<RoleResponse> content = jpaQueryFactory.select(
                         new QRoleResponse(
                                 role.id,
@@ -65,6 +73,7 @@ public class RoleJpaQueryRepository {
                 .where(builder)
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
+                .orderBy(new OrderSpecifier<>(direction, role.updateAt))
                 .fetch();
 
         long total = Optional.ofNullable(

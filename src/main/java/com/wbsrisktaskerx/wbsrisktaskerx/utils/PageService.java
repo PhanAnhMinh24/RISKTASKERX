@@ -14,6 +14,6 @@ public class PageService {
         return StringUtils.isEmpty(requestPaging.getSortKey())
                 ? PageRequest.of(pageIndex, size)
                 : PageRequest.of(pageIndex, size,
-                Sort.by(requestPaging.getSortBy(), requestPaging.getSortKey()));
+                Sort.by(requestPaging.getSortBy(), new String[]{requestPaging.getSortKey()}));
     }
 }
