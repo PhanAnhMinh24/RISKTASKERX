@@ -3,6 +3,7 @@ package com.wbsrisktaskerx.wbsrisktaskerx.controller;
 import com.wbsrisktaskerx.wbsrisktaskerx.common.constants.EndpointConstants;
 import com.wbsrisktaskerx.wbsrisktaskerx.entity.Permission;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.ApiResult;
+import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.PermissionResponse;
 import com.wbsrisktaskerx.wbsrisktaskerx.service.permission.IPermissionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,14 +22,10 @@ import static com.wbsrisktaskerx.wbsrisktaskerx.common.constants.MessageConstant
 public class PermissionController {
 
     private final IPermissionService permissionService;
-    @GetMapping
-    public ApiResult<List<Permission>> getAll() {
-        List<Permission> permissions = permissionService.getAllPermissions();
-        return ApiResult.success(permissions, GET_ALL_PERMISSIONS_SUCCESS);
+    @GetMapping()
+    public ApiResult<List<PermissionResponse>> getAllPermissionTree() {
+        List<PermissionResponse> list = permissionService.getAllPermissionsWithChildren();
+        return ApiResult.success(list, GET_ALL_PERMISSIONS_SUCCESS);
     }
-    @GetMapping(EndpointConstants.PERMISSION_ID)
-    public ApiResult<Permission> getById(@PathVariable Integer id) {
-        Permission permission = permissionService.getPermissionById(id);
-        return ApiResult.success(permission, GET_PERMISSION_SUCCESS);
-    }
+
 }
