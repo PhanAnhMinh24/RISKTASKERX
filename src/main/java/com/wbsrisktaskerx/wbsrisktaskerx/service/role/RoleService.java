@@ -5,12 +5,15 @@ import com.wbsrisktaskerx.wbsrisktaskerx.entity.Role;
 import com.wbsrisktaskerx.wbsrisktaskerx.entity.RolePermission;
 import com.wbsrisktaskerx.wbsrisktaskerx.exception.AppException;
 import com.wbsrisktaskerx.wbsrisktaskerx.exception.ErrorCode;
+import com.wbsrisktaskerx.wbsrisktaskerx.pojo.PagingRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.ActiveRoleRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.RoleRequest;
+import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.SearchFilterRoleRequest;
+import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.AdminResponse;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.RoleResponse;
-import com.wbsrisktaskerx.wbsrisktaskerx.repository.PermissionRepository;
-import com.wbsrisktaskerx.wbsrisktaskerx.repository.RolePermissionRepository;
-import com.wbsrisktaskerx.wbsrisktaskerx.repository.RoleRepository;
+import com.wbsrisktaskerx.wbsrisktaskerx.repository.*;
+import com.wbsrisktaskerx.wbsrisktaskerx.utils.MaskUtils;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,12 +26,14 @@ public class RoleService implements IRoleService {
     private final RoleRepository roleRepository;
     private final PermissionRepository permissionRepository;
     private final RolePermissionRepository rolePermissionRepository;
+    private final RoleJpaQueryRepository roleJpaQueryRepository;
 
     public RoleService (RoleRepository roleRepository, PermissionRepository permissionRepository,
-                        RolePermissionRepository rolePermissionRepository) {
+                        RolePermissionRepository rolePermissionRepository, RoleJpaQueryRepository roleJpaQueryRepository) {
         this.roleRepository = roleRepository;
         this.permissionRepository = permissionRepository;
         this.rolePermissionRepository = rolePermissionRepository;
+        this.roleJpaQueryRepository = roleJpaQueryRepository;
     }
 
     private Role findById(Integer id){
@@ -69,6 +74,7 @@ public class RoleService implements IRoleService {
                 .id(role.getId())
                 .name(role.getName())
                 .isActive(role.getIsActive())
+                .updateAt(role.getUpdateAt())
                 .build();
     }
 
@@ -79,5 +85,10 @@ public class RoleService implements IRoleService {
         role.setIsActive(request.getIsActive());
         roleRepository.save(role);
         return Boolean.TRUE;
+    }
+
+    @Override
+    public Page<RoleResponse> searchAndFilterRole(PagingRequest<SearchFilterRoleRequest> request) {
+        return roleJpaQueryRepository.searchedAndFilteredRole(request);
     }
 }

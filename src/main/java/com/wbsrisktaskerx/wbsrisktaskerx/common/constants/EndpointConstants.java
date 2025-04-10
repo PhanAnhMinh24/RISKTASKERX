@@ -33,4 +33,10 @@ public class EndpointConstants {
 
     //Roles
     public static final String ROLES = "/roles";
+
+    //Permission
+    public static final String PERMISSION = "/permissions";
+    public static final String PERMISSION_ID = "/{id}";
+
+
 }
