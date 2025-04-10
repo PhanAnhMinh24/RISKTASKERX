@@ -86,7 +86,7 @@ public class CustomerServiceImpl implements ICustomerService {
         return Boolean.TRUE;
     }
 
-    private Customer findById(Integer id){
+    public Customer findById(Integer id){
         Optional<Customer> customer = customerRepository.findById(id);
         if(customer.isEmpty()){
             throw new AppException(ErrorCode.CUSTOMER_NOT_FOUND);
@@ -94,15 +94,8 @@ public class CustomerServiceImpl implements ICustomerService {
         return customer.get();
     }
 
-    public List<PurchaseHistory> getPurchaseHistoryById(int id) {
-        return purchaseHistoryRepository.getPurchaseHistoryByCustomerId(id);
-    }
 
-    public List<WarrantyHistory> getWarrantyHistoryById(int id) {
-        return warrantyHistoryRepository.getWarrantyHistoryByCustomerId(id);
-    }
-
-    private Customer findCustomerById(Integer customerId) {
+    public Customer findCustomerById(Integer customerId) {
         Optional<Customer> customer = customerRepository.findById(customerId);
         if (customer.isEmpty()) {
             throw new AppException(ErrorCode.CUSTOMER_NOT_FOUND);
@@ -138,4 +131,5 @@ public class CustomerServiceImpl implements ICustomerService {
                 .build();
         warrantyHistoryRepository.save(warrantyHistory);
     }
+
 }
