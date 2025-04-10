@@ -3,7 +3,9 @@ package com.wbsrisktaskerx.wbsrisktaskerx.controller;
 import com.wbsrisktaskerx.wbsrisktaskerx.common.constants.EndpointConstants;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.PagingRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.SearchFilterCustomersRequest;
+import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.SearchFilterRoleRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.ExportCustomerResponse;
+import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.ExportRoleResponse;
 import com.wbsrisktaskerx.wbsrisktaskerx.service.export.IExportService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -35,6 +37,12 @@ public class ExportController {
     @GetMapping(EndpointConstants.CUSTOMERS + EndpointConstants.WARRANTY + EndpointConstants.ID)
     public ResponseEntity<ExportCustomerResponse> exportWarrantyHistory(@PathVariable int id) throws IOException {
         ExportCustomerResponse exportResponse = exportService.exportCustomerWarrantyHistory(id);
+        return ResponseEntity.ok().body(exportResponse);
+    }
+
+    @PostMapping(EndpointConstants.ROLES)
+    public ResponseEntity<ExportRoleResponse> exportRole(@RequestBody PagingRequest<SearchFilterRoleRequest> request) throws IOException {
+        ExportRoleResponse exportResponse = exportService.getRoleList(request);
         return ResponseEntity.ok().body(exportResponse);
     }
 }
