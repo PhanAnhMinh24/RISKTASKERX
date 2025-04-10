@@ -15,7 +15,6 @@ public class PageService {
         return StringUtils.isEmpty(requestPaging.getSortKey())
                 ? PageRequest.of(pageIndex, size)
                 : PageRequest.of(pageIndex, size,
-                Sort.by(requestPaging.getSortBy(), requestPaging.getSortKey())
-                        .and(Sort.by(requestPaging.getSortBy(), RoleConstants.UPDATE_AT)));
+                Sort.by(requestPaging.getSortBy(), requestPaging.getSortKey(), RoleConstants.UPDATE_AT));
     }
 }
