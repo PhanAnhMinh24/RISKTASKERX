@@ -1,20 +1,17 @@
 package com.wbsrisktaskerx.wbsrisktaskerx.service.export;
 
-import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.wbsrisktaskerx.wbsrisktaskerx.common.constants.CommonConstants;
 import com.wbsrisktaskerx.wbsrisktaskerx.common.constants.ExportConstants;
 import com.wbsrisktaskerx.wbsrisktaskerx.entity.QCustomer;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.PagingRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.SearchFilterCustomersRequest;
+import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.SearchFilterRoleRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.*;
 import com.wbsrisktaskerx.wbsrisktaskerx.repository.CustomerJpaQueryRepository;
+import com.wbsrisktaskerx.wbsrisktaskerx.repository.RoleJpaQueryRepository;
 import com.wbsrisktaskerx.wbsrisktaskerx.service.customer.CustomerServiceImpl;
 import com.wbsrisktaskerx.wbsrisktaskerx.utils.ExcelUtils;
 import com.wbsrisktaskerx.wbsrisktaskerx.utils.PasswordExport;
-import io.micrometer.common.util.StringUtils;
-import org.apache.commons.lang3.ObjectUtils;
-import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -29,14 +26,17 @@ import static com.wbsrisktaskerx.wbsrisktaskerx.entity.QWarrantyHistory.warranty
 @Service
 public class ExportService implements IExportService{
     private final CustomerJpaQueryRepository customerJpaQueryRepository;
+    private final RoleJpaQueryRepository roleJpaQueryRepository;
     private final JPAQueryFactory jpaQueryFactory;
     private final QCustomer customer = QCustomer.customer;
     private final CustomerServiceImpl customerService;
 
-    public ExportService (CustomerJpaQueryRepository customerJpaQueryRepository, JPAQueryFactory jpaQueryFactory, CustomerServiceImpl customerService){
+    public ExportService (CustomerJpaQueryRepository customerJpaQueryRepository, JPAQueryFactory jpaQueryFactory,
+                          CustomerServiceImpl customerService, RoleJpaQueryRepository roleJpaQueryRepository){
         this.customerJpaQueryRepository =customerJpaQueryRepository;
         this.jpaQueryFactory = jpaQueryFactory;
         this.customerService = customerService;
+        this.roleJpaQueryRepository = roleJpaQueryRepository;
     }
 
     @Override
@@ -98,6 +98,14 @@ public class ExportService implements IExportService{
         ExportCustomerResponse response = ExcelUtils.warrantyHistoryToExcel(warrantyHistoryResponses, details.password, fileName);
 
         return response;
+    }
+
+    @Override
+    public ExportRoleResponse getRoleList(PagingRequest<SearchFilterRoleRequest> request) throws IOException {
+        List<RoleResponse> content = roleJpaQueryRepository.findRolesByFilter(request);
+        ExportDetails details = generateExportDetails();
+        String fileName = String.format(ExportConstants.FILE_FORMAT, ExportConstants.ROLE, details.currentDate, ExportConstants.XLSX);
+        return ExcelUtils.roleToExcel(content, details.password, fileName);
     }
 
     private ExportDetails generateExportDetails() {

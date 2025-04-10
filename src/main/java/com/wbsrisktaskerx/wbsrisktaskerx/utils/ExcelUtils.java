@@ -1,10 +1,7 @@
 package com.wbsrisktaskerx.wbsrisktaskerx.utils;
 
 import com.wbsrisktaskerx.wbsrisktaskerx.common.constants.ExportConstants;
-import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.CustomerResponse;
-import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.ExportCustomerResponse;
-import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.PurchaseHistoryResponse;
-import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.WarrantyHistoryResponse;
+import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.*;
 import org.apache.commons.compress.utils.IOUtils;
 import org.apache.poi.poifs.crypt.EncryptionInfo;
 import org.apache.poi.poifs.crypt.EncryptionMode;
@@ -29,6 +26,7 @@ public class ExcelUtils {
             "Phone Number", "Email", "Address", "Car Model", "Vehicle Identification Number", "Price", "Payment Method", "Purchase Date"};
     public static String[] WARRANTY_HISTORY_HEADER = {"Customer Name", "Customer ID", "Active Status", "Date of Birth",
             "Phone Number", "Email", "Address", "Car model", "License Plate", "Service Type", "Service Center", "Service Date", "Service Cost"};
+    public static String[] ROLES_HEADER = {"No", "Role Name", "Last Update", "Action"};
     public static ExportCustomerResponse customerToExcel(List<CustomerResponse> customerList, String password, String fileName) throws IOException {
         try (Workbook workbook = new XSSFWorkbook()) {
             Sheet sheet = workbook.createSheet("Sheet1");
@@ -135,6 +133,37 @@ public class ExcelUtils {
             ByteArrayOutputStream encryptedBaos = encryptExcelFile(workbook, password);
 
             return ExportCustomerResponse.builder()
+                    .fileName(fileName)
+                    .password(password)
+                    .response(encryptedBaos.toByteArray())
+                    .build();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static ExportRoleResponse roleToExcel(List<RoleResponse> roleList, String password, String fileName) throws IOException {
+        try (Workbook workbook = new XSSFWorkbook()) {
+            Sheet sheet = workbook.createSheet("Sheet1");
+            createHeader(sheet, workbook, ROLES_HEADER);
+
+            int rowIndex = 1;
+            for (RoleResponse r : roleList) {
+                Row row = sheet.createRow(rowIndex);
+                rowIndex++;
+                row.createCell(0).setCellValue(r.getId());
+                row.createCell(1).setCellValue(r.getName());
+                row.createCell(2).setCellValue(r.getUpdateAt().toLocalDate().toString());
+                row.createCell(3).setCellValue(r.getIsActive());
+            }
+
+            for (int i = 0; i < HEADER.length; i++) {
+                sheet.autoSizeColumn(i);
+            }
+
+            ByteArrayOutputStream encryptedBaos = encryptExcelFile(workbook, password);
+
+            return ExportRoleResponse.builder()
                     .fileName(fileName)
                     .password(password)
                     .response(encryptedBaos.toByteArray())

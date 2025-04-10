@@ -85,4 +85,41 @@ public class RoleJpaQueryRepository {
         return new PageImpl<>(content, pageable, total);
     }
 
+    public List<RoleResponse> findRolesByFilter(PagingRequest<SearchFilterRoleRequest> request) {
+        SearchFilterRoleRequest filter = request.getFilters();
+        Pageable pageable = PageService.getPageRequest(request);
+        String searchKey = filter.getSearchKey();
+
+        BooleanBuilder builder = new BooleanBuilder();
+        if (StringUtils.isNotBlank(searchKey)) {
+            BooleanBuilder searchBuilder = new BooleanBuilder();
+            searchBuilder.or(role.name.like(CommonConstants.WILDCARD + searchKey + CommonConstants.WILDCARD));
+            if (NumberUtils.isCreatable(searchKey)) {
+                Integer idValue = Integer.valueOf(searchKey);
+                searchBuilder.or(role.id.eq(idValue));
+            }
+            builder.and(searchBuilder);
+        }
+
+        if (!ObjectUtils.isEmpty(filter.getIsActive())) {
+            builder.and(role.isActive.in(filter.getIsActive()));
+        }
+
+        Order direction = Optional.of(pageable.getSort())
+                .map(sort -> sort.getOrderFor(RoleConstants.UPDATE_AT))
+                .map(order -> order.isDescending() ? Order.DESC : Order.ASC)
+                .orElse(Order.ASC);
+
+        return jpaQueryFactory.select(
+                        new QRoleResponse(
+                                role.id,
+                                role.name,
+                                role.isActive,
+                                role.updateAt
+                        ))
+                .from(role)
+                .where(builder)
+                .orderBy(new OrderSpecifier<>(direction, role.updateAt))
+                .fetch();
+    }
 }
