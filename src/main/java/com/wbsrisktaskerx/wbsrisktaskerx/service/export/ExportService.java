@@ -3,11 +3,12 @@ package com.wbsrisktaskerx.wbsrisktaskerx.service.export;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.wbsrisktaskerx.wbsrisktaskerx.common.constants.ExportConstants;
 import com.wbsrisktaskerx.wbsrisktaskerx.entity.*;
+import com.wbsrisktaskerx.wbsrisktaskerx.mapper.HistoryMapper;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.PagingRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.SearchFilterCustomersRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.*;
 import com.wbsrisktaskerx.wbsrisktaskerx.repository.CustomerJpaQueryRepository;
-import com.wbsrisktaskerx.wbsrisktaskerx.service.car.CarServiceBuilder;
+import com.wbsrisktaskerx.wbsrisktaskerx.mapper.CarMapper;
 import com.wbsrisktaskerx.wbsrisktaskerx.service.customer.CustomerServiceImpl;
 import com.wbsrisktaskerx.wbsrisktaskerx.utils.ExcelUtils;
 import com.wbsrisktaskerx.wbsrisktaskerx.utils.PasswordExport;
@@ -25,7 +26,6 @@ import static com.wbsrisktaskerx.wbsrisktaskerx.entity.QWarrantyHistory.warranty
 public class ExportService implements IExportService{
     private final CustomerJpaQueryRepository customerJpaQueryRepository;
     private final JPAQueryFactory jpaQueryFactory;
-    private final QCustomer customer = QCustomer.customer;
     private final CustomerServiceImpl customerService;
 
     public ExportService (CustomerJpaQueryRepository customerJpaQueryRepository, JPAQueryFactory jpaQueryFactory, CustomerServiceImpl customerService){
@@ -55,15 +55,15 @@ public class ExportService implements IExportService{
 
         List<PurchaseHistoryResponse> purchaseHistoryResponses = jpaQueryFactory
                 .selectFrom(purchaseHistory)
-                .join(purchaseHistory.car, car).fetchJoin()
-                .join(car.brand, brand).fetchJoin()
-                .join(car.category, category).fetchJoin()
-                .join(car.seller, seller).fetchJoin()
-                .join(purchaseHistory.customer, customer).fetchJoin()
+                .innerJoin(purchaseHistory.car, car).fetchJoin()
+                .innerJoin(car.brand, brand).fetchJoin()
+                .innerJoin(car.category, category).fetchJoin()
+                .innerJoin(car.seller, seller).fetchJoin()
+                .innerJoin(purchaseHistory.customer, customer).fetchJoin()
                 .where(purchaseHistory.customer.id.eq(customerId))
                 .fetch()
                 .stream()
-                .map(CarServiceBuilder::purchaseHistoryBuilder)
+                .map(HistoryMapper::purchaseHistoryMapper)
                 .collect(Collectors.toList());
 
         ExportDetails details = generateExportDetails();
@@ -80,7 +80,7 @@ public class ExportService implements IExportService{
                 .where(warrantyHistory.customer.id.eq(customerId))
                 .fetch()
                 .stream()
-                .map(CarServiceBuilder::warrantyHistoryBuilder)
+                .map(HistoryMapper::warrantyHistoryMapper)
                 .collect(Collectors.toList());
 
         ExportDetails details = generateExportDetails();

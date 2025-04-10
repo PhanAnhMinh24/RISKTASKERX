@@ -3,10 +3,12 @@ package com.wbsrisktaskerx.wbsrisktaskerx.repository;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.wbsrisktaskerx.wbsrisktaskerx.entity.*;
+import com.wbsrisktaskerx.wbsrisktaskerx.mapper.HistoryMapper;
+import com.wbsrisktaskerx.wbsrisktaskerx.mapper.PaymentMapper;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.PagingRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.HistoryRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.*;
-import com.wbsrisktaskerx.wbsrisktaskerx.service.car.CarServiceBuilder;
+import com.wbsrisktaskerx.wbsrisktaskerx.mapper.CarMapper;
 import com.wbsrisktaskerx.wbsrisktaskerx.service.customer.CustomerServiceImpl;
 import com.wbsrisktaskerx.wbsrisktaskerx.utils.PageService;
 import org.apache.commons.lang3.ObjectUtils;
@@ -48,15 +50,15 @@ public class HistoryQueryRepository {
 
         List<PurchaseHistoryResponse> purchaseHistoryResponses = jpaQueryFactory
                 .selectFrom(purchaseHistory)
-                .join(purchaseHistory.car, car).fetchJoin()
-                .join(car.brand, brand).fetchJoin()
-                .join(car.category, category).fetchJoin()
-                .join(car.seller, seller).fetchJoin()
-                .join(purchaseHistory.customer, customer).fetchJoin()
+                .innerJoin(purchaseHistory.car, car).fetchJoin()
+                .innerJoin(car.brand, brand).fetchJoin()
+                .innerJoin(car.category, category).fetchJoin()
+                .innerJoin(car.seller, seller).fetchJoin()
+                .innerJoin(purchaseHistory.customer, customer).fetchJoin()
                 .where(builder)
                 .fetch()
                 .stream()
-                .map(CarServiceBuilder::purchaseHistoryBuilder)
+                .map(HistoryMapper::purchaseHistoryMapper)
                 .collect(Collectors.toList());
 
         long total = Optional.ofNullable(
@@ -86,7 +88,7 @@ public class HistoryQueryRepository {
                 .where(builder)
                 .fetch()
                 .stream()
-                .map(CarServiceBuilder::warrantyHistoryBuilder)
+                .map(HistoryMapper::warrantyHistoryMapper)
                 .collect(Collectors.toList());
 
         long total = Optional.ofNullable(

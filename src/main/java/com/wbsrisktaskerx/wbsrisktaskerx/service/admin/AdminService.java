@@ -1,5 +1,6 @@
 package com.wbsrisktaskerx.wbsrisktaskerx.service.admin;
 
+import com.wbsrisktaskerx.wbsrisktaskerx.entity.Admin;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.PagingRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.SearchFilterAdminRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.AdminResponse;
@@ -10,7 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 @Service
-public class AdminService implements IAdminService{
+public class AdminService implements IAdminService {
 
     private final AdminRepository adminRepository;
     private final AdminJpaQueryRepository adminJpaQueryRepository;
@@ -23,14 +24,15 @@ public class AdminService implements IAdminService{
     @Override
     public Page<AdminResponse> searchAndFilterAdmin(PagingRequest<SearchFilterAdminRequest> request) {
         return adminJpaQueryRepository.searchedAndFilteredAdmin(request)
-            .map(ad -> AdminResponse.builder()
-                    .id(ad.getId())
-                    .fullName(MaskUtils.mask(ad.getFullName()))
-                    .email(MaskUtils.mask(ad.getEmail()))
-                    .role(ad.getRole())
-                    .departmentName(ad.getDepartmentName())
-                    .lastLogin(ad.getLastLogin())
-                    .isActive(ad.getIsActive())
-                    .build());
+                .map(ad -> AdminResponse.builder()
+                        .id(ad.getId())
+                        .fullName(MaskUtils.mask(ad.getFullName()))
+                        .email(MaskUtils.mask(ad.getEmail()))
+                        .role(ad.getRole())
+                        .departmentName(ad.getDepartmentName())
+                        .lastLogin(ad.getLastLogin())
+                        .isActive(ad.getIsActive())
+                        .build());
     }
+
 }
