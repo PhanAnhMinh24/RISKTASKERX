@@ -1,7 +1,6 @@
 package com.wbsrisktaskerx.wbsrisktaskerx.service.permission;
 
 import com.wbsrisktaskerx.wbsrisktaskerx.entity.Permission;
-import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.PermissionRequest;
 
 import java.util.List;
 
