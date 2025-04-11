@@ -12,19 +12,17 @@ import java.util.List;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Builder
-@AllArgsConstructor
-public class RoleResponse {
+public class RoleDetailsReponse {
     Integer id;
     String name;
     Boolean isActive;
-    OffsetDateTime updateAt;
     List<String> permissionNames;
 
     @QueryProjection
-    public RoleResponse(Integer id, String name, Boolean isActive, OffsetDateTime updateAt) {
+    public RoleDetailsReponse(Integer id, String name, Boolean isActive, List<String> permissionNames) {
         this.id = id;
         this.name = name;
         this.isActive = isActive;
-        this.updateAt = updateAt;
+        this.permissionNames = permissionNames;
     }
 }
