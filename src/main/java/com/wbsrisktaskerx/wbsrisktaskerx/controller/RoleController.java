@@ -6,7 +6,6 @@ import com.wbsrisktaskerx.wbsrisktaskerx.pojo.PagingRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.ActiveRoleRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.RoleRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.SearchFilterRoleRequest;
-import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.RoleDetailsReponse;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.RoleResponse;
 import com.wbsrisktaskerx.wbsrisktaskerx.service.role.IRoleService;
 import jakarta.validation.Valid;
@@ -42,7 +41,7 @@ public class RoleController {
     }
 
     @GetMapping(EndpointConstants.ID)
-    public ResponseEntity<ApiResult<RoleDetailsReponse>> getRoleDetail(@PathVariable int id) {
+    public ResponseEntity<ApiResult<RoleResponse>> getRoleDetail(@PathVariable int id) {
         return ResponseEntity.ok(ApiResult.success(roleService.getRoleById(id)));
     }
 }

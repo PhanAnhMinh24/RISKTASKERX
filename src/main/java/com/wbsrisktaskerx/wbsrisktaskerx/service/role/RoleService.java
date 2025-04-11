@@ -93,18 +93,17 @@ public class RoleService implements IRoleService {
 
     @Override
     @Transactional
-    public RoleDetailsReponse getRoleById(int id) {
+    public RoleResponse getRoleById(int id) {
         Role role = findById(id);
-
         List<RolePermission> rolePermissions = role.getRolePermissions();
-
         List<String> permissionNames = rolePermissions.stream()
                 .map(rolePermission -> rolePermission.getPermission().getName())
                 .toList();
-        return new RoleDetailsReponse(
+        return new RoleResponse(
                 role.getId(),
                 role.getName(),
                 role.getIsActive(),
+                role.getUpdateAt(),
                 permissionNames
         );
     }

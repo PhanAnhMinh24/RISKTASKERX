@@ -5,17 +5,20 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.OffsetDateTime;
+import java.util.List;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Builder
+@AllArgsConstructor
 public class RoleResponse {
     Integer id;
     String name;
     Boolean isActive;
     OffsetDateTime updateAt;
+    List<String> permissionNames;
 
     @QueryProjection
     public RoleResponse(Integer id, String name, Boolean isActive, OffsetDateTime updateAt) {

@@ -12,5 +12,5 @@ public interface IRoleService {
     RoleResponse addRole(RoleRequest request);
     boolean updateIsActive(ActiveRoleRequest request);
     Page<RoleResponse> searchAndFilterRole(PagingRequest<SearchFilterRoleRequest> request);
-    RoleDetailsReponse getRoleById(int id);
+    RoleResponse getRoleById(int id);
 }
