@@ -86,7 +86,7 @@ public class CustomerServiceImpl implements ICustomerService {
         return Boolean.TRUE;
     }
 
-    private Customer findById(Integer id){
+    public Customer findById(Integer id){
         Optional<Customer> customer = customerRepository.findById(id);
         if(customer.isEmpty()){
             throw new AppException(ErrorCode.CUSTOMER_NOT_FOUND);

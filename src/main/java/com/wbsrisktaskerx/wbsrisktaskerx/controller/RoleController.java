@@ -6,7 +6,6 @@ import com.wbsrisktaskerx.wbsrisktaskerx.pojo.PagingRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.ActiveRoleRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.RoleRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.SearchFilterRoleRequest;
-import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.AdminResponse;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.RoleResponse;
 import com.wbsrisktaskerx.wbsrisktaskerx.service.role.IRoleService;
 import jakarta.validation.Valid;
@@ -39,5 +38,10 @@ public class RoleController {
     public ResponseEntity<ApiResult<Page<RoleResponse>>> searchFilterRole(@RequestBody PagingRequest<SearchFilterRoleRequest> request) {
         Page<RoleResponse> pageResult = roleService.searchAndFilterRole(request);
         return ResponseEntity.ok(ApiResult.success(pageResult));
+    }
+
+    @GetMapping(EndpointConstants.ID)
+    public ResponseEntity<ApiResult<RoleResponse>> getRoleDetail(@PathVariable int id) {
+        return ResponseEntity.ok(ApiResult.success(roleService.getRoleById(id)));
     }
 }

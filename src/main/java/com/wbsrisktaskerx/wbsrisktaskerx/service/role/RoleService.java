@@ -9,10 +9,9 @@ import com.wbsrisktaskerx.wbsrisktaskerx.pojo.PagingRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.ActiveRoleRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.RoleRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.SearchFilterRoleRequest;
-import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.AdminResponse;
+import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.RoleDetailsReponse;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.RoleResponse;
 import com.wbsrisktaskerx.wbsrisktaskerx.repository.*;
-import com.wbsrisktaskerx.wbsrisktaskerx.utils.MaskUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -90,5 +89,22 @@ public class RoleService implements IRoleService {
     @Override
     public Page<RoleResponse> searchAndFilterRole(PagingRequest<SearchFilterRoleRequest> request) {
         return roleJpaQueryRepository.searchedAndFilteredRole(request);
+    }
+
+    @Override
+    @Transactional
+    public RoleResponse getRoleById(int id) {
+        Role role = findById(id);
+        List<RolePermission> rolePermissions = role.getRolePermissions();
+        List<String> permissionNames = rolePermissions.stream()
+                .map(rolePermission -> rolePermission.getPermission().getName())
+                .toList();
+        return new RoleResponse(
+                role.getId(),
+                role.getName(),
+                role.getIsActive(),
+                role.getUpdateAt(),
+                permissionNames
+        );
     }
 }
