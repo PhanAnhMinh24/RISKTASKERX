@@ -8,6 +8,6 @@ import java.io.IOException;
 
 public interface IExportService {
     ExportCustomerResponse getCustomerList(PagingRequest<SearchFilterCustomersRequest> request) throws IOException;
-    ExportCustomerResponse exportCustomerPurchaseHistory(Integer customerId) throws IOException;
+    ExportCustomerResponse exportCustomerPurchaseHistory(Integer customerId, Integer paymentId) throws IOException;
     ExportCustomerResponse exportCustomerWarrantyHistory(Integer customerId) throws IOException;
 }

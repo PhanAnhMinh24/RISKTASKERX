@@ -4,6 +4,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.wbsrisktaskerx.wbsrisktaskerx.common.constants.ExportConstants;
 import com.wbsrisktaskerx.wbsrisktaskerx.entity.*;
 import com.wbsrisktaskerx.wbsrisktaskerx.mapper.HistoryMapper;
+import com.wbsrisktaskerx.wbsrisktaskerx.mapper.PaymentMapper;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.PagingRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.SearchFilterCustomersRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.*;
@@ -44,7 +45,7 @@ public class ExportService implements IExportService{
     }
 
     @Override
-    public ExportCustomerResponse exportCustomerPurchaseHistory(Integer customerId) throws IOException {
+    public ExportCustomerResponse exportCustomerPurchaseHistory(Integer customerId, Integer paymentsId) throws IOException {
         CustomerResponse customerResponse = customerService.findOneById(customerId);
         QPurchaseHistory purchaseHistory = QPurchaseHistory.purchaseHistory;
         QCar car = QCar.car;
@@ -52,6 +53,8 @@ public class ExportService implements IExportService{
         QCarCategory category = QCarCategory.carCategory;
         QAdmin seller = QAdmin.admin;
         QCustomer customer = QCustomer.customer;
+        QInstallments installments = QInstallments.installments;
+        QPayment payment = QPayment.payment;
 
         List<PurchaseHistoryResponse> purchaseHistoryResponses = jpaQueryFactory
                 .selectFrom(purchaseHistory)
@@ -66,9 +69,17 @@ public class ExportService implements IExportService{
                 .map(HistoryMapper::purchaseHistoryMapper)
                 .collect(Collectors.toList());
 
+        List<InstallmentsResponse> installmentsResponses = jpaQueryFactory
+                .selectFrom(installments)
+                .where(installments.payments.id.eq(paymentsId))
+                .fetch()
+                .stream()
+                .map(PaymentMapper::installmentsMapper)
+                .toList();
+
         ExportDetails details = generateExportDetails();
         String fileName = String.format(ExportConstants.ID_FILE_FORMAT, ExportConstants.PURCHASE_HISTORY_CUSTOMER, customerId, details.currentDate, ExportConstants.XLSX);
-        ExportCustomerResponse response = ExcelUtils.purchaseHistoryToExcel(purchaseHistoryResponses, details.password, fileName);
+        ExportCustomerResponse response = ExcelUtils.purchaseHistoryToExcel(purchaseHistoryResponses, installmentsResponses, details.password, fileName);
 
         return response;
     }
