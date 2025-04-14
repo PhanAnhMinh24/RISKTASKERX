@@ -12,4 +12,5 @@ import java.util.List;
 public class SearchFilterAdminRequest {
     String searchKey;
     List<DepartmentName> departmentName;
+    List<Boolean> isActive;
 }

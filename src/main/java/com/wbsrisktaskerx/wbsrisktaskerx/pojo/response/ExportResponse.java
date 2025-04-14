@@ -9,7 +9,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ExportCustomerResponse {
+public class ExportResponse {
     byte[] response;
     String fileName;
     String password;

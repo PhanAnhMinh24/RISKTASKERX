@@ -2,6 +2,7 @@ package com.wbsrisktaskerx.wbsrisktaskerx.common.constants;
 
 public class ExportConstants {
     public static final String FILENAME = "Customerlist_";
+    public static final String ADMIN_FILENAME = "Adminlist_";
     public static final String PURCHASE_HISTORY_CUSTOMER = "Purchase_History_Customer_";
     public static final String WARRANTY_HISTORY_CUSTOMER = "Warranty_History_Customer_";
     public static final String XLSX = ".xlsx";
@@ -12,4 +13,5 @@ public class ExportConstants {
     public static final String VI_VN = "vi-VN";
     public static final String VND = " VND";
     public static final String N_A = "N/A";
+    public static final String EMPTY = "";
 }
