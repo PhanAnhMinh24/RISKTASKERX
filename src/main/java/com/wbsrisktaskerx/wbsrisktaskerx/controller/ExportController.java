@@ -2,6 +2,7 @@ package com.wbsrisktaskerx.wbsrisktaskerx.controller;
 
 import com.wbsrisktaskerx.wbsrisktaskerx.common.constants.EndpointConstants;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.PagingRequest;
+import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.ExportHistoryRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.SearchFilterCustomersRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.ExportCustomerResponse;
 import com.wbsrisktaskerx.wbsrisktaskerx.service.export.IExportService;
@@ -26,9 +27,9 @@ public class ExportController {
         return ResponseEntity.ok().body(exportResponse);
     }
 
-    @GetMapping(EndpointConstants.CUSTOMERS + EndpointConstants.PURCHASE + EndpointConstants.ID + EndpointConstants.PAYMENTS_ID)
-    public ResponseEntity<ExportCustomerResponse> exportPurchaseHistory(@PathVariable int id, @PathVariable int paymentsId) throws IOException {
-        ExportCustomerResponse exportResponse = exportService.exportCustomerPurchaseHistory(id, paymentsId);
+    @PostMapping(EndpointConstants.CUSTOMERS + EndpointConstants.PURCHASE + EndpointConstants.ID)
+    public ResponseEntity<ExportCustomerResponse> exportPurchaseHistory(@RequestBody ExportHistoryRequest request) throws IOException {
+        ExportCustomerResponse exportResponse = exportService.exportCustomerPurchaseHistory(request);
         return ResponseEntity.ok().body(exportResponse);
     }
 

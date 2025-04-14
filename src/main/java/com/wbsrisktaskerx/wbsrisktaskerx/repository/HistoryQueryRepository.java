@@ -31,11 +31,32 @@ public class HistoryQueryRepository {
         this.customerService = customerService;
     }
 
+    public PurchaseHistoryResponse findPurchaseHistoryByPaymentsId(List<PurchaseHistoryResponse> list, Integer paymentsId) {
+        return list.stream().filter(p -> p.getPayment().getId().equals(paymentsId))
+                .findFirst().orElse(null);
+    }
+
     public Page<PurchaseHistoryResponse> getPurchaseHistory(PagingRequest<HistoryRequest> request) {
         HistoryRequest filter = request.getFilters();
         Pageable pageable = PageService.getPageRequest(request);
         Integer id = filter.getCustomerId();
 
+        BooleanBuilder builder = new BooleanBuilder();
+        builder.and(purchaseHistory.customer.id.eq(id));
+
+        List<PurchaseHistoryResponse> purchaseHistoryResponses = getListPurchaseHistory(id);
+
+        long total = Optional.ofNullable(
+                jpaQueryFactory.select(purchaseHistory.count())
+                        .from(purchaseHistory)
+                        .where(builder)
+                        .fetchOne()
+        ).orElse(0L);
+
+        return new PageImpl<>(purchaseHistoryResponses, pageable, total);
+    }
+
+    public List<PurchaseHistoryResponse> getListPurchaseHistory(Integer id) {
         BooleanBuilder builder = new BooleanBuilder();
         builder.and(purchaseHistory.customer.id.eq(id));
 
@@ -46,27 +67,18 @@ public class HistoryQueryRepository {
         QAdmin seller = QAdmin.admin;
         QCustomer customer = QCustomer.customer;
 
-        List<PurchaseHistoryResponse> purchaseHistoryResponses = jpaQueryFactory
+        return jpaQueryFactory
                 .selectFrom(purchaseHistory)
-                .innerJoin(purchaseHistory.car, car).fetchJoin()
-                .innerJoin(car.brand, brand).fetchJoin()
-                .innerJoin(car.category, category).fetchJoin()
-                .innerJoin(purchaseHistory.seller, seller).fetchJoin()
-                .innerJoin(purchaseHistory.customer, customer).fetchJoin()
+                .innerJoin(car).on(purchaseHistory.car.id.eq(car.id))
+                .innerJoin(brand).on(car.brand.id.eq(brand.id))
+                .innerJoin(category).on(car.category.id.eq(category.id))
+                .innerJoin(seller).on(purchaseHistory.seller.id.eq(seller.id))
+                .innerJoin(customer).on(purchaseHistory.customer.id.eq(customer.id))
                 .where(builder)
                 .fetch()
                 .stream()
                 .map(HistoryMapper::purchaseHistoryMapper)
                 .collect(Collectors.toList());
-
-        long total = Optional.ofNullable(
-                jpaQueryFactory.select(purchaseHistory.count())
-                        .from(purchaseHistory)
-                        .where(builder)
-                        .fetchOne()
-        ).orElse(0L);
-
-        return new PageImpl<>(purchaseHistoryResponses, pageable, total);
     }
 
 

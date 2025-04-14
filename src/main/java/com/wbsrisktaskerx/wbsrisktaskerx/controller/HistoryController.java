@@ -41,7 +41,7 @@ public class HistoryController {
 
     @GetMapping(EndpointConstants.PURCHASE + EndpointConstants.PAYMENTS_ID)
     public ResponseEntity<List<InstallmentsResponse>> getInstallmentsByPaymentId(@PathVariable Integer paymentsId) {
-        List<InstallmentsResponse> installments = installmentService.getInstallments(paymentsId);
+        List<InstallmentsResponse> installments = installmentService.getListInstallments(paymentsId);
         return ResponseEntity.ok(installments);
     }
 }

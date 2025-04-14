@@ -17,7 +17,7 @@ public class InstallmentService{
         this.installmentRepository = iInstallmentService;
     }
 
-    public List<InstallmentsResponse> getInstallments(Integer paymentsId) {
+    public List<InstallmentsResponse> getListInstallments(Integer paymentsId) {
         List<Installments> installmentsList = installmentRepository.findByPaymentsId(paymentsId);
         return installmentsList.stream().map(PaymentMapper::installmentsMapper)
                 .collect(Collectors.toList());

@@ -2,17 +2,18 @@ package com.wbsrisktaskerx.wbsrisktaskerx.service.export;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.wbsrisktaskerx.wbsrisktaskerx.common.constants.ExportConstants;
-import com.wbsrisktaskerx.wbsrisktaskerx.entity.*;
 import com.wbsrisktaskerx.wbsrisktaskerx.mapper.HistoryMapper;
-import com.wbsrisktaskerx.wbsrisktaskerx.mapper.PaymentMapper;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.PagingRequest;
+import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.ExportHistoryRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.SearchFilterCustomersRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.*;
 import com.wbsrisktaskerx.wbsrisktaskerx.repository.CustomerJpaQueryRepository;
-import com.wbsrisktaskerx.wbsrisktaskerx.mapper.CarMapper;
+import com.wbsrisktaskerx.wbsrisktaskerx.repository.HistoryQueryRepository;
+import com.wbsrisktaskerx.wbsrisktaskerx.repository.InstallmentQueryRepository;
 import com.wbsrisktaskerx.wbsrisktaskerx.service.customer.CustomerServiceImpl;
 import com.wbsrisktaskerx.wbsrisktaskerx.utils.ExcelUtils;
 import com.wbsrisktaskerx.wbsrisktaskerx.utils.PasswordExport;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -28,11 +29,20 @@ public class ExportService implements IExportService{
     private final CustomerJpaQueryRepository customerJpaQueryRepository;
     private final JPAQueryFactory jpaQueryFactory;
     private final CustomerServiceImpl customerService;
+    private final HistoryQueryRepository historyQueryRepository;
+    private final InstallmentQueryRepository installmentQueryRepository;
 
-    public ExportService (CustomerJpaQueryRepository customerJpaQueryRepository, JPAQueryFactory jpaQueryFactory, CustomerServiceImpl customerService){
+    @Autowired
+    private ExcelUtils excelUtils;
+
+    public ExportService (CustomerJpaQueryRepository customerJpaQueryRepository, JPAQueryFactory jpaQueryFactory,
+                          CustomerServiceImpl customerService, HistoryQueryRepository historyQueryRepository,
+                          InstallmentQueryRepository installmentQueryRepository){
         this.customerJpaQueryRepository =customerJpaQueryRepository;
         this.jpaQueryFactory = jpaQueryFactory;
         this.customerService = customerService;
+        this.historyQueryRepository = historyQueryRepository;
+        this.installmentQueryRepository = installmentQueryRepository;
     }
 
     @Override
@@ -45,43 +55,16 @@ public class ExportService implements IExportService{
     }
 
     @Override
-    public ExportCustomerResponse exportCustomerPurchaseHistory(Integer customerId, Integer paymentsId) throws IOException {
-        CustomerResponse customerResponse = customerService.findOneById(customerId);
-        QPurchaseHistory purchaseHistory = QPurchaseHistory.purchaseHistory;
-        QCar car = QCar.car;
-        QCarBrand brand = QCarBrand.carBrand;
-        QCarCategory category = QCarCategory.carCategory;
-        QAdmin seller = QAdmin.admin;
-        QCustomer customer = QCustomer.customer;
-        QInstallments installments = QInstallments.installments;
-        QPayment payment = QPayment.payment;
+    public ExportCustomerResponse exportCustomerPurchaseHistory(ExportHistoryRequest request) throws IOException {
+        Integer customerId = request.getId();
+        Integer paymentsId = request.getPaymentsId();
+        List<PurchaseHistoryResponse> purchaseHistoryResponses = historyQueryRepository.getListPurchaseHistory(customerId);
 
-        List<PurchaseHistoryResponse> purchaseHistoryResponses = jpaQueryFactory
-                .selectFrom(purchaseHistory)
-                .innerJoin(purchaseHistory.car, car).fetchJoin()
-                .innerJoin(car.brand, brand).fetchJoin()
-                .innerJoin(car.category, category).fetchJoin()
-                .innerJoin(purchaseHistory.seller, seller).fetchJoin()
-                .innerJoin(purchaseHistory.customer, customer).fetchJoin()
-                .where(purchaseHistory.customer.id.eq(customerId))
-                .fetch()
-                .stream()
-                .map(HistoryMapper::purchaseHistoryMapper)
-                .collect(Collectors.toList());
-
-        List<InstallmentsResponse> installmentsResponses = jpaQueryFactory
-                .selectFrom(installments)
-                .where(installments.payments.id.eq(paymentsId))
-                .fetch()
-                .stream()
-                .map(PaymentMapper::installmentsMapper)
-                .toList();
-
+        List<InstallmentsResponse> installmentsResponses = installmentQueryRepository.getListInstallments(paymentsId);
         ExportDetails details = generateExportDetails();
         String fileName = String.format(ExportConstants.ID_FILE_FORMAT, ExportConstants.PURCHASE_HISTORY_CUSTOMER, customerId, details.currentDate, ExportConstants.XLSX);
-        ExportCustomerResponse response = ExcelUtils.purchaseHistoryToExcel(purchaseHistoryResponses, installmentsResponses, details.password, fileName);
 
-        return response;
+        return excelUtils.purchaseHistoryToExcel(purchaseHistoryResponses, installmentsResponses, paymentsId, details.password, fileName);
     }
 
     @Override
@@ -96,9 +79,8 @@ public class ExportService implements IExportService{
 
         ExportDetails details = generateExportDetails();
         String fileName = String.format(ExportConstants.ID_FILE_FORMAT, ExportConstants.WARRANTY_HISTORY_CUSTOMER, customerId, details.currentDate, ExportConstants.XLSX);
-        ExportCustomerResponse response = ExcelUtils.warrantyHistoryToExcel(warrantyHistoryResponses, details.password, fileName);
 
-        return response;
+        return ExcelUtils.warrantyHistoryToExcel(warrantyHistoryResponses, details.password, fileName);
     }
 
     private ExportDetails generateExportDetails() {
