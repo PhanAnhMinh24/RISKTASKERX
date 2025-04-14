@@ -61,7 +61,7 @@ public class ExportService implements IExportService{
                 .innerJoin(purchaseHistory.car, car).fetchJoin()
                 .innerJoin(car.brand, brand).fetchJoin()
                 .innerJoin(car.category, category).fetchJoin()
-                .innerJoin(car.seller, seller).fetchJoin()
+                .innerJoin(purchaseHistory.seller, seller).fetchJoin()
                 .innerJoin(purchaseHistory.customer, customer).fetchJoin()
                 .where(purchaseHistory.customer.id.eq(customerId))
                 .fetch()

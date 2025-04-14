@@ -34,8 +34,6 @@ public class CarMapper {
                 .price(car.getPrice())
                 .description(car.getDescription())
                 .imageUrl(car.getImageUrl())
-                .sparePartsId(car.getSparePartsId())
-                .seller(adminMapper(car.getSeller()))
                 .isActive(car.getIsActive())
                 .build();
     }

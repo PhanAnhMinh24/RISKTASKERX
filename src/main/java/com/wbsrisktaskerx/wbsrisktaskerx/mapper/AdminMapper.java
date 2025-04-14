@@ -9,6 +9,7 @@ public class AdminMapper {
                 .id(admin.getId())
                 .fullName(admin.getFullName())
                 .email(admin.getEmail())
+                .phoneNumber(admin.getPhoneNumber())
                 .role(admin.getRole())
                 .departmentName(admin.getDepartmentName())
                 .lastLogin(admin.getLastLogin())

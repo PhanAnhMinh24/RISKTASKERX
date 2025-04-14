@@ -4,11 +4,9 @@ import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.wbsrisktaskerx.wbsrisktaskerx.entity.*;
 import com.wbsrisktaskerx.wbsrisktaskerx.mapper.HistoryMapper;
-import com.wbsrisktaskerx.wbsrisktaskerx.mapper.PaymentMapper;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.PagingRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.HistoryRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.*;
-import com.wbsrisktaskerx.wbsrisktaskerx.mapper.CarMapper;
 import com.wbsrisktaskerx.wbsrisktaskerx.service.customer.CustomerServiceImpl;
 import com.wbsrisktaskerx.wbsrisktaskerx.utils.PageService;
 import org.apache.commons.lang3.ObjectUtils;
@@ -53,7 +51,7 @@ public class HistoryQueryRepository {
                 .innerJoin(purchaseHistory.car, car).fetchJoin()
                 .innerJoin(car.brand, brand).fetchJoin()
                 .innerJoin(car.category, category).fetchJoin()
-                .innerJoin(car.seller, seller).fetchJoin()
+                .innerJoin(purchaseHistory.seller, seller).fetchJoin()
                 .innerJoin(purchaseHistory.customer, customer).fetchJoin()
                 .where(builder)
                 .fetch()

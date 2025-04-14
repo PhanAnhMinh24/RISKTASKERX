@@ -5,6 +5,7 @@ import com.wbsrisktaskerx.wbsrisktaskerx.entity.WarrantyHistory;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.PurchaseHistoryResponse;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.WarrantyHistoryResponse;
 
+import static com.wbsrisktaskerx.wbsrisktaskerx.mapper.AdminMapper.adminMapper;
 import static com.wbsrisktaskerx.wbsrisktaskerx.mapper.CarMapper.carMapper;
 import static com.wbsrisktaskerx.wbsrisktaskerx.mapper.CarMapper.warrantyMapper;
 import static com.wbsrisktaskerx.wbsrisktaskerx.mapper.CustomerMapper.customerMapper;
@@ -20,7 +21,7 @@ public class HistoryMapper {
                 .warranty(warrantyMapper(purchaseHistory.getWarranty()))
                 .vehicleIdentificationNumber(purchaseHistory.getVehicleIdentificationNumber())
                 .purchaseDate(purchaseHistory.getPurchaseDate())
-                .salesRepresentative(purchaseHistory.getSalesRepresentative())
+                .admin(adminMapper(purchaseHistory.getSeller()))
                 .serviceCenter(purchaseHistory.getServiceCenter())
                 .build();
     }

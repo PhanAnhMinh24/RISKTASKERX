@@ -1,7 +1,6 @@
 package com.wbsrisktaskerx.wbsrisktaskerx.utils;
 
 import com.wbsrisktaskerx.wbsrisktaskerx.common.constants.ExportConstants;
-import com.wbsrisktaskerx.wbsrisktaskerx.entity.Installments;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.data.PaymentOptions;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.*;
 import org.apache.commons.compress.utils.IOUtils;
@@ -91,8 +90,8 @@ public class ExcelUtils {
                         row.createCell(4).setCellValue(p.getCustomer().getPhoneNumber());
                         row.createCell(5).setCellValue(p.getCustomer().getEmail());
                         row.createCell(6).setCellValue(p.getCustomer().getAddress());
-                        row.createCell(7).setCellValue(p.getSalesRepresentative());
-                        row.createCell(8).setCellValue(String.valueOf(p.getServiceCenter()));
+                        row.createCell(7).setCellValue(String.valueOf(p.getServiceCenter()));
+                        row.createCell(8).setCellValue(p.getAdmin().getFullName());
                         row.createCell(9).setCellValue(p.getVehicleIdentificationNumber());
                         row.createCell(10).setCellValue(nf.format(p.getPayment().getPrice()) + ExportConstants.VND);
                         row.createCell(11).setCellValue(String.valueOf(p.getPayment().getPaymentOption()));
@@ -117,7 +116,7 @@ public class ExcelUtils {
                     row.createCell(4).setCellValue(p.getCustomer().getPhoneNumber());
                     row.createCell(5).setCellValue(p.getCustomer().getEmail());
                     row.createCell(6).setCellValue(p.getCustomer().getAddress());
-                    row.createCell(7).setCellValue(p.getSalesRepresentative());
+                    row.createCell(7).setCellValue(p.getAdmin().getFullName());
                     row.createCell(8).setCellValue(String.valueOf(p.getServiceCenter()));
                     row.createCell(9).setCellValue(p.getVehicleIdentificationNumber());
                     row.createCell(10).setCellValue(nf.format(p.getPayment().getPrice()) + ExportConstants.VND);
