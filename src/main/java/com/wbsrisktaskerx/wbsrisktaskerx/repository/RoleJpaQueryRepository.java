@@ -5,7 +5,7 @@ import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.wbsrisktaskerx.wbsrisktaskerx.common.constants.CommonConstants;
-import com.wbsrisktaskerx.wbsrisktaskerx.common.constants.RoleConstants;
+import com.wbsrisktaskerx.wbsrisktaskerx.common.constants.FillConstants;
 import com.wbsrisktaskerx.wbsrisktaskerx.common.constants.StringConstants;
 import com.wbsrisktaskerx.wbsrisktaskerx.entity.QRole;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.PagingRequest;
@@ -58,7 +58,7 @@ public class RoleJpaQueryRepository {
         }
 
         Order direction = Optional.of(pageable.getSort())
-                .map(sort -> sort.getOrderFor(RoleConstants.UPDATE_AT))
+                .map(sort -> sort.getOrderFor(FillConstants.UPDATE_AT))
                 .map(order -> order.isDescending() ? Order.DESC : Order.ASC)
                 .orElse(Order.ASC);
 
