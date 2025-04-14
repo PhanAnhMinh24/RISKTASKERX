@@ -39,7 +39,7 @@ public class ExportService implements IExportService {
     }
 
     @Override
-    public ExportCustomerResponse getCustomerList(PagingRequest<SearchFilterCustomersRequest> request) throws IOException {
+    public ExportResponse getCustomerList(PagingRequest<SearchFilterCustomersRequest> request) throws IOException {
         SearchFilterCustomersRequest filter = request.getFilters();
         List<CustomerResponse> content = customerJpaQueryRepository.findCustomersByFilter(filter);
         ExportDetails details = generateExportDetails();
@@ -48,7 +48,7 @@ public class ExportService implements IExportService {
     }
 
     @Override
-    public ExportAdminResponse getAdminList(PagingRequest<SearchFilterAdminRequest> request) throws IOException {
+    public ExportResponse getAdminList(PagingRequest<SearchFilterAdminRequest> request) throws IOException {
         List<AdminResponse> content = adminJpaQueryRepository.searchedAndFilteredAdmin(request).getContent();
         ExportDetails details = generateExportDetails();
         String fileName = String.format(ExportConstants.FILE_FORMAT, ExportConstants.ADMIN_FILENAME, details.currentDate, ExportConstants.XLSX);
@@ -57,7 +57,7 @@ public class ExportService implements IExportService {
 
 
     @Override
-    public ExportCustomerResponse exportCustomerPurchaseHistory(Integer customerId) throws IOException {
+    public ExportResponse exportCustomerPurchaseHistory(Integer customerId) throws IOException {
         CustomerResponse customerResponse = customerService.findOneById(customerId);
         QPurchaseHistory purchaseHistory = QPurchaseHistory.purchaseHistory;
         QCar car = QCar.car;
@@ -81,13 +81,13 @@ public class ExportService implements IExportService {
 
         ExportDetails details = generateExportDetails();
         String fileName = String.format(ExportConstants.ID_FILE_FORMAT, ExportConstants.PURCHASE_HISTORY_CUSTOMER, customerId, details.currentDate, ExportConstants.XLSX);
-        ExportCustomerResponse response = ExcelUtils.purchaseHistoryToExcel(purchaseHistoryResponses, details.password, fileName);
+        ExportResponse response = ExcelUtils.purchaseHistoryToExcel(purchaseHistoryResponses, details.password, fileName);
 
         return response;
     }
 
     @Override
-    public ExportCustomerResponse exportCustomerWarrantyHistory(Integer customerId) throws IOException {
+    public ExportResponse exportCustomerWarrantyHistory(Integer customerId) throws IOException {
         CustomerResponse customerResponse = customerService.findOneById(customerId);
         List<WarrantyHistoryResponse> warrantyHistoryResponses = jpaQueryFactory.selectFrom(warrantyHistory)
                 .where(warrantyHistory.customer.id.eq(customerId))
@@ -98,7 +98,7 @@ public class ExportService implements IExportService {
 
         ExportDetails details = generateExportDetails();
         String fileName = String.format(ExportConstants.ID_FILE_FORMAT, ExportConstants.WARRANTY_HISTORY_CUSTOMER, customerId, details.currentDate, ExportConstants.XLSX);
-        ExportCustomerResponse response = ExcelUtils.warrantyHistoryToExcel(warrantyHistoryResponses, details.password, fileName);
+        ExportResponse response = ExcelUtils.warrantyHistoryToExcel(warrantyHistoryResponses, details.password, fileName);
 
         return response;
     }

@@ -36,8 +36,9 @@ public class ExcelUtils {
             "Service Type", "Service Center", "Service Date", "Service Cost"};
 
     public static String[] ADMIN_HEADER = {"ID", "Full Name", "Email", "Role", "Department", "Last Login", "Is Active"};
-    public static ExportCustomerResponse customerToExcel(List<CustomerResponse> customerList,
-                                                         String password, String fileName) throws IOException {
+
+    public static ExportResponse customerToExcel(List<CustomerResponse> customerList,
+                                                 String password, String fileName) throws IOException {
         try (Workbook workbook = new XSSFWorkbook()) {
             Sheet sheet = workbook.createSheet("Sheet1");
             createHeader(sheet, workbook, HEADER);
@@ -61,7 +62,7 @@ public class ExcelUtils {
 
             ByteArrayOutputStream encryptedBaos = encryptExcelFile(workbook, password);
 
-            return ExportCustomerResponse.builder()
+            return ExportResponse.builder()
                     .fileName(fileName)
                     .password(password)
                     .response(encryptedBaos.toByteArray())
@@ -71,8 +72,8 @@ public class ExcelUtils {
         }
     }
 
-    public static ExportCustomerResponse purchaseHistoryToExcel(List<PurchaseHistoryResponse> purchaseHistory,
-                                                                String password, String fileName) throws IOException {
+    public static ExportResponse purchaseHistoryToExcel(List<PurchaseHistoryResponse> purchaseHistory,
+                                                        String password, String fileName) throws IOException {
         try (Workbook workbook = new XSSFWorkbook()) {
             Sheet sheet = workbook.createSheet("Sheet1");
             createHeader(sheet, workbook, PURCHASE_HISTORY_HEADER);
@@ -118,7 +119,7 @@ public class ExcelUtils {
 
             ByteArrayOutputStream encryptedBaos = encryptExcelFile(workbook, password);
 
-            return ExportCustomerResponse.builder()
+            return ExportResponse.builder()
                     .fileName(fileName)
                     .password(password)
                     .response(encryptedBaos.toByteArray())
@@ -128,8 +129,8 @@ public class ExcelUtils {
         }
     }
 
-    public static ExportCustomerResponse warrantyHistoryToExcel(List<WarrantyHistoryResponse> warrantyHistory,
-                                                                String password, String fileName) throws IOException {
+    public static ExportResponse warrantyHistoryToExcel(List<WarrantyHistoryResponse> warrantyHistory,
+                                                        String password, String fileName) throws IOException {
         try (Workbook workbook = new XSSFWorkbook()) {
             Sheet sheet = workbook.createSheet("Sheet1");
             createHeader(sheet, workbook, WARRANTY_HISTORY_HEADER);
@@ -160,7 +161,7 @@ public class ExcelUtils {
 
             ByteArrayOutputStream encryptedBaos = encryptExcelFile(workbook, password);
 
-            return ExportCustomerResponse.builder()
+            return ExportResponse.builder()
                     .fileName(fileName)
                     .password(password)
                     .response(encryptedBaos.toByteArray())
@@ -220,8 +221,8 @@ public class ExcelUtils {
         }
     }
 
-    public static ExportAdminResponse adminToExcel(List<AdminResponse> adminList,
-                                                   String password, String fileName) throws IOException {
+    public static ExportResponse adminToExcel(List<AdminResponse> adminList,
+                                              String password, String fileName) throws IOException {
         try (Workbook workbook = new XSSFWorkbook()) {
             Sheet sheet = workbook.createSheet("Sheet1");
             createHeader(sheet, workbook, ADMIN_HEADER);
@@ -232,9 +233,9 @@ public class ExcelUtils {
                 row.createCell(0).setCellValue(a.getId());
                 row.createCell(1).setCellValue(a.getFullName());
                 row.createCell(2).setCellValue(a.getEmail());
-                row.createCell(3).setCellValue(a.getRole() != null ? a.getRole().getName() : "");
-                row.createCell(4).setCellValue(a.getDepartmentName() != null ? a.getDepartmentName().toString() : "");
-                row.createCell(5).setCellValue(a.getLastLogin() != null ? a.getLastLogin().toString() : "");
+                row.createCell(3).setCellValue(a.getRole() != null ? a.getRole().getName() : ExportConstants.EMPTY);
+                row.createCell(4).setCellValue(a.getDepartmentName() != null ? a.getDepartmentName().toString() : ExportConstants.EMPTY);
+                row.createCell(5).setCellValue(a.getLastLogin() != null ? a.getLastLogin().toString() : ExportConstants.EMPTY);
                 row.createCell(6).setCellValue(a.getIsActive() != null ? a.getIsActive() : false);
             }
 
@@ -244,7 +245,7 @@ public class ExcelUtils {
 
             ByteArrayOutputStream encryptedBaos = encryptExcelFile(workbook, password);
 
-            return ExportAdminResponse.builder()
+            return ExportResponse.builder()
                     .fileName(fileName)
                     .password(password)
                     .response(encryptedBaos.toByteArray())
