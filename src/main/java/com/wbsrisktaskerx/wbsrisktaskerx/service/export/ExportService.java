@@ -5,10 +5,11 @@ import com.wbsrisktaskerx.wbsrisktaskerx.common.constants.ExportConstants;
 import com.wbsrisktaskerx.wbsrisktaskerx.entity.*;
 import com.wbsrisktaskerx.wbsrisktaskerx.mapper.HistoryMapper;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.PagingRequest;
+import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.SearchFilterAdminRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.SearchFilterCustomersRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.*;
+import com.wbsrisktaskerx.wbsrisktaskerx.repository.AdminJpaQueryRepository;
 import com.wbsrisktaskerx.wbsrisktaskerx.repository.CustomerJpaQueryRepository;
-import com.wbsrisktaskerx.wbsrisktaskerx.mapper.CarMapper;
 import com.wbsrisktaskerx.wbsrisktaskerx.service.customer.CustomerServiceImpl;
 import com.wbsrisktaskerx.wbsrisktaskerx.utils.ExcelUtils;
 import com.wbsrisktaskerx.wbsrisktaskerx.utils.PasswordExport;
@@ -23,13 +24,16 @@ import java.util.stream.Collectors;
 import static com.wbsrisktaskerx.wbsrisktaskerx.entity.QWarrantyHistory.warrantyHistory;
 
 @Service
-public class ExportService implements IExportService{
+public class ExportService implements IExportService {
     private final CustomerJpaQueryRepository customerJpaQueryRepository;
     private final JPAQueryFactory jpaQueryFactory;
     private final CustomerServiceImpl customerService;
 
-    public ExportService (CustomerJpaQueryRepository customerJpaQueryRepository, JPAQueryFactory jpaQueryFactory, CustomerServiceImpl customerService){
-        this.customerJpaQueryRepository =customerJpaQueryRepository;
+    private final AdminJpaQueryRepository adminJpaQueryRepository;
+
+    public ExportService(CustomerJpaQueryRepository customerJpaQueryRepository, JPAQueryFactory jpaQueryFactory, CustomerServiceImpl customerService, AdminJpaQueryRepository adminJpaQueryRepository) {
+        this.customerJpaQueryRepository = customerJpaQueryRepository;
+        this.adminJpaQueryRepository = adminJpaQueryRepository;
         this.jpaQueryFactory = jpaQueryFactory;
         this.customerService = customerService;
     }
@@ -42,6 +46,15 @@ public class ExportService implements IExportService{
         String fileName = String.format(ExportConstants.FILE_FORMAT, ExportConstants.FILENAME, details.currentDate, ExportConstants.XLSX);
         return ExcelUtils.customerToExcel(content, details.password, fileName);
     }
+
+    @Override
+    public ExportAdminResponse getAdminList(PagingRequest<SearchFilterAdminRequest> request) throws IOException {
+        List<AdminResponse> content = adminJpaQueryRepository.searchedAndFilteredAdmin(request).getContent();
+        ExportDetails details = generateExportDetails();
+        String fileName = String.format(ExportConstants.FILE_FORMAT, ExportConstants.ADMIN_FILENAME, details.currentDate, ExportConstants.XLSX);
+        return ExcelUtils.adminToExcel(content, details.password, fileName);
+    }
+
 
     @Override
     public ExportCustomerResponse exportCustomerPurchaseHistory(Integer customerId) throws IOException {

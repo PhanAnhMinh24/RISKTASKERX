@@ -2,7 +2,9 @@ package com.wbsrisktaskerx.wbsrisktaskerx.controller;
 
 import com.wbsrisktaskerx.wbsrisktaskerx.common.constants.EndpointConstants;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.PagingRequest;
+import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.SearchFilterAdminRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.SearchFilterCustomersRequest;
+import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.ExportAdminResponse;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.ExportCustomerResponse;
 import com.wbsrisktaskerx.wbsrisktaskerx.service.export.IExportService;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +27,13 @@ public class ExportController {
         ExportCustomerResponse exportResponse = exportService.getCustomerList(request);
         return ResponseEntity.ok().body(exportResponse);
     }
+
+    @PostMapping(EndpointConstants.ADMIN)
+    public ResponseEntity<ExportAdminResponse> downloadAdmin(@RequestBody PagingRequest<SearchFilterAdminRequest> request) throws IOException {
+        ExportAdminResponse exportResponse = exportService.getAdminList(request);
+        return ResponseEntity.ok().body(exportResponse);
+    }
+
 
     @GetMapping(EndpointConstants.CUSTOMERS + EndpointConstants.PURCHASE + EndpointConstants.ID)
     public ResponseEntity<ExportCustomerResponse> exportPurchaseHistory(@PathVariable int id) throws IOException {
