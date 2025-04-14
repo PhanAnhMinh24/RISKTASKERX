@@ -4,8 +4,7 @@ import com.wbsrisktaskerx.wbsrisktaskerx.common.constants.EndpointConstants;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.PagingRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.SearchFilterAdminRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.SearchFilterCustomersRequest;
-import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.ExportAdminResponse;
-import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.ExportCustomerResponse;
+import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.ExportResponse;
 import com.wbsrisktaskerx.wbsrisktaskerx.service.export.IExportService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,27 +22,27 @@ public class ExportController {
     }
 
     @PostMapping(EndpointConstants.CUSTOMERS)
-    public ResponseEntity<ExportCustomerResponse> download(@RequestBody PagingRequest<SearchFilterCustomersRequest> request) throws IOException {
-        ExportCustomerResponse exportResponse = exportService.getCustomerList(request);
+    public ResponseEntity<ExportResponse> download(@RequestBody PagingRequest<SearchFilterCustomersRequest> request) throws IOException {
+        ExportResponse exportResponse = exportService.getCustomerList(request);
         return ResponseEntity.ok().body(exportResponse);
     }
 
     @PostMapping(EndpointConstants.ADMIN)
-    public ResponseEntity<ExportAdminResponse> downloadAdmin(@RequestBody PagingRequest<SearchFilterAdminRequest> request) throws IOException {
-        ExportAdminResponse exportResponse = exportService.getAdminList(request);
+    public ResponseEntity<ExportResponse> downloadAdmin(@RequestBody PagingRequest<SearchFilterAdminRequest> request) throws IOException {
+        ExportResponse exportResponse = exportService.getAdminList(request);
         return ResponseEntity.ok().body(exportResponse);
     }
 
 
     @GetMapping(EndpointConstants.CUSTOMERS + EndpointConstants.PURCHASE + EndpointConstants.ID)
-    public ResponseEntity<ExportCustomerResponse> exportPurchaseHistory(@PathVariable int id) throws IOException {
-        ExportCustomerResponse exportResponse = exportService.exportCustomerPurchaseHistory(id);
+    public ResponseEntity<ExportResponse> exportPurchaseHistory(@PathVariable int id) throws IOException {
+        ExportResponse exportResponse = exportService.exportCustomerPurchaseHistory(id);
         return ResponseEntity.ok().body(exportResponse);
     }
 
     @GetMapping(EndpointConstants.CUSTOMERS + EndpointConstants.WARRANTY + EndpointConstants.ID)
-    public ResponseEntity<ExportCustomerResponse> exportWarrantyHistory(@PathVariable int id) throws IOException {
-        ExportCustomerResponse exportResponse = exportService.exportCustomerWarrantyHistory(id);
+    public ResponseEntity<ExportResponse> exportWarrantyHistory(@PathVariable int id) throws IOException {
+        ExportResponse exportResponse = exportService.exportCustomerWarrantyHistory(id);
         return ResponseEntity.ok().body(exportResponse);
     }
 }

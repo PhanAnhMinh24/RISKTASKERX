@@ -13,4 +13,5 @@ public class ExportConstants {
     public static final String VI_VN = "vi-VN";
     public static final String VND = " VND";
     public static final String N_A = "-";
+    public static final String EMPTY = "";
 }
