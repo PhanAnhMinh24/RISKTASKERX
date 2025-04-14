@@ -1,7 +1,10 @@
 package com.wbsrisktaskerx.wbsrisktaskerx.repository;
 
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.Order;
+import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.wbsrisktaskerx.wbsrisktaskerx.common.constants.AdminConstants;
 import com.wbsrisktaskerx.wbsrisktaskerx.common.constants.CommonConstants;
 import com.wbsrisktaskerx.wbsrisktaskerx.common.constants.StringConstants;
 import com.wbsrisktaskerx.wbsrisktaskerx.entity.QAdmin;
@@ -51,6 +54,15 @@ public class AdminJpaQueryRepository {
             builder.and(admin.departmentName.in(filter.getDepartmentName()));
         }
 
+        if (!ObjectUtils.isEmpty(filter.getIsActive())) {
+            builder.and(admin.isActive.in(filter.getIsActive()));
+        }
+
+        Order direction = Optional.of(pageable.getSort())
+                .map(sort -> sort.getOrderFor(AdminConstants.LAST_LOGIN))
+                .map(order -> order.isDescending() ? Order.DESC : Order.ASC)
+                .orElse(Order.ASC);
+
         List<AdminResponse> content = jpaQueryFactory.select(
                         new QAdminResponse(
                                 admin.id,
@@ -65,6 +77,7 @@ public class AdminJpaQueryRepository {
                 .where(builder)
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
+                .orderBy(new OrderSpecifier<>(direction, admin.lastLogin))
                 .fetch();
 
         long total = Optional.ofNullable(
