@@ -36,6 +36,7 @@ public class ExcelUtils {
             "Service Type", "Service Center", "Service Date", "Service Cost"};
 
     public static String[] ADMIN_HEADER = {"ID", "Full Name", "Email", "Role", "Department", "Last Login", "Is Active"};
+
     public static ExportResponse customerToExcel(List<CustomerResponse> customerList,
                                                  String password, String fileName) throws IOException {
         try (Workbook workbook = new XSSFWorkbook()) {
@@ -220,38 +221,38 @@ public class ExcelUtils {
         }
     }
 
-        public static ExportResponse adminToExcel(List<AdminResponse> adminList,
-                                                       String password, String fileName) throws IOException {
-            try (Workbook workbook = new XSSFWorkbook()) {
-                Sheet sheet = workbook.createSheet("Sheet1");
-                createHeader(sheet, workbook, ADMIN_HEADER);
+    public static ExportResponse adminToExcel(List<AdminResponse> adminList,
+                                              String password, String fileName) throws IOException {
+        try (Workbook workbook = new XSSFWorkbook()) {
+            Sheet sheet = workbook.createSheet("Sheet1");
+            createHeader(sheet, workbook, ADMIN_HEADER);
 
-                int rowIndex = 1;
-                for (AdminResponse a : adminList) {
-                    Row row = sheet.createRow(rowIndex++);
-                    row.createCell(0).setCellValue(a.getId());
-                    row.createCell(1).setCellValue(a.getFullName());
-                    row.createCell(2).setCellValue(a.getEmail());
-                    row.createCell(3).setCellValue(a.getRole() != null ? a.getRole().getName() : ExportConstants.EMPTY);
-                    row.createCell(4).setCellValue(a.getDepartmentName() != null ? a.getDepartmentName().toString() : ExportConstants.EMPTY);
-                    row.createCell(5).setCellValue(a.getLastLogin() != null ? a.getLastLogin().toString() : ExportConstants.EMPTY);
-                    row.createCell(6).setCellValue(a.getIsActive() != null ? a.getIsActive() : false);
-                }
-
-                for (int i = 0; i < ADMIN_HEADER.length; i++) {
-                    sheet.autoSizeColumn(i);
-                }
-
-                ByteArrayOutputStream encryptedBaos = encryptExcelFile(workbook, password);
-
-                return ExportResponse.builder()
-                        .fileName(fileName)
-                        .password(password)
-                        .response(encryptedBaos.toByteArray())
-                        .build();
-            } catch (Exception e) {
-                throw new RuntimeException(e);
+            int rowIndex = 1;
+            for (AdminResponse a : adminList) {
+                Row row = sheet.createRow(rowIndex++);
+                row.createCell(0).setCellValue(a.getId());
+                row.createCell(1).setCellValue(a.getFullName());
+                row.createCell(2).setCellValue(a.getEmail());
+                row.createCell(3).setCellValue(a.getRole() != null ? a.getRole().getName() : ExportConstants.EMPTY);
+                row.createCell(4).setCellValue(a.getDepartmentName() != null ? a.getDepartmentName().toString() : ExportConstants.EMPTY);
+                row.createCell(5).setCellValue(a.getLastLogin() != null ? a.getLastLogin().toString() : ExportConstants.EMPTY);
+                row.createCell(6).setCellValue(a.getIsActive() != null ? a.getIsActive() : false);
             }
+
+            for (int i = 0; i < ADMIN_HEADER.length; i++) {
+                sheet.autoSizeColumn(i);
+            }
+
+            ByteArrayOutputStream encryptedBaos = encryptExcelFile(workbook, password);
+
+            return ExportResponse.builder()
+                    .fileName(fileName)
+                    .password(password)
+                    .response(encryptedBaos.toByteArray())
+                    .build();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
+    }
 
 }
