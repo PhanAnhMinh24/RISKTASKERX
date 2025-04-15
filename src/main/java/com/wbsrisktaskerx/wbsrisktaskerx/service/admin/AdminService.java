@@ -53,4 +53,20 @@ public class AdminService implements IAdminService {
         return adminJpaQueryRepository.searchedAndFilteredAdmin(request);
     }
 
+    @Override
+    public List<AdminResponse> searchedAndFilteredAdminNoPaging(SearchFilterAdminRequest request) {
+        return adminJpaQueryRepository.searchedAndFilteredAdminNoPaging(request).stream()
+                .map(ad -> AdminResponse.builder()
+                        .id(ad.getId())
+                        .fullName(MaskUtils.mask(ad.getFullName()))
+                        .email(MaskUtils.mask(ad.getEmail()))
+                        .role(ad.getRole())
+                        .departmentName(ad.getDepartmentName())
+                        .lastLogin(ad.getLastLogin())
+                        .isActive(ad.getIsActive())
+                        .build())
+                .toList();
+    }
+
+
 }

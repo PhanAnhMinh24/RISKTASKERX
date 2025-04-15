@@ -10,9 +10,10 @@ import com.wbsrisktaskerx.wbsrisktaskerx.pojo.PagingRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.ActiveRoleRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.RoleRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.SearchFilterRoleRequest;
-import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.RoleDetailsReponse;
+import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.PermissionResponse;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.RoleResponse;
 import com.wbsrisktaskerx.wbsrisktaskerx.repository.*;
+import com.wbsrisktaskerx.wbsrisktaskerx.service.permission.PermissionService;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,13 +28,16 @@ public class RoleService implements IRoleService {
     private final PermissionRepository permissionRepository;
     private final RolePermissionRepository rolePermissionRepository;
     private final RoleJpaQueryRepository roleJpaQueryRepository;
+    private final PermissionService permissionService;
 
     public RoleService (RoleRepository roleRepository, PermissionRepository permissionRepository,
-                        RolePermissionRepository rolePermissionRepository, RoleJpaQueryRepository roleJpaQueryRepository) {
+                        RolePermissionRepository rolePermissionRepository, RoleJpaQueryRepository roleJpaQueryRepository,
+                        PermissionService permissionService) {
         this.roleRepository = roleRepository;
         this.permissionRepository = permissionRepository;
         this.rolePermissionRepository = rolePermissionRepository;
         this.roleJpaQueryRepository = roleJpaQueryRepository;
+        this.permissionService = permissionService;
     }
 
     private Role findById(Integer id){
@@ -92,15 +96,28 @@ public class RoleService implements IRoleService {
     public RoleResponse getRoleById(int id) {
         Role role = findById(id);
         List<RolePermission> rolePermissions = role.getRolePermissions();
-        List<String> permissionNames = rolePermissions.stream()
-                .map(rolePermission -> rolePermission.getPermission().getName())
+        List<PermissionResponse> permissions = rolePermissions.stream()
+                .map(rolePermission -> new PermissionResponse(
+                        rolePermission.getPermission().getId(),
+                        rolePermission.getPermission().getKey(),
+                        rolePermission.getPermission().getName()))
                 .toList();
         return new RoleResponse(
                 role.getId(),
                 role.getName(),
                 role.getIsActive(),
                 role.getUpdateAt(),
-                permissionNames
+                permissions
         );
+    }
+
+    @Override
+    @Transactional
+    public boolean updateRole(RoleRequest request) {
+        Role role = findById(request.getId());
+        Optional.ofNullable(request.getPermissionId())
+                .filter(ids -> !ids.isEmpty())
+                .ifPresent(ids -> permissionService.updateRolePermissions(role, ids));
+        return true;
     }
 }

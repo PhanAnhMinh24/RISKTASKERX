@@ -74,11 +74,12 @@ public class ExportService implements IExportService {
 
     @Override
     public ExportResponse getAdminList(PagingRequest<SearchFilterAdminRequest> request) throws IOException {
-        List<AdminResponse> content = adminJpaQueryRepository.searchedAndFilteredAdmin(request).getContent();
+        List<AdminResponse> content = adminJpaQueryRepository.searchedAndFilteredAdminNoPaging(request.getFilters());
         ExportDetails details = generateExportDetails();
         String fileName = String.format(ExportConstants.FILE_FORMAT, ExportConstants.ADMIN_FILENAME, details.currentDate, ExportConstants.XLSX);
         return ExcelUtils.adminToExcel(content, details.password, fileName);
     }
+
 
     @Override
     public ExportResponse exportCustomerWarrantyHistory(Integer customerId) throws IOException {
