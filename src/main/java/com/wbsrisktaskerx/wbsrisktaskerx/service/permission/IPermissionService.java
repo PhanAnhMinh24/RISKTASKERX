@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface IPermissionService {
     List<PermissionResponse> getAllPermissionsWithChildren();
+    void updateRolePermissions(int roleId, List<Integer> newPermissionIds);
 }
