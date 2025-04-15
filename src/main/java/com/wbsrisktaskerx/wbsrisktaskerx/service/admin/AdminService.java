@@ -10,6 +10,8 @@ import com.wbsrisktaskerx.wbsrisktaskerx.utils.MaskUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class AdminService implements IAdminService {
 
@@ -34,5 +36,21 @@ public class AdminService implements IAdminService {
                         .isActive(ad.getIsActive())
                         .build());
     }
+
+    @Override
+    public List<AdminResponse> searchedAndFilteredAdminNoPaging(SearchFilterAdminRequest request) {
+        return adminJpaQueryRepository.searchedAndFilteredAdminNoPaging(request).stream()
+                .map(ad -> AdminResponse.builder()
+                        .id(ad.getId())
+                        .fullName(MaskUtils.mask(ad.getFullName()))
+                        .email(MaskUtils.mask(ad.getEmail()))
+                        .role(ad.getRole())
+                        .departmentName(ad.getDepartmentName())
+                        .lastLogin(ad.getLastLogin())
+                        .isActive(ad.getIsActive())
+                        .build())
+                .toList();
+    }
+
 
 }

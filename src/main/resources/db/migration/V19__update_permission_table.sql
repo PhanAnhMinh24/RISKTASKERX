@@ -20,30 +20,30 @@ VALUES ('view_dashboard', 'View Dashboard', 2, 1);
 -- Role & Permission
 -- =========================================
 INSERT INTO permission (`key`, `name`, order_number, parent_id)
-VALUES ('admin_role_manager', 'Admin&Role Management', 3, NULL);
+VALUES ('admin_role_manager', 'Admin & Role Management', 3, NULL);
 
 -- Admin Management
 INSERT INTO permission (`key`, `name`, order_number, parent_id)
 VALUES
   ('admin_manager', 'Admin Management', 4, 3),
   ('role_manager', 'Role Management', 5, 3);
+-- Admin Management Details
+
+  INSERT INTO permission (`key`, `name`, order_number, parent_id)
+VALUES
+  ('view_admin_account_list', 'View Admin Account List', 6, 4),
+  ('view_admin_account_details', 'View Role Details', 7, 4),
+  ('add_new_admin_account', 'Add New Admin Account', 8, 4),
+  ('edit_admin_account', 'Edit Admin Account', 9, 4);
 
 -- Role Management Details
 INSERT INTO permission (`key`, `name`, order_number, parent_id)
 VALUES
-  ('view_role_list', 'View Role List', 6, 4),
-  ('view_role_details', 'View Role Details', 7, 4),
-  ('add_new_role', 'Add New Role', 8, 4),
-  ('edit_role', 'Edit Role', 9, 4),
-  ('delete_role', 'Delete Role', 10, 4);
-
--- Admin Management Details
-INSERT INTO permission (`key`, `name`, order_number, parent_id)
-VALUES
-  ('view_admin_account_list', 'View Admin Account List', 11, 5),
-  ('view_admin_account_details', 'View Role Details', 12, 5),
-  ('add_new_admin_account', 'Add New Admin Account', 13, 5),
-  ('edit_admin_account', 'Edit Admin Account', 14, 5);
+  ('view_role_list', 'View Role List', 10, 5),
+  ('view_role_details', 'View Role Details', 11, 5),
+  ('add_new_role', 'Add New Role', 12, 5),
+  ('edit_role', 'Edit Role', 13, 5),
+  ('delete_role', 'Delete Role', 14, 5);
 
 -- =========================================
 -- Customer Management
