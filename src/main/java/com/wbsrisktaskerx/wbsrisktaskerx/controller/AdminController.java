@@ -18,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequestMapping(EndpointConstants.ADMIN)
@@ -51,4 +52,12 @@ public class AdminController {
         Page<AdminResponse> pageResult = adminService.searchAndFilterAdmin(request);
         return ResponseEntity.ok(ApiResult.success(pageResult));
     }
+
+    @PostMapping(EndpointConstants.SEARCH_FILTER + "/no-paging")
+    public ResponseEntity<ApiResult<List<AdminResponse>>> searchFilterAdminNoPaging(@RequestBody @Valid SearchFilterAdminRequest request) {
+        List<AdminResponse> result = adminService.searchedAndFilteredAdminNoPaging(request);
+        return ResponseEntity.ok(ApiResult.success(result));
+    }
+
+
 }

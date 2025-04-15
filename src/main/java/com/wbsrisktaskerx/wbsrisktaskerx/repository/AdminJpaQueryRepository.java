@@ -89,4 +89,46 @@ public class AdminJpaQueryRepository {
         ).orElse(0L);
         return new PageImpl<>(content, pageable, total);
     }
+
+    public List<AdminResponse> searchedAndFilteredAdminNoPaging(SearchFilterAdminRequest filter) {
+        String searchKey = filter.getSearchKey();
+
+        BooleanBuilder builder = new BooleanBuilder();
+        if (StringUtils.isNotBlank(searchKey)) {
+            BooleanBuilder searchBuilder = new BooleanBuilder();
+            searchBuilder.or(admin.fullName.like(
+                    String.format(StringConstants.PERCENT, CommonConstants.WILDCARD, searchKey, CommonConstants.WILDCARD)
+            ));
+            if (NumberUtils.isCreatable(searchKey)) {
+                Integer idValue = Integer.valueOf(searchKey);
+                searchBuilder.or(admin.id.eq(idValue));
+            }
+            builder.and(searchBuilder);
+        }
+
+        if (!ObjectUtils.isEmpty(filter.getDepartmentName())) {
+            builder.and(admin.departmentName.in(filter.getDepartmentName()));
+        }
+
+        if (!ObjectUtils.isEmpty(filter.getIsActive())) {
+            builder.and(admin.isActive.in(filter.getIsActive()));
+        }
+
+        return jpaQueryFactory.select(
+                        new QAdminResponse(
+                                admin.id,
+                                admin.fullName,
+                                admin.email,
+                                admin.phoneNumber,
+                                admin.role,
+                                admin.departmentName,
+                                admin.lastLogin,
+                                admin.isActive
+                        ))
+                .from(admin)
+                .where(builder)
+                .orderBy(admin.lastLogin.desc())
+                .fetch();
+    }
+
 }
