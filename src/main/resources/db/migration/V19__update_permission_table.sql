@@ -80,7 +80,7 @@ INSERT INTO permission (`key`, `name`, order_number, parent_id)
 VALUES
   ('view_spare_parts_list', 'View Spare Parts List', 25, 24),
   ('view_spare_parts_detail', 'View Spare Parts Detail', 26, 24),
-  ('add__new_spare_parts', 'Add New Spare Parts', 27, 24),
+  ('add_new_spare_parts', 'Add New Spare Parts', 27, 24),
   ('edit_spare_parts', 'Edit Spare Parts', 28, 24);
 
 -- =========================================
