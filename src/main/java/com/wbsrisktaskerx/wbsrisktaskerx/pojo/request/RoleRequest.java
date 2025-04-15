@@ -13,6 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class RoleRequest {
+    int id;
     String name;
     @Schema(defaultValue = "false")
     Boolean isActive = false;

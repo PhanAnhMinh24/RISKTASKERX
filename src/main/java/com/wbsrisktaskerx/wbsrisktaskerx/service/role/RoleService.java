@@ -117,11 +117,11 @@ public class RoleService implements IRoleService {
 
     @Override
     @Transactional
-    public boolean updateRole(int id, RoleRequest request) {
+    public boolean updateRole(RoleRequest request) {
+        Role role = findById(request.getId());
         Optional.ofNullable(request.getPermissionId())
                 .filter(ids -> !ids.isEmpty())
-                .ifPresent(ids -> permissionService.updateRolePermissions(id, ids));
-        List<PermissionResponse> permissions = permissionService.getPermissionResponsesByRoleId(id);
+                .ifPresent(ids -> permissionService.updateRolePermissions(role, ids));
         return true;
     }
 }
