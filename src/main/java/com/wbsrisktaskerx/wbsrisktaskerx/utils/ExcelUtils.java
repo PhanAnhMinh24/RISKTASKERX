@@ -46,7 +46,7 @@ public class ExcelUtils {
         this.historyQueryRepository = historyQueryRepository;
     }
 
-    public static ExportResponse customerToExcel(List<CustomerResponse> customerList,
+    public ExportResponse customerToExcel(List<CustomerResponse> customerList,
                                                          String password, String fileName) throws IOException {
         try (Workbook workbook = new XSSFWorkbook()) {
             Sheet sheet = workbook.createSheet("Sheet1");
