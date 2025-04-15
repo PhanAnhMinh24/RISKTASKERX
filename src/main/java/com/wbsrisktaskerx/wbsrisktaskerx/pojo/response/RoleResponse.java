@@ -18,7 +18,7 @@ public class RoleResponse {
     String name;
     Boolean isActive;
     OffsetDateTime updateAt;
-    List<String> permissionNames;
+    List<PermissionResponse> permissions;
 
     @QueryProjection
     public RoleResponse(Integer id, String name, Boolean isActive, OffsetDateTime updateAt) {
