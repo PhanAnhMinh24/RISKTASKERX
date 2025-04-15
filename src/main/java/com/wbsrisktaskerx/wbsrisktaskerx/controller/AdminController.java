@@ -4,6 +4,7 @@ import com.wbsrisktaskerx.wbsrisktaskerx.common.constants.EndpointConstants;
 import com.wbsrisktaskerx.wbsrisktaskerx.common.constants.EndpointUtil;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.ApiResult;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.PagingRequest;
+import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.AdminRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.ForgotPasswordRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.ResetPasswordRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.SearchFilterAdminRequest;
@@ -13,11 +14,13 @@ import com.wbsrisktaskerx.wbsrisktaskerx.service.admin.AdminService;
 import com.wbsrisktaskerx.wbsrisktaskerx.service.otp.AdminEmailService;
 import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequestMapping(EndpointConstants.ADMIN)
@@ -50,5 +53,11 @@ public class AdminController {
     public ResponseEntity<ApiResult<Page<AdminResponse>>> searchFilterAdmin(@RequestBody PagingRequest<SearchFilterAdminRequest> request) {
         Page<AdminResponse> pageResult = adminService.searchAndFilterAdmin(request);
         return ResponseEntity.ok(ApiResult.success(pageResult));
+    }
+
+    @PostMapping
+    public ResponseEntity<ApiResult<AdminResponse>> addAdmin(@Valid @RequestBody AdminRequest request) {
+        AdminResponse response = adminService.addAdmin(request);
+        return ResponseEntity.ok(ApiResult.success(response));
     }
 }

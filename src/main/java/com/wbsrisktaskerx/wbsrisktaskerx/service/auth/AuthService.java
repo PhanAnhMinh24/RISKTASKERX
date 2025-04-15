@@ -4,10 +4,8 @@ import com.wbsrisktaskerx.wbsrisktaskerx.common.constants.EmailConstants;
 import com.wbsrisktaskerx.wbsrisktaskerx.entity.Admin;
 import com.wbsrisktaskerx.wbsrisktaskerx.exception.AppException;
 import com.wbsrisktaskerx.wbsrisktaskerx.exception.ErrorCode;
-import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.ActiveAdminRequest;
-import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.ChangePasswordRequest;
-import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.LoginRequest;
-import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.SignupRequest;
+import com.wbsrisktaskerx.wbsrisktaskerx.mapper.AdminMapper;
+import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.*;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.JwtResponse;
 import com.wbsrisktaskerx.wbsrisktaskerx.repository.AdminRepository;
 import com.wbsrisktaskerx.wbsrisktaskerx.service.admintoken.IAdminTokenService;
@@ -26,6 +24,7 @@ public class AuthService implements IAuthService {
     private final JwtUtils jwtUtils;
     private final BCryptPasswordEncoder passwordEncoder;
     private final IAdminTokenService adminTokenService;
+    private final AdminMapper adminMapper;
 
     @Override
     public JwtResponse login(LoginRequest loginRequest) {
@@ -55,19 +54,10 @@ public class AuthService implements IAuthService {
         }
 
         if (adminRepository.findByEmail(signupRequest.getEmail()).isPresent()) {
-            throw new RuntimeException(ErrorCode.EMAIL_EXIST.getMessage());
+            throw new RuntimeException(ErrorCode.EMAIL_EXISTED.getMessage());
         }
-        String encodedPassword = passwordEncoder.encode(signupRequest.getPassword());
-        Admin newAdmin = Admin.builder()
-                .fullName(signupRequest.getFullName())
-                .email(signupRequest.getEmail())
-                .phoneNumber(signupRequest.getPhoneNumber())
-                .password(encodedPassword)
-                .profileImg(signupRequest.getProfileImg())
-                .roleId(signupRequest.getRoleId())
-                .isActive(false)
-                .departmentName(signupRequest.getDepartmentName())
-                .build();
+
+        Admin newAdmin = adminMapper.getAdminBySignUpRequest(signupRequest);
 
         Admin savedAdmin = adminRepository.save(newAdmin);
         String token = jwtUtils.generateToken(savedAdmin.getEmail());
@@ -104,6 +94,4 @@ public class AuthService implements IAuthService {
 
         return true;
     }
-
-
 }

@@ -18,14 +18,17 @@ public class AdminResponse {
     String fullName;
     String email;
     String phoneNumber;
-    Role role;
+    RoleResponse role;
     DepartmentName departmentName;
     OffsetDateTime lastLogin;
+    OffsetDateTime dateOfBirth;
+    String profileImg;
     Boolean isActive;
 
     @QueryProjection
-    public AdminResponse(Integer id, String fullName, String email, String phoneNumber, Role role,
-                         DepartmentName departmentName, OffsetDateTime lastLogin, Boolean isActive) {
+    public AdminResponse(Integer id, String fullName, String email, String phoneNumber, RoleResponse role,
+                         DepartmentName departmentName, OffsetDateTime lastLogin, OffsetDateTime dateOfBirth,
+                         String profileImg, Boolean isActive) {
         this.id = id;
         this.fullName = fullName;
         this.email = email;
@@ -33,6 +36,8 @@ public class AdminResponse {
         this.role = role;
         this.departmentName = departmentName;
         this.lastLogin = lastLogin;
+        this.dateOfBirth = dateOfBirth;
+        this.profileImg = profileImg;
         this.isActive = isActive;
     }
 }

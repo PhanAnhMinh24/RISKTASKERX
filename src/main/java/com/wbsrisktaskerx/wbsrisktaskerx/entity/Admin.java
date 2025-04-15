@@ -59,4 +59,7 @@ public class Admin extends BaseTimeEntity  {
 
     @OneToMany(mappedBy = "admin", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     List<AdminOtp> otp;
+
+    @Column(name = "date_of_birth", nullable = false)
+    OffsetDateTime dateOfBirth;
 }
