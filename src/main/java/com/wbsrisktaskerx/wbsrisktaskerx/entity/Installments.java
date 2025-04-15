@@ -1,7 +1,6 @@
 package com.wbsrisktaskerx.wbsrisktaskerx.entity;
 
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.data.PaymentMethods;
-import com.wbsrisktaskerx.wbsrisktaskerx.pojo.data.PaymentOptions;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -9,39 +8,41 @@ import lombok.experimental.FieldDefaults;
 import java.time.OffsetDateTime;
 
 @Entity
-@Table(name = "payments")
 @Getter
 @Setter
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
+@Table(name = "installments")
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Payment {
+public class Installments {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
 
     @ManyToOne
-    @JoinColumn(name = "order_id", nullable = false)
-    Order order;
+    @JoinColumn(name = "payments_id")
+    Payment payments;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "payment_method", nullable = false)
     PaymentMethods paymentMethod;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "payment_option", nullable = false)
-    PaymentOptions paymentOption;
+    @Column(name = "installment_amount")
+    Float installmentAmount;
 
-    @Column(name = "invoice", nullable = false)
-    String invoice;
+    @Column(name = "installment_plan")
+    Integer installmentPlan;
 
-    @Column(name = "price", nullable = false)
-    Float price;
+    @Column(name = "remaining_installment_months")
+    Integer remainingInstallmentMonths;
 
-    @Column(name = "initial_payment", nullable = false)
-    Float initialPayment;
+    @Column(name = "monthly_payment")
+    Float monthlyPayment;
 
-    @Column(name = "payment_date", nullable = false)
+    @Column(name = "due_date")
+    OffsetDateTime dueDate;
+
+    @Column(name = "payment_date")
     OffsetDateTime paymentDate;
 }

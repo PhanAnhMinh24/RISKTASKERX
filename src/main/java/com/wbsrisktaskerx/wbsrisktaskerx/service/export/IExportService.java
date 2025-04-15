@@ -1,6 +1,7 @@
 package com.wbsrisktaskerx.wbsrisktaskerx.service.export;
 
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.PagingRequest;
+import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.ExportHistoryRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.SearchFilterAdminRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.SearchFilterCustomersRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.ExportResponse;
@@ -12,7 +13,7 @@ public interface IExportService {
 
     ExportResponse getAdminList(PagingRequest<SearchFilterAdminRequest> request) throws IOException;
 
-    ExportResponse exportCustomerPurchaseHistory(Integer customerId) throws IOException;
+    ExportResponse exportCustomerPurchaseHistory(ExportHistoryRequest request) throws IOException;
 
     ExportResponse exportCustomerWarrantyHistory(Integer customerId) throws IOException;
 }

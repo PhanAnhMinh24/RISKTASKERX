@@ -1,7 +1,9 @@
 package com.wbsrisktaskerx.wbsrisktaskerx.mapper;
 
+import com.wbsrisktaskerx.wbsrisktaskerx.entity.Installments;
 import com.wbsrisktaskerx.wbsrisktaskerx.entity.Order;
 import com.wbsrisktaskerx.wbsrisktaskerx.entity.Payment;
+import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.InstallmentsResponse;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.OrderResponse;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.PaymentResponse;
 
@@ -27,12 +29,21 @@ public class PaymentMapper {
                 .invoice(payment.getInvoice())
                 .price(payment.getPrice())
                 .initialPayment(payment.getInitialPayment())
-                .installmentAmount(payment.getInstallmentAmount())
-                .installmentPlan(payment.getInstallmentPlan())
-                .remainingInstallmentMonths(payment.getRemainingInstallmentMonths())
-                .monthlyPayment(payment.getMonthlyPayment())
-                .dueDate(payment.getDueDate())
                 .paymentDate(payment.getPaymentDate())
+                .build();
+    }
+
+    public static InstallmentsResponse installmentsMapper(Installments installments) {
+        return InstallmentsResponse.builder()
+                .id(installments.getId())
+                .payment(paymentMapper(installments.getPayments()))
+                .paymentMethods(installments.getPaymentMethod())
+                .installmentAmount(installments.getInstallmentAmount())
+                .installmentPlan(installments.getInstallmentPlan())
+                .remainingInstallmentMonths(installments.getRemainingInstallmentMonths())
+                .monthlyPayment(installments.getMonthlyPayment())
+                .dueDate(installments.getDueDate())
+                .paymentDate(installments.getPaymentDate())
                 .build();
     }
 }

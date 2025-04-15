@@ -30,6 +30,7 @@ public class EndpointConstants {
     public static final String WARRANTY = "/warranty";
 
     public static final String ID = "/{id}";
+    public static final String PAYMENTS_ID = "/{paymentsId}";
 
     //Roles
     public static final String ROLES = "/roles";

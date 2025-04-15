@@ -68,6 +68,7 @@ public class AdminJpaQueryRepository {
                                 admin.id,
                                 admin.fullName,
                                 admin.email,
+                                admin.phoneNumber,
                                 admin.role,
                                 admin.departmentName,
                                 admin.lastLogin,

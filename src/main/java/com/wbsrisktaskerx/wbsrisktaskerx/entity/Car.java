@@ -41,13 +41,6 @@ public class Car {
     @Column(name = "image_url")
     private String imageUrl;
 
-    @Column(name = "spare_parts_id")
-    private Integer sparePartsId;
-
-    @ManyToOne
-    @JoinColumn(name = "seller_id")
-    private Admin seller;
-
     @Column(name = "is_active")
     private Boolean isActive = true;
 }

@@ -1,7 +1,6 @@
 package com.wbsrisktaskerx.wbsrisktaskerx.pojo.response;
 
 import com.querydsl.core.annotations.QueryProjection;
-import com.wbsrisktaskerx.wbsrisktaskerx.entity.Order;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.data.PaymentMethods;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.data.PaymentOptions;
 import lombok.*;
@@ -22,18 +21,11 @@ public class PaymentResponse {
     String invoice;
     Float price;
     Float initialPayment;
-    Float installmentAmount;
-    Integer installmentPlan;
-    Integer remainingInstallmentMonths;
-    Float monthlyPayment;
-    OffsetDateTime dueDate;
     OffsetDateTime paymentDate;
 
     @QueryProjection
     public PaymentResponse(Integer id, OrderResponse order, PaymentMethods paymentMethod, PaymentOptions paymentOption,
-                           String invoice, Float price, Float initialPayment, Float installmentAmount,
-                           Integer installmentPlan, Integer remainingInstallmentMonths, Float monthlyPayment,
-                           OffsetDateTime dueDate, OffsetDateTime paymentDate) {
+                           String invoice, Float price, Float initialPayment, OffsetDateTime paymentDate) {
         this.id = id;
         this.order = order;
         this.paymentMethod = paymentMethod;
@@ -41,11 +33,6 @@ public class PaymentResponse {
         this.invoice = invoice;
         this.price = price;
         this.initialPayment = initialPayment;
-        this.installmentAmount = installmentAmount;
-        this.installmentPlan = installmentPlan;
-        this.remainingInstallmentMonths = remainingInstallmentMonths;
-        this.monthlyPayment = monthlyPayment;
-        this.dueDate = dueDate;
         this.paymentDate = paymentDate;
     }
 }
