@@ -1,5 +1,6 @@
 package com.wbsrisktaskerx.wbsrisktaskerx.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.wbsrisktaskerx.wbsrisktaskerx.common.constants.EntityConstant;
 import jakarta.persistence.*;
 import lombok.*;
@@ -34,5 +35,6 @@ public class Permission extends BaseTimeEntity {
     Integer parentId;
 
     @OneToMany(mappedBy = "permission", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JsonIgnore
     List<RolePermission> rolePermissions;
 }

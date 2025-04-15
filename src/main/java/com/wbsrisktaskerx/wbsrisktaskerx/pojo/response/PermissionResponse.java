@@ -1,5 +1,6 @@
 package com.wbsrisktaskerx.wbsrisktaskerx.pojo.response;
 
+import com.querydsl.core.annotations.QueryProjection;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -17,4 +18,11 @@ public class PermissionResponse {
     Integer orderNumber;
     Integer parentId;
     List<PermissionResponse> children;
+
+    @QueryProjection
+    public PermissionResponse(Integer id, String key, String name) {
+        this.id = id;
+        this.key = key;
+        this.name = name;
+    }
 }

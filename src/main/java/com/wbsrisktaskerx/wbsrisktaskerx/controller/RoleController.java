@@ -44,4 +44,9 @@ public class RoleController {
     public ResponseEntity<ApiResult<RoleResponse>> getRoleDetail(@PathVariable int id) {
         return ResponseEntity.ok(ApiResult.success(roleService.getRoleById(id)));
     }
+
+    @PutMapping(EndpointConstants.ID)
+    public ResponseEntity<ApiResult<RoleResponse>> updateRole(@PathVariable int id, @RequestBody RoleRequest request) {
+        return ResponseEntity.ok(ApiResult.success(roleService.updateRole(id, request)));
+    }
 }
