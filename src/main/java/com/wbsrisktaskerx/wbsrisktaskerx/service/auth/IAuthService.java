@@ -1,5 +1,6 @@
 package com.wbsrisktaskerx.wbsrisktaskerx.service.auth;
 
+import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.ActiveAdminRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.ChangePasswordRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.LoginRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.SignupRequest;
@@ -11,4 +12,6 @@ public interface IAuthService {
     JwtResponse signup(SignupRequest signupRequest);
 
     Boolean changePassword(ChangePasswordRequest changePasswordRequest);
+
+    Boolean activateAccount(ActiveAdminRequest request);
 }

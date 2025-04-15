@@ -4,6 +4,7 @@ import com.wbsrisktaskerx.wbsrisktaskerx.common.constants.EmailConstants;
 import com.wbsrisktaskerx.wbsrisktaskerx.entity.Admin;
 import com.wbsrisktaskerx.wbsrisktaskerx.exception.AppException;
 import com.wbsrisktaskerx.wbsrisktaskerx.exception.ErrorCode;
+import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.ActiveAdminRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.ChangePasswordRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.LoginRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.SignupRequest;
@@ -64,7 +65,7 @@ public class AuthService implements IAuthService {
                 .password(encodedPassword)
                 .profileImg(signupRequest.getProfileImg())
                 .roleId(signupRequest.getRoleId())
-                .isActive(true)
+                .isActive(false)
                 .departmentName(signupRequest.getDepartmentName())
                 .build();
 
@@ -88,6 +89,20 @@ public class AuthService implements IAuthService {
         admin.setPassword(passwordEncoder.encode(changePasswordRequest.getNewPassword()));
         adminRepository.save(admin);
         return Boolean.TRUE;
+    }
+    @Override
+    public Boolean activateAccount(ActiveAdminRequest request) {
+        Admin admin = adminRepository.findById(request.getId())
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+
+        if (admin.getIsActive() != null && admin.getIsActive().equals(request.getIsActive())) {
+            throw new AppException(ErrorCode.ACCOUNT_ALREADY_ACTIVATED);
+        }
+
+        admin.setIsActive(request.getIsActive());
+        adminRepository.save(admin);
+
+        return true;
     }
 
 
