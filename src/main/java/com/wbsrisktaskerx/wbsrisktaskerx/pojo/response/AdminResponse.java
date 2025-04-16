@@ -11,6 +11,7 @@ import java.time.OffsetDateTime;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Builder
 public class AdminResponse {
@@ -21,6 +22,7 @@ public class AdminResponse {
     Role role;
     DepartmentName departmentName;
     OffsetDateTime lastLogin;
+    OffsetDateTime dayOfBirth;
     Boolean isActive;
 
     @QueryProjection

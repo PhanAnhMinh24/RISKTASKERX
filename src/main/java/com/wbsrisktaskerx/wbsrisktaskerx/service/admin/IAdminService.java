@@ -12,4 +12,6 @@ public interface IAdminService {
 
     List<AdminResponse> searchedAndFilteredAdminNoPaging(SearchFilterAdminRequest request);
 
+    AdminResponse getAdminById(int id);
+
 }
