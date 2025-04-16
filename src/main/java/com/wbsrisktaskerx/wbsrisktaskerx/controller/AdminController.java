@@ -4,6 +4,7 @@ import com.wbsrisktaskerx.wbsrisktaskerx.common.constants.EndpointConstants;
 import com.wbsrisktaskerx.wbsrisktaskerx.common.constants.EndpointUtil;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.ApiResult;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.PagingRequest;
+import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.AdminRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.ForgotPasswordRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.ResetPasswordRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.SearchFilterAdminRequest;
@@ -57,6 +58,12 @@ public class AdminController {
     public ResponseEntity<ApiResult<List<AdminResponse>>> searchFilterAdminNoPaging(@RequestBody @Valid SearchFilterAdminRequest request) {
         List<AdminResponse> result = adminService.searchedAndFilteredAdminNoPaging(request);
         return ResponseEntity.ok(ApiResult.success(result));
+    }
+
+    @PostMapping
+    public ResponseEntity<ApiResult<AdminResponse>> addAdmin(@Valid @RequestBody AdminRequest request) {
+        AdminResponse response = adminService.addAdmin(request);
+        return ResponseEntity.ok(ApiResult.success(response));
     }
 
     @GetMapping(EndpointConstants.ID)
