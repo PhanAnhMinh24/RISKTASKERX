@@ -2,7 +2,6 @@ package com.wbsrisktaskerx.wbsrisktaskerx.service.customer;
 
 import com.wbsrisktaskerx.wbsrisktaskerx.entity.AdminToken;
 import com.wbsrisktaskerx.wbsrisktaskerx.entity.Customer;
-import com.wbsrisktaskerx.wbsrisktaskerx.entity.PurchaseHistory;
 import com.wbsrisktaskerx.wbsrisktaskerx.entity.WarrantyHistory;
 import com.wbsrisktaskerx.wbsrisktaskerx.exception.AppException;
 import com.wbsrisktaskerx.wbsrisktaskerx.exception.ErrorCode;
@@ -17,10 +16,8 @@ import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -75,7 +72,6 @@ public class CustomerServiceImpl implements ICustomerService {
                 customer.getDateOfBirth()
         );
     }
-
 
     @Override
     @Transactional

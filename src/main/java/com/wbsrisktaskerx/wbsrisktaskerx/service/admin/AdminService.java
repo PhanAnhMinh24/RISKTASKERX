@@ -4,6 +4,7 @@ import com.wbsrisktaskerx.wbsrisktaskerx.common.constants.EmailConstants;
 import com.wbsrisktaskerx.wbsrisktaskerx.exception.AppException;
 import com.wbsrisktaskerx.wbsrisktaskerx.exception.ErrorCode;
 import com.wbsrisktaskerx.wbsrisktaskerx.mapper.AdminMapper;
+import com.wbsrisktaskerx.wbsrisktaskerx.entity.Admin;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.PagingRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.AdminRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.SearchFilterAdminRequest;
@@ -15,6 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class AdminService implements IAdminService {
@@ -68,5 +70,17 @@ public class AdminService implements IAdminService {
                 .toList();
     }
 
+    public Admin findAdminById(Integer adminId) {
+        Optional<Admin> admin = adminRepository.findById(adminId);
+        if (admin.isEmpty()) {
+            throw new AppException(ErrorCode.ACCOUNT_ADMIN_NOT_FOUND);
+        }
+        return admin.get();
+    }
 
+    @Override
+    public AdminResponse getAdminById(int id) {
+        Admin admin = findAdminById(id);
+        return AdminMapper.adminMapper(admin);
+    }
 }

@@ -66,4 +66,9 @@ public class AdminController {
         return ResponseEntity.ok(ApiResult.success(response));
     }
 
+    @GetMapping(EndpointConstants.ID)
+    public ResponseEntity<ApiResult<AdminResponse>> getAdminDetail(@PathVariable int id) {
+        return ResponseEntity.ok(ApiResult.success(adminService.getAdminById(id)));
+    }
+
 }

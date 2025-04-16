@@ -30,6 +30,7 @@ public enum  ErrorCode {
     OTP_NOT_VERIFIED("otp-not-verified", HttpStatus.BAD_REQUEST),
     USER_NOT_FOUND("user-not-found", HttpStatus.BAD_REQUEST),
     CUSTOMER_NOT_FOUND("customer-not-found", HttpStatus.BAD_REQUEST),
+    ACCOUNT_ADMIN_NOT_FOUND("account-admin-not-found", HttpStatus.BAD_REQUEST),
     ACCOUNT_ALREADY_ACTIVATED(" account-already-activated", HttpStatus.BAD_REQUEST),
     PHONE_NUMBER_EXISTED("Phone-number-is-existed", HttpStatus.BAD_REQUEST),
 
