@@ -22,7 +22,7 @@ public class AdminResponse {
     Role role;
     DepartmentName departmentName;
     OffsetDateTime lastLogin;
-    OffsetDateTime dayOfBirth;
+    OffsetDateTime dateOfBirth;
     Boolean isActive;
 
     @QueryProjection
