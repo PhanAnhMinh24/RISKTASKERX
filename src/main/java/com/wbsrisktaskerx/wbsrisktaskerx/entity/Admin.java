@@ -49,6 +49,9 @@ public class Admin extends BaseTimeEntity  {
     @Column(name = "last_login", nullable = false)
     OffsetDateTime lastLogin;
 
+    @Column(name = "date_of_birth", nullable = false)
+    OffsetDateTime dateOfBirth;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "department_name", nullable = false, length = 10)
     DepartmentName departmentName;
