@@ -119,6 +119,12 @@ public class RoleService implements IRoleService {
     @Transactional
     public boolean updateRole(RoleRequest request) {
         Role role = findById(request.getId());
+
+        Optional.ofNullable(request.getName())
+                .map(String::trim)
+                .filter(name -> !name.isEmpty())
+                .ifPresent(role::setName);
+
         Optional.ofNullable(request.getPermissionId())
                 .filter(ids -> !ids.isEmpty())
                 .ifPresent(ids -> permissionService.updateRolePermissions(role, ids));
