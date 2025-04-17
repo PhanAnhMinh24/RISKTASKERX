@@ -123,7 +123,12 @@ public class RoleService implements IRoleService {
         Optional.ofNullable(request.getName())
                 .map(String::trim)
                 .filter(name -> !name.isEmpty())
-                .ifPresent(role::setName);
+                .ifPresent(name -> {
+                    if (roleRepository.existsByName(name)) {
+                        throw new AppException(ErrorCode.ROLE_NAME_ALREADY_EXISTS);
+                    }
+                    role.setName(name);
+                });
 
         Optional.ofNullable(request.getPermissionId())
                 .filter(ids -> !ids.isEmpty())
