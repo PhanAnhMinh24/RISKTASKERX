@@ -54,6 +54,7 @@ public enum  ErrorCode {
     ROLE_PERMISSION_DUPLICATE("role-permission-duplicate", HttpStatus.BAD_REQUEST),
     ROLE_INACTIVE_OR_UNAVAILABLE("role-inactive-or-unavailable", HttpStatus.BAD_REQUEST),
     INVALID_ROLE_NAME("invalid-role-name", HttpStatus.BAD_REQUEST),
+    INVALID_VALID_NAME("invalid-valid-name", HttpStatus.BAD_REQUEST),
 
     INVALID_REQUEST("invalid-request", HttpStatus.BAD_REQUEST),
     REQUEST_NOT_FOUND("request-not-found", HttpStatus.BAD_REQUEST),

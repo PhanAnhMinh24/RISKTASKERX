@@ -130,11 +130,16 @@ public class RoleService implements IRoleService {
 
         Optional.ofNullable(request.getName())
                 .map(String::trim)
-                .filter(name -> !name.isEmpty())
                 .ifPresent(name -> {
-                    if (roleRepository.existsByName(name)) {
+                    if (name.isEmpty()) {
+                        throw new AppException(ErrorCode.INVALID_VALID_NAME);
+                    }
+
+                    if (!name.equalsIgnoreCase(role.getName()) &&
+                            roleRepository.existsByName(name)) {
                         throw new AppException(ErrorCode.ROLE_NAME_EXISTS);
                     }
+
                     role.setName(name);
                 });
 
