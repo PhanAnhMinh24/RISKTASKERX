@@ -50,12 +50,20 @@ public class RoleService implements IRoleService {
     @Override
     @Transactional
     public RoleResponse addRole(RoleRequest request) {
-        if (roleRepository.existsByName(request.getName())) {
+        String name = Optional.ofNullable(request.getName())
+                .map(String::trim)
+                .orElseThrow(() -> new AppException(ErrorCode.INVALID_ROLE_NAME));
+
+        if (name.isEmpty()) {
+            throw new AppException(ErrorCode.INVALID_ROLE_NAME);
+        }
+
+        if (roleRepository.existsByName(name)) {
             throw new AppException(ErrorCode.ROLE_ALREADY_EXISTS);
         }
 
         Role role = roleRepository.save(Role.builder()
-                .name(request.getName())
+                .name(name)
                 .isActive(request.getIsActive())
                 .build());
 
