@@ -71,4 +71,10 @@ public class AdminController {
         return ResponseEntity.ok(ApiResult.success(adminService.getAdminById(id)));
     }
 
+    @PutMapping()
+    public ResponseEntity<ApiResult<Boolean>> update(@RequestBody AdminRequest request) {
+        return ResponseEntity.ok().body(ApiResult.success(adminService.updateAdmin(request)));
+    }
+
+
 }

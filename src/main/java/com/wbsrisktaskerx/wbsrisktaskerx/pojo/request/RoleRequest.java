@@ -15,7 +15,6 @@ import java.util.List;
 public class RoleRequest {
     int id;
     String name;
-    @Schema(defaultValue = "false")
-    Boolean isActive = false;
+    Boolean isActive;
     List<Integer> permissionId;
 }

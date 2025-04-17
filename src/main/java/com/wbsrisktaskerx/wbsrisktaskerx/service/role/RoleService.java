@@ -30,9 +30,9 @@ public class RoleService implements IRoleService {
     private final RoleJpaQueryRepository roleJpaQueryRepository;
     private final PermissionService permissionService;
 
-    public RoleService (RoleRepository roleRepository, PermissionRepository permissionRepository,
-                        RolePermissionRepository rolePermissionRepository, RoleJpaQueryRepository roleJpaQueryRepository,
-                        PermissionService permissionService) {
+    public RoleService(RoleRepository roleRepository, PermissionRepository permissionRepository,
+                       RolePermissionRepository rolePermissionRepository, RoleJpaQueryRepository roleJpaQueryRepository,
+                       PermissionService permissionService) {
         this.roleRepository = roleRepository;
         this.permissionRepository = permissionRepository;
         this.rolePermissionRepository = rolePermissionRepository;
@@ -40,9 +40,10 @@ public class RoleService implements IRoleService {
         this.permissionService = permissionService;
     }
 
-    private Role findById(Integer id){
+    @Override
+    public Role findById(Integer id) {
         Optional<Role> role = roleRepository.findById(id);
-        if(role.isEmpty()){
+        if (role.isEmpty()) {
             throw new AppException(ErrorCode.ROLE_NOT_FOUND);
         }
         return role.get();
@@ -51,12 +52,20 @@ public class RoleService implements IRoleService {
     @Override
     @Transactional
     public RoleResponse addRole(RoleRequest request) {
-        if (roleRepository.existsByName(request.getName())) {
+        String name = Optional.ofNullable(request.getName())
+                .map(String::trim)
+                .orElseThrow(() -> new AppException(ErrorCode.INVALID_ROLE_NAME));
+
+        if (name.isEmpty()) {
+            throw new AppException(ErrorCode.INVALID_ROLE_NAME);
+        }
+
+        if (roleRepository.existsByName(name)) {
             throw new AppException(ErrorCode.ROLE_ALREADY_EXISTS);
         }
 
         Role role = roleRepository.save(Role.builder()
-                .name(request.getName())
+                .name(name)
                 .isActive(request.getIsActive())
                 .build());
 
@@ -118,8 +127,18 @@ public class RoleService implements IRoleService {
 
         Optional.ofNullable(request.getName())
                 .map(String::trim)
-                .filter(name -> !name.isEmpty())
-                .ifPresent(role::setName);
+                .ifPresent(name -> {
+                    if (name.isEmpty()) {
+                        throw new AppException(ErrorCode.INVALID_VALID_NAME);
+                    }
+
+                    if (!name.equalsIgnoreCase(role.getName()) &&
+                            roleRepository.existsByName(name)) {
+                        throw new AppException(ErrorCode.ROLE_NAME_EXISTS);
+                    }
+
+                    role.setName(name);
+                });
 
         Optional.ofNullable(request.getPermissionId())
                 .filter(ids -> !ids.isEmpty())

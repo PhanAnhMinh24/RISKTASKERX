@@ -13,4 +13,6 @@ public interface IAdminService {
     AdminResponse addAdmin(AdminRequest request);
     List<AdminResponse> searchedAndFilteredAdminNoPaging(SearchFilterAdminRequest request);
     AdminResponse getAdminById(int id);
+    boolean updateAdmin (AdminRequest adminRequest);
+
 }
