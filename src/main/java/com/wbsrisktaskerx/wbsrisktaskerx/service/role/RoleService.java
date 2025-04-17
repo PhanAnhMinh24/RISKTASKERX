@@ -125,7 +125,7 @@ public class RoleService implements IRoleService {
                 .filter(name -> !name.isEmpty())
                 .ifPresent(name -> {
                     if (roleRepository.existsByName(name)) {
-                        throw new AppException(ErrorCode.ROLE_NAME_ALREADY_EXISTS);
+                        throw new AppException(ErrorCode.ROLE_NAME_EXISTS);
                     }
                     role.setName(name);
                 });
