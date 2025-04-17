@@ -29,9 +29,9 @@ public class RoleService implements IRoleService {
     private final RoleJpaQueryRepository roleJpaQueryRepository;
     private final PermissionService permissionService;
 
-    public RoleService (RoleRepository roleRepository, PermissionRepository permissionRepository,
-                        RolePermissionRepository rolePermissionRepository, RoleJpaQueryRepository roleJpaQueryRepository,
-                        PermissionService permissionService) {
+    public RoleService(RoleRepository roleRepository, PermissionRepository permissionRepository,
+                       RolePermissionRepository rolePermissionRepository, RoleJpaQueryRepository roleJpaQueryRepository,
+                       PermissionService permissionService) {
         this.roleRepository = roleRepository;
         this.permissionRepository = permissionRepository;
         this.rolePermissionRepository = rolePermissionRepository;
@@ -39,9 +39,10 @@ public class RoleService implements IRoleService {
         this.permissionService = permissionService;
     }
 
-    private Role findById(Integer id){
+    @Override
+    public Role findById(Integer id) {
         Optional<Role> role = roleRepository.findById(id);
-        if(role.isEmpty()){
+        if (role.isEmpty()) {
             throw new AppException(ErrorCode.ROLE_NOT_FOUND);
         }
         return role.get();

@@ -14,6 +14,7 @@ import java.time.OffsetDateTime;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class AdminRequest {
+    Integer id;
     Role role;
     DepartmentName departmentName;
     String name;
