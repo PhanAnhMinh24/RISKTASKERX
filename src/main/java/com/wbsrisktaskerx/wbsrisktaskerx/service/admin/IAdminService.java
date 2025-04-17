@@ -1,6 +1,7 @@
 package com.wbsrisktaskerx.wbsrisktaskerx.service.admin;
 
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.PagingRequest;
+import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.AdminRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.SearchFilterAdminRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.AdminResponse;
 import org.springframework.data.domain.Page;
@@ -13,5 +14,7 @@ public interface IAdminService {
     List<AdminResponse> searchedAndFilteredAdminNoPaging(SearchFilterAdminRequest request);
 
     AdminResponse getAdminById(int id);
+
+    boolean updateAdmin (AdminRequest adminRequest);
 
 }
