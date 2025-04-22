@@ -2,16 +2,15 @@ package com.wbsrisktaskerx.wbsrisktaskerx.service.export;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.wbsrisktaskerx.wbsrisktaskerx.common.constants.ExportConstants;
+import com.wbsrisktaskerx.wbsrisktaskerx.entity.Payment;
 import com.wbsrisktaskerx.wbsrisktaskerx.mapper.HistoryMapper;
+import com.wbsrisktaskerx.wbsrisktaskerx.mapper.PaymentMapper;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.PagingRequest;
-import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.ExportHistoryRequest;
+import com.wbsrisktaskerx.wbsrisktaskerx.pojo.data.PaymentOptions;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.SearchFilterAdminRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.SearchFilterCustomersRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.*;
-import com.wbsrisktaskerx.wbsrisktaskerx.repository.AdminJpaQueryRepository;
-import com.wbsrisktaskerx.wbsrisktaskerx.repository.CustomerJpaQueryRepository;
-import com.wbsrisktaskerx.wbsrisktaskerx.repository.HistoryQueryRepository;
-import com.wbsrisktaskerx.wbsrisktaskerx.repository.InstallmentQueryRepository;
+import com.wbsrisktaskerx.wbsrisktaskerx.repository.*;
 import com.wbsrisktaskerx.wbsrisktaskerx.service.customer.CustomerServiceImpl;
 import com.wbsrisktaskerx.wbsrisktaskerx.utils.ExcelUtils;
 import com.wbsrisktaskerx.wbsrisktaskerx.utils.PasswordExport;
@@ -32,22 +31,26 @@ public class ExportService implements IExportService {
     private final JPAQueryFactory jpaQueryFactory;
     private final CustomerServiceImpl customerService;
     private final HistoryQueryRepository historyQueryRepository;
-    private final InstallmentQueryRepository installmentQueryRepository;
+    private final InstallmentRepository installmentRepository;
+    private final PaymentRepository paymentRepository;
     private final AdminJpaQueryRepository adminJpaQueryRepository;
+    private final OrderRepository orderRepository;
 
     @Autowired
     private ExcelUtils excelUtils;
 
     public ExportService (CustomerJpaQueryRepository customerJpaQueryRepository, JPAQueryFactory jpaQueryFactory,
                           CustomerServiceImpl customerService, HistoryQueryRepository historyQueryRepository,
-                          InstallmentQueryRepository installmentQueryRepository,
-                          AdminJpaQueryRepository adminJpaQueryRepository){
+                          InstallmentRepository installmentRepository, PaymentRepository paymentRepository,
+                          AdminJpaQueryRepository adminJpaQueryRepository, OrderRepository orderRepository){
         this.customerJpaQueryRepository =customerJpaQueryRepository;
         this.jpaQueryFactory = jpaQueryFactory;
+        this.installmentRepository = installmentRepository;
+        this.paymentRepository = paymentRepository;
         this.adminJpaQueryRepository = adminJpaQueryRepository;
         this.customerService = customerService;
         this.historyQueryRepository = historyQueryRepository;
-        this.installmentQueryRepository = installmentQueryRepository;
+        this.orderRepository = orderRepository;
     }
 
     @Override
@@ -60,17 +63,74 @@ public class ExportService implements IExportService {
     }
 
     @Override
-    public ExportResponse exportCustomerPurchaseHistory(ExportHistoryRequest request) throws IOException {
-        Integer customerId = request.getId();
-        Integer paymentsId = request.getPaymentsId();
+    public ExportResponse exportCustomerPurchaseHistory(Integer customerId) throws IOException {
+        System.out.println("=== [DEBUG] Exporting purchase history for customerId: " + customerId);
+
+        List<OrderResponse> orderResponses = orderRepository.findByCustomerId(customerId)
+                .stream()
+                .map(PaymentMapper::orderMapper)
+                .toList();
+
+        List<Integer> orderIds = orderResponses
+                .stream()
+                .map(OrderResponse::getId)
+                .toList();
+        System.out.println("=== [DEBUG] Found order IDs: " + orderIds);
+
+        List<PaymentResponse> allPaymentResponses = paymentRepository.findByOrderIdIn(orderIds)
+                .stream()
+                .map(PaymentMapper::paymentMapper)
+                .toList();
+        System.out.println("=== [DEBUG] Payment responses count: " + allPaymentResponses.size());
+
+        System.out.println("=== [DEBUG] Payment Responses Details:");
+        allPaymentResponses.forEach(p -> {
+            System.out.println("Payment ID: " + p.getId() + ", Option: " + p.getPaymentOption());
+        });
+
+        List<Integer> allPaymentsId = paymentRepository.findByOrderIdIn(orderIds)
+                .stream()
+                .map(Payment::getId)
+                .toList();
+        System.out.println("=== [DEBUG] Installment payment IDs: " + allPaymentsId);
+
+
+        List<Integer> installmentPaymentIds = allPaymentResponses.stream()
+                .filter(p -> p.getPaymentOption().equals(PaymentOptions.Installment))
+                .map(PaymentResponse::getId)
+                .distinct()
+                .toList();
+        System.out.println("=== [DEBUG] Installment payment IDs: " + installmentPaymentIds);
+
+        List<InstallmentsResponse> installmentsResponses = installmentRepository.findByPayments_IdIn(installmentPaymentIds)
+                .stream()
+                .map(PaymentMapper::installmentsMapper)
+                .toList();
+        System.out.println("=== [DEBUG] Installments responses count: " + installmentsResponses.size());
+
         List<PurchaseHistoryResponse> purchaseHistoryResponses = historyQueryRepository.getListPurchaseHistory(customerId);
+        System.out.println("=== [DEBUG] Purchase history responses count: " + purchaseHistoryResponses.size());
 
-        List<InstallmentsResponse> installmentsResponses = installmentQueryRepository.getListInstallments(paymentsId);
         ExportDetails details = generateExportDetails();
-        String fileName = String.format(ExportConstants.ID_FILE_FORMAT, ExportConstants.PURCHASE_HISTORY_CUSTOMER, customerId, details.currentDate, ExportConstants.XLSX);
+        String fileName = String.format(ExportConstants.ID_FILE_FORMAT,
+                ExportConstants.PURCHASE_HISTORY_CUSTOMER,
+                customerId,
+                details.currentDate,
+                ExportConstants.XLSX);
+        System.out.println("=== [DEBUG] Export file name: " + fileName);
 
-        return excelUtils.purchaseHistoryToExcel(purchaseHistoryResponses, installmentsResponses, paymentsId, details.password, fileName);
+        ExportResponse response = excelUtils.purchaseHistoryToExcel(
+                purchaseHistoryResponses,
+                installmentsResponses,
+                allPaymentsId,
+                details.password,
+                fileName);
+        System.out.println("=== [DEBUG] Export completed!");
+
+        return response;
     }
+
+
 
     @Override
     public ExportResponse getAdminList(PagingRequest<SearchFilterAdminRequest> request) throws IOException {

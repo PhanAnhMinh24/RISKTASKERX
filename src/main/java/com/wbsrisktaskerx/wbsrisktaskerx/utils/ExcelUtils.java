@@ -82,10 +82,9 @@ public class ExcelUtils {
     }
 
     public ExportResponse purchaseHistoryToExcel(List<PurchaseHistoryResponse> purchaseHistory,
-                                                                List<InstallmentsResponse> installments, Integer paymentsId,
-                                                                String password, String fileName) throws IOException {
+                                                 List<InstallmentsResponse> installments, List<Integer> allPaymentsId,
+                                                 String password, String fileName) throws IOException {
 
-        PurchaseHistoryResponse p = historyQueryRepository.findPurchaseHistoryByPaymentsId(purchaseHistory, paymentsId);
         try (Workbook workbook = new XSSFWorkbook()) {
             Sheet sheet = workbook.createSheet("CUSTOMER & PAYMENT INFORMATION");
             createHeader(sheet, workbook, PURCHASE_HISTORY_HEADER);
@@ -93,20 +92,32 @@ public class ExcelUtils {
             int rowIndex = 1;
             NumberFormat nf = NumberFormat.getNumberInstance(Locale.forLanguageTag(ExportConstants.VI_VN));
 
-            if (p.getPayment().getPaymentOption() == PaymentOptions.Installment) {
-                for (InstallmentsResponse i : installments) {
-                    if (i.getPayment().getId().equals(p.getPayment().getId())) {
-                        Row row = sheet.createRow(rowIndex++);
-                        fillPurchaseHistoryRow(row, p, nf, i);
-                        row.createCell(13).setCellValue(i.getPaymentDate().toLocalDate().toString());
-                        fillInstallmentRow(row, i);
+            for (Integer paymentId : allPaymentsId) {
+                PurchaseHistoryResponse p = historyQueryRepository.findPurchaseHistoryByPaymentsId(purchaseHistory, paymentId);
+
+                if (p == null) continue;
+
+                boolean isInstallment = p.getPayment() != null && PaymentOptions.Installment.equals(p.getPayment().getPaymentOption());
+
+                if (isInstallment) {
+                    for (InstallmentsResponse i : installments) {
+                        if (i.getPayment() != null && i.getPayment().getId().equals(p.getPayment().getId())) {
+                            Row row = sheet.createRow(rowIndex++);
+                            fillPurchaseHistoryRow(row, p, nf, i);
+                            row.createCell(13).setCellValue(i.getPaymentDate() != null ? i.getPaymentDate().toLocalDate().toString() : ExportConstants.EMPTY);
+                            fillInstallmentRow(row, i);
+                        }
                     }
+                } else {
+                    Row row = sheet.createRow(rowIndex++);
+                    fillPurchaseHistoryRow(row, p, nf, null);
+                    row.createCell(13).setCellValue(
+                            p.getPayment() != null && p.getPayment().getPaymentDate() != null
+                                    ? p.getPayment().getPaymentDate().toLocalDate().toString()
+                                    : ExportConstants.EMPTY
+                    );
+                    fillNAInstallmentFields(row);
                 }
-            } else {
-                Row row = sheet.createRow(rowIndex++);
-                fillPurchaseHistoryRow(row, p, nf, null);
-                row.createCell(13).setCellValue(p.getPayment().getPaymentDate().toLocalDate().toString());
-                fillNAInstallmentFields(row);
             }
 
             for (int i = 0; i < PURCHASE_HISTORY_HEADER.length; i++) {
@@ -120,10 +131,13 @@ public class ExcelUtils {
                     .password(password)
                     .response(encryptedBaos.toByteArray())
                     .build();
+
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Failed to export purchase history to Excel", e);
         }
     }
+
+
 
     public static ExportResponse warrantyHistoryToExcel(List<WarrantyHistoryResponse> warrantyHistory,
                                                                 String password, String fileName) throws IOException {
