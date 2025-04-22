@@ -34,9 +34,9 @@ public class ExportController {
         return ResponseEntity.ok().body(exportResponse);
     }
 
-    @PostMapping(EndpointConstants.CUSTOMERS + EndpointConstants.PURCHASE)
-    public ResponseEntity<ExportResponse> exportPurchaseHistory(@RequestBody ExportHistoryRequest request) throws IOException {
-        ExportResponse exportResponse = exportService.exportCustomerPurchaseHistory(request);
+    @GetMapping(EndpointConstants.CUSTOMERS + EndpointConstants.PURCHASE + EndpointConstants.ID)
+    public ResponseEntity<ExportResponse> exportPurchaseHistory(@PathVariable int id) throws IOException {
+        ExportResponse exportResponse = exportService.exportCustomerPurchaseHistory(id);
         return ResponseEntity.ok().body(exportResponse);
     }
 

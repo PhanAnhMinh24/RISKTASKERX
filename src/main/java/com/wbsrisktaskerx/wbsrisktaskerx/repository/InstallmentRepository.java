@@ -9,4 +9,5 @@ import java.util.List;
 @Repository
 public interface InstallmentRepository extends JpaRepository<Installments, Integer> {
     List<Installments> findByPaymentsId(Integer paymentsId);
+    List<Installments> findByPaymentsIdIn(List<Integer> paymentsId);
 }

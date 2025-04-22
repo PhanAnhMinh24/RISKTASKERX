@@ -50,4 +50,9 @@ public class RoleController {
         return ResponseEntity.ok(ApiResult.success(roleService.updateRole(request)));
     }
 
+    @DeleteMapping(EndpointConstants.ID)
+    public ResponseEntity<ApiResult<Boolean>> deleteRole(@PathVariable Integer id) {
+        return ResponseEntity.ok(ApiResult.success(roleService.deleteRole(id)));
+    }
+
 }

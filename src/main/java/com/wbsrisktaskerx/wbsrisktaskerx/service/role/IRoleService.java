@@ -20,4 +20,7 @@ public interface IRoleService {
     boolean updateRole(RoleRequest request);
 
     Role findById(Integer id);
+
+    boolean deleteRole(Integer id);
+
 }

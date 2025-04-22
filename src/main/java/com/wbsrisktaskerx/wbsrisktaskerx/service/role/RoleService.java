@@ -28,16 +28,18 @@ public class RoleService implements IRoleService {
     private final PermissionRepository permissionRepository;
     private final RolePermissionRepository rolePermissionRepository;
     private final RoleJpaQueryRepository roleJpaQueryRepository;
+    private final AdminRepository adminRepository;
     private final PermissionService permissionService;
 
     public RoleService(RoleRepository roleRepository, PermissionRepository permissionRepository,
                        RolePermissionRepository rolePermissionRepository, RoleJpaQueryRepository roleJpaQueryRepository,
-                       PermissionService permissionService) {
+                       PermissionService permissionService, AdminRepository adminRepository) {
         this.roleRepository = roleRepository;
         this.permissionRepository = permissionRepository;
         this.rolePermissionRepository = rolePermissionRepository;
         this.roleJpaQueryRepository = roleJpaQueryRepository;
         this.permissionService = permissionService;
+        this.adminRepository = adminRepository;
     }
 
     @Override
@@ -143,6 +145,20 @@ public class RoleService implements IRoleService {
         Optional.ofNullable(request.getPermissionId())
                 .filter(ids -> !ids.isEmpty())
                 .ifPresent(ids -> permissionService.updateRolePermissions(role, ids));
+        return true;
+    }
+
+    @Override
+    @Transactional
+    public boolean deleteRole(Integer id) {
+        Role role = findById(id);
+
+        if (adminRepository.existsByRole(role)) {
+            throw new AppException(ErrorCode.ROLE_IN_USE_BY_ADMIN);
+        }
+
+        rolePermissionRepository.deleteByRole(role);
+        roleRepository.delete(role);
         return true;
     }
 }
