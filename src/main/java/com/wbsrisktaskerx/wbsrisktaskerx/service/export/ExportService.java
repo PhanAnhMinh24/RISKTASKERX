@@ -64,8 +64,6 @@ public class ExportService implements IExportService {
 
     @Override
     public ExportResponse exportCustomerPurchaseHistory(Integer customerId) throws IOException {
-        System.out.println("=== [DEBUG] Exporting purchase history for customerId: " + customerId);
-
         List<OrderResponse> orderResponses = orderRepository.findByCustomerId(customerId)
                 .stream()
                 .map(PaymentMapper::orderMapper)
@@ -75,41 +73,29 @@ public class ExportService implements IExportService {
                 .stream()
                 .map(OrderResponse::getId)
                 .toList();
-        System.out.println("=== [DEBUG] Found order IDs: " + orderIds);
 
         List<PaymentResponse> allPaymentResponses = paymentRepository.findByOrderIdIn(orderIds)
                 .stream()
                 .map(PaymentMapper::paymentMapper)
                 .toList();
-        System.out.println("=== [DEBUG] Payment responses count: " + allPaymentResponses.size());
-
-        System.out.println("=== [DEBUG] Payment Responses Details:");
-        allPaymentResponses.forEach(p -> {
-            System.out.println("Payment ID: " + p.getId() + ", Option: " + p.getPaymentOption());
-        });
 
         List<Integer> allPaymentsId = paymentRepository.findByOrderIdIn(orderIds)
                 .stream()
                 .map(Payment::getId)
                 .toList();
-        System.out.println("=== [DEBUG] Installment payment IDs: " + allPaymentsId);
-
 
         List<Integer> installmentPaymentIds = allPaymentResponses.stream()
                 .filter(p -> p.getPaymentOption().equals(PaymentOptions.Installment))
                 .map(PaymentResponse::getId)
                 .distinct()
                 .toList();
-        System.out.println("=== [DEBUG] Installment payment IDs: " + installmentPaymentIds);
 
         List<InstallmentsResponse> installmentsResponses = installmentRepository.findByPayments_IdIn(installmentPaymentIds)
                 .stream()
                 .map(PaymentMapper::installmentsMapper)
                 .toList();
-        System.out.println("=== [DEBUG] Installments responses count: " + installmentsResponses.size());
 
         List<PurchaseHistoryResponse> purchaseHistoryResponses = historyQueryRepository.getListPurchaseHistory(customerId);
-        System.out.println("=== [DEBUG] Purchase history responses count: " + purchaseHistoryResponses.size());
 
         ExportDetails details = generateExportDetails();
         String fileName = String.format(ExportConstants.ID_FILE_FORMAT,
@@ -117,7 +103,6 @@ public class ExportService implements IExportService {
                 customerId,
                 details.currentDate,
                 ExportConstants.XLSX);
-        System.out.println("=== [DEBUG] Export file name: " + fileName);
 
         ExportResponse response = excelUtils.purchaseHistoryToExcel(
                 purchaseHistoryResponses,
@@ -125,7 +110,6 @@ public class ExportService implements IExportService {
                 allPaymentsId,
                 details.password,
                 fileName);
-        System.out.println("=== [DEBUG] Export completed!");
 
         return response;
     }
