@@ -99,16 +99,7 @@ public class ExcelUtils {
 
                 boolean isInstallment = p.getPayment() != null && PaymentOptions.Installment.equals(p.getPayment().getPaymentOption());
 
-                if (isInstallment) {
-                    for (InstallmentsResponse i : installments) {
-                        if (i.getPayment() != null && i.getPayment().getId().equals(p.getPayment().getId())) {
-                            Row row = sheet.createRow(rowIndex++);
-                            fillPurchaseHistoryRow(row, p, nf, i);
-                            row.createCell(13).setCellValue(i.getPaymentDate() != null ? i.getPaymentDate().toLocalDate().toString() : ExportConstants.EMPTY);
-                            fillInstallmentRow(row, i);
-                        }
-                    }
-                } else {
+                if (!isInstallment) {
                     Row row = sheet.createRow(rowIndex++);
                     fillPurchaseHistoryRow(row, p, nf, null);
                     row.createCell(13).setCellValue(
@@ -117,7 +108,17 @@ public class ExcelUtils {
                                     : ExportConstants.EMPTY
                     );
                     fillNAInstallmentFields(row);
+                } else {
+                    for (InstallmentsResponse i : installments) {
+                        if (i.getPayment() != null && i.getPayment().getId().equals(p.getPayment().getId())) {
+                            Row row = sheet.createRow(rowIndex++);
+                            fillPurchaseHistoryRow(row, p, nf, i);
+                            row.createCell(13).setCellValue(i.getPaymentDate() != null ? i.getPaymentDate().toLocalDate().toString() : ExportConstants.EMPTY);
+                            fillInstallmentRow(row, i);
+                        }
+                    }
                 }
+                rowIndex++;
             }
 
             for (int i = 0; i < PURCHASE_HISTORY_HEADER.length; i++) {

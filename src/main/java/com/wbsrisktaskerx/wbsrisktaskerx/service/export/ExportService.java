@@ -90,7 +90,7 @@ public class ExportService implements IExportService {
                 .distinct()
                 .toList();
 
-        List<InstallmentsResponse> installmentsResponses = installmentRepository.findByPayments_IdIn(installmentPaymentIds)
+        List<InstallmentsResponse> installmentsResponses = installmentRepository.findByPaymentsIdIn(installmentPaymentIds)
                 .stream()
                 .map(PaymentMapper::installmentsMapper)
                 .toList();
