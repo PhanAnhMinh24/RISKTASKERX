@@ -26,12 +26,12 @@ public class AdminMapper {
                 .build();
     }
 
-    public static Admin adminMapperByAdminRequest(AdminRequest request) {
+    public static Admin adminMapperByAdminRequest(AdminRequest request, String password) {
         return Admin.builder()
                 .fullName(request.getName())
                 .email(request.getEmail())
                 .phoneNumber(request.getPhoneNumber())
-                .password(new BCryptPasswordEncoder().encode(PasswordConstants.DEFAULT_PASSWORD))
+                .password(new BCryptPasswordEncoder().encode(password))
                 .isActive(false)
                 .departmentName(request.getDepartmentName())
                 .role(request.getRole())

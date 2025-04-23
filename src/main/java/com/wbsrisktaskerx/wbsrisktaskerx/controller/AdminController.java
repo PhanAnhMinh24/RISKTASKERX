@@ -76,5 +76,8 @@ public class AdminController {
         return ResponseEntity.ok().body(ApiResult.success(adminService.updateAdmin(request)));
     }
 
-
+    @GetMapping(EndpointUtil.TEMPORARY_PASSWORD + EndpointUtil.EMAIL + EndpointUtil.SEND)
+    public ResponseEntity<ApiResult<Boolean>> sendTemporaryPassword(@RequestParam String to) throws MessagingException, IOException {
+        return ResponseEntity.ok(ApiResult.success(adminEmailService.sendTemporaryPassword(to)));
+    }
 }

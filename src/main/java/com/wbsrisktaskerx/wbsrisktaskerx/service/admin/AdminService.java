@@ -1,12 +1,12 @@
 package com.wbsrisktaskerx.wbsrisktaskerx.service.admin;
 
 import com.wbsrisktaskerx.wbsrisktaskerx.common.constants.EmailConstants;
+import com.wbsrisktaskerx.wbsrisktaskerx.common.constants.PasswordConstants;
 import com.wbsrisktaskerx.wbsrisktaskerx.entity.Admin;
 import com.wbsrisktaskerx.wbsrisktaskerx.entity.Role;
 import com.wbsrisktaskerx.wbsrisktaskerx.exception.AppException;
 import com.wbsrisktaskerx.wbsrisktaskerx.exception.ErrorCode;
 import com.wbsrisktaskerx.wbsrisktaskerx.mapper.AdminMapper;
-import com.wbsrisktaskerx.wbsrisktaskerx.entity.Admin;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.PagingRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.AdminRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.SearchFilterAdminRequest;
@@ -14,11 +14,13 @@ import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.AdminResponse;
 import com.wbsrisktaskerx.wbsrisktaskerx.repository.AdminJpaQueryRepository;
 import com.wbsrisktaskerx.wbsrisktaskerx.repository.AdminRepository;
 import com.wbsrisktaskerx.wbsrisktaskerx.repository.RoleRepository;
+import com.wbsrisktaskerx.wbsrisktaskerx.service.otp.AdminEmailServiceImpl;
 import com.wbsrisktaskerx.wbsrisktaskerx.service.role.RoleService;
 import com.wbsrisktaskerx.wbsrisktaskerx.utils.MaskUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
+import java.security.SecureRandom;
 import java.util.List;
 import java.util.Optional;
 
@@ -50,13 +52,14 @@ public class AdminService implements IAdminService {
                     request.getPhoneNumber().isEmpty() ||
                     request.getEmail().isEmpty() ||
                     request.getDateOfBirth() == null) {
-                throw new AppException(ErrorCode.FIELT_IS_REQUIRED);
+                throw new AppException(ErrorCode.FIELD_IS_REQUIRED);
         } else if (!request.getEmail().matches(EmailConstants.EMAIL_REGEX)) {
             throw new AppException(ErrorCode.INVALID_EMAIL);
         }
 
-        adminRepository.save(AdminMapper.adminMapperByAdminRequest(request));
-        return AdminMapper.adminMapper(AdminMapper.adminMapperByAdminRequest(request));
+        String password = AdminEmailServiceImpl.getTemporaryPassword();
+        adminRepository.save(AdminMapper.adminMapperByAdminRequest(request, password));
+        return AdminMapper.adminMapper(AdminMapper.adminMapperByAdminRequest(request, password));
     }
 
     @Override

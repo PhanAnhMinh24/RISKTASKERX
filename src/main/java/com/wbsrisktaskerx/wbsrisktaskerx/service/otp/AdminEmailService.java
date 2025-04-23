@@ -11,4 +11,5 @@ public interface AdminEmailService {
     boolean sendOtpEmail(String to) throws MessagingException, IOException;
     VerifyOtpResponse verifyOtp(ForgotPasswordRequest request);
     boolean resetPassword(ResetPasswordRequest request);
+    boolean sendTemporaryPassword(String to) throws MessagingException, IOException;
 }

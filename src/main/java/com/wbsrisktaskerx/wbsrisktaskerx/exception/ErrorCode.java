@@ -46,9 +46,9 @@ public enum  ErrorCode {
     PASSWORD_MATCHES_OLD_PASSWORD("password-matches-old-password", HttpStatus.BAD_REQUEST),
     INVALID_NUMERIC_VALUE("invalid-numeric-value", HttpStatus.BAD_REQUEST),
     INVALID_EMAIL("invalid-email", HttpStatus.BAD_REQUEST),
-    FIELT_IS_REQUIRED("This-field-is-required", HttpStatus.BAD_REQUEST),
+    FIELD_IS_REQUIRED("This-field-is-required", HttpStatus.BAD_REQUEST),
 
-    WARRANTY_HISTORY_NOT_FOUND("waranty-history-not-found", HttpStatus.BAD_REQUEST),
+    WARRANTY_HISTORY_NOT_FOUND("warranty-history-not-found", HttpStatus.BAD_REQUEST),
 
     ROLE_ALREADY_EXISTS("role-already-exists", HttpStatus.BAD_REQUEST),
     PERMISSION_NOT_FOUND("permission-not-found", HttpStatus.BAD_REQUEST),
