@@ -23,7 +23,7 @@ public enum  ErrorCode {
     INVALID_USERNAME_OR_PASSWORD("invalid-username-or-password", HttpStatus.BAD_REQUEST),
     DURING_REGISTRATION_ERROR("during-registration-error", HttpStatus.BAD_REQUEST),
     SEND_EMAIL_ERROR("send-email-error", HttpStatus.BAD_REQUEST),
-    EMAIL_EXIST("email-exist", HttpStatus.BAD_REQUEST),
+    EMAIL_EXISTED("email-existed", HttpStatus.BAD_REQUEST),
     USERNAME_EXIST("username-exist", HttpStatus.BAD_REQUEST),
     INVALID_IMAGE_FORMAT("invalid-image-format", HttpStatus.BAD_REQUEST),
     INVALID_OTP("invalid-otp", HttpStatus.BAD_REQUEST),
@@ -32,6 +32,7 @@ public enum  ErrorCode {
     CUSTOMER_NOT_FOUND("customer-not-found", HttpStatus.BAD_REQUEST),
     ACCOUNT_ADMIN_NOT_FOUND("account-admin-not-found", HttpStatus.BAD_REQUEST),
     ACCOUNT_ALREADY_ACTIVATED(" account-already-activated", HttpStatus.BAD_REQUEST),
+    PHONE_NUMBER_EXISTED("Phone-number-is-existed", HttpStatus.BAD_REQUEST),
 
     NOT_FOUND("not-found", HttpStatus.BAD_REQUEST),
     ACCOUNT_NOT_ACTIVE("account-not-active", HttpStatus.FORBIDDEN),
@@ -44,8 +45,10 @@ public enum  ErrorCode {
     PASSWORD_CONTAINS_SPACE("password-contains-space", HttpStatus.BAD_REQUEST),
     PASSWORD_MATCHES_OLD_PASSWORD("password-matches-old-password", HttpStatus.BAD_REQUEST),
     INVALID_NUMERIC_VALUE("invalid-numeric-value", HttpStatus.BAD_REQUEST),
+    INVALID_EMAIL("invalid-email", HttpStatus.BAD_REQUEST),
+    FIELD_IS_REQUIRED("This-field-is-required", HttpStatus.BAD_REQUEST),
 
-    WARRANTY_HISTORY_NOT_FOUND("waranty-history-not-found", HttpStatus.BAD_REQUEST),
+    WARRANTY_HISTORY_NOT_FOUND("warranty-history-not-found", HttpStatus.BAD_REQUEST),
 
     ROLE_ALREADY_EXISTS("role-already-exists", HttpStatus.BAD_REQUEST),
     PERMISSION_NOT_FOUND("permission-not-found", HttpStatus.BAD_REQUEST),

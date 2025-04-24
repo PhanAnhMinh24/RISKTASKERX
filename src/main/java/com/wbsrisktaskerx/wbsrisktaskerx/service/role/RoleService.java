@@ -5,6 +5,7 @@ import com.wbsrisktaskerx.wbsrisktaskerx.entity.Role;
 import com.wbsrisktaskerx.wbsrisktaskerx.entity.RolePermission;
 import com.wbsrisktaskerx.wbsrisktaskerx.exception.AppException;
 import com.wbsrisktaskerx.wbsrisktaskerx.exception.ErrorCode;
+import com.wbsrisktaskerx.wbsrisktaskerx.mapper.RoleMapper;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.PagingRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.ActiveRoleRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.RoleRequest;
@@ -84,12 +85,7 @@ public class RoleService implements IRoleService {
 
         rolePermissionRepository.saveAll(rolePermissions);
 
-        return RoleResponse.builder()
-                .id(role.getId())
-                .name(role.getName())
-                .isActive(role.getIsActive())
-                .updateAt(role.getUpdateAt())
-                .build();
+        return RoleMapper.roleMapper(role);
     }
 
     @Override

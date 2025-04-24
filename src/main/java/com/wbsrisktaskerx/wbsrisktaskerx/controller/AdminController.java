@@ -60,6 +60,12 @@ public class AdminController {
         return ResponseEntity.ok(ApiResult.success(result));
     }
 
+    @PostMapping
+    public ResponseEntity<ApiResult<AdminResponse>> addAdmin(@Valid @RequestBody AdminRequest request) {
+        AdminResponse response = adminService.addAdmin(request);
+        return ResponseEntity.ok(ApiResult.success(response));
+    }
+
     @GetMapping(EndpointConstants.ID)
     public ResponseEntity<ApiResult<AdminResponse>> getAdminDetail(@PathVariable int id) {
         return ResponseEntity.ok(ApiResult.success(adminService.getAdminById(id)));
@@ -70,5 +76,8 @@ public class AdminController {
         return ResponseEntity.ok().body(ApiResult.success(adminService.updateAdmin(request)));
     }
 
-
+    @GetMapping(EndpointUtil.TEMPORARY_PASSWORD + EndpointUtil.EMAIL + EndpointUtil.SEND)
+    public ResponseEntity<ApiResult<Boolean>> sendTemporaryPassword(@RequestParam String to) throws MessagingException, IOException {
+        return ResponseEntity.ok(ApiResult.success(adminEmailService.sendTemporaryPassword(to)));
+    }
 }
