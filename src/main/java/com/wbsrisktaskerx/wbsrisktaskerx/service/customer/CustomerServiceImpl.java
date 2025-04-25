@@ -124,11 +124,6 @@ public class CustomerServiceImpl implements ICustomerService {
                 .serviceDate(warrantyHistoryRequest.getServiceDate())
                 .serviceCost(warrantyHistoryRequest.getServiceCost())
                 .build();
-        try {
-            warrantyHistoryRepository.save(warrantyHistory);
-        } catch (Exception e) {
-            throw new AppException(ErrorCode.LICENSE_PLATE_EXISTS);
-        }
+        warrantyHistoryRepository.save(warrantyHistory);
     }
-
 }

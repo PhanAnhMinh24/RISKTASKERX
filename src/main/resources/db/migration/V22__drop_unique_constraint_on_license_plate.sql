@@ -1,0 +1,1 @@
+ALTER TABLE history_warranty DROP INDEX license_plate;

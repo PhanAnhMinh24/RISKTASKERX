@@ -27,7 +27,7 @@ public class WarrantyHistory {
     @Column(name = "car_model", length = 100, nullable = false)
     String carModel;
 
-    @Column(name = "license_plate", length = 9, nullable = false, unique = true)
+    @Column(name = "license_plate", length = 9, nullable = false)
     String licensePlate;
 
     @Column(name = "service_type", length = 50, nullable = false)
