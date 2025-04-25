@@ -44,7 +44,7 @@ public class HistoryQueryRepository {
         BooleanBuilder builder = new BooleanBuilder();
         builder.and(purchaseHistory.customer.id.eq(id));
 
-        List<PurchaseHistoryResponse> purchaseHistoryResponses = getListPurchaseHistory(id);
+        List<PurchaseHistoryResponse> purchaseHistoryResponses = getListPurchaseHistoryWithPaging(id, pageable);
 
         long total = Optional.ofNullable(
                 jpaQueryFactory.select(purchaseHistory.count())
@@ -56,7 +56,7 @@ public class HistoryQueryRepository {
         return new PageImpl<>(purchaseHistoryResponses, pageable, total);
     }
 
-    public List<PurchaseHistoryResponse> getListPurchaseHistory(Integer id) {
+    public List<PurchaseHistoryResponse> getListPurchaseHistoryWithExport(Integer id) {
         BooleanBuilder builder = new BooleanBuilder();
         builder.and(purchaseHistory.customer.id.eq(id));
 
@@ -81,6 +81,32 @@ public class HistoryQueryRepository {
                 .collect(Collectors.toList());
     }
 
+    public List<PurchaseHistoryResponse> getListPurchaseHistoryWithPaging(Integer id, Pageable pageable) {
+        BooleanBuilder builder = new BooleanBuilder();
+        builder.and(purchaseHistory.customer.id.eq(id));
+
+        QPurchaseHistory purchaseHistory = QPurchaseHistory.purchaseHistory;
+        QCar car = QCar.car;
+        QCarBrand brand = QCarBrand.carBrand;
+        QCarCategory category = QCarCategory.carCategory;
+        QAdmin seller = QAdmin.admin;
+        QCustomer customer = QCustomer.customer;
+
+        return jpaQueryFactory
+                .selectFrom(purchaseHistory)
+                .innerJoin(car).on(purchaseHistory.car.id.eq(car.id))
+                .innerJoin(brand).on(car.brand.id.eq(brand.id))
+                .innerJoin(category).on(car.category.id.eq(category.id))
+                .innerJoin(seller).on(purchaseHistory.seller.id.eq(seller.id))
+                .innerJoin(customer).on(purchaseHistory.customer.id.eq(customer.id))
+                .where(builder)
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch()
+                .stream()
+                .map(HistoryMapper::purchaseHistoryMapper)
+                .collect(Collectors.toList());
+    }
 
     public Page<WarrantyHistoryResponse> getWarrantyHistory(PagingRequest<HistoryRequest> request) {
         HistoryRequest filter = request.getFilters();
@@ -96,6 +122,8 @@ public class HistoryQueryRepository {
         List<WarrantyHistoryResponse> warrantyHistoryResponses = jpaQueryFactory
                 .selectFrom(warrantyHistory)
                 .where(builder)
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
                 .fetch()
                 .stream()
                 .map(HistoryMapper::warrantyHistoryMapper)

@@ -95,7 +95,7 @@ public class ExportService implements IExportService {
                 .map(PaymentMapper::installmentsMapper)
                 .toList();
 
-        List<PurchaseHistoryResponse> purchaseHistoryResponses = historyQueryRepository.getListPurchaseHistory(customerId);
+        List<PurchaseHistoryResponse> purchaseHistoryResponses = historyQueryRepository.getListPurchaseHistoryWithExport(customerId);
 
         ExportDetails details = generateExportDetails();
         String fileName = String.format(ExportConstants.ID_FILE_FORMAT,
