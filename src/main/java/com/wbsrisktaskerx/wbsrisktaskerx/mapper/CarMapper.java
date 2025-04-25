@@ -3,9 +3,7 @@ package com.wbsrisktaskerx.wbsrisktaskerx.mapper;
 import com.wbsrisktaskerx.wbsrisktaskerx.entity.*;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.*;
 
-import static com.wbsrisktaskerx.wbsrisktaskerx.mapper.AdminMapper.adminMapper;
 import static com.wbsrisktaskerx.wbsrisktaskerx.mapper.CustomerMapper.customerMapper;
-import static com.wbsrisktaskerx.wbsrisktaskerx.mapper.PaymentMapper.paymentMapper;
 
 public class CarMapper {
 

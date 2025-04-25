@@ -27,7 +27,7 @@ public class EmailServiceImpl implements EmailService {
     }
 
     @Override
-    public boolean sendEmail(String to, String templatePath, Map<String, String> placeholders) throws MessagingException, IOException {
+    public boolean sendEmail(String to, String subject, String templatePath, Map<String, String> placeholders) throws MessagingException, IOException {
 
         String htmlTemplate = new String(Files.readAllBytes(Paths.get(new ClassPathResource(templatePath).getURI())));
 
@@ -39,7 +39,7 @@ public class EmailServiceImpl implements EmailService {
         MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(message, true, "UTF-8");
 
         mimeMessageHelper.setTo(to);
-        mimeMessageHelper.setSubject(EmailConstants.PLACEHOLDER_SUBJECT_SEND_OTP);
+        mimeMessageHelper.setSubject(subject);
         mimeMessageHelper.setFrom(fromEmail);
         mimeMessageHelper.setText(htmlTemplate, true);
 

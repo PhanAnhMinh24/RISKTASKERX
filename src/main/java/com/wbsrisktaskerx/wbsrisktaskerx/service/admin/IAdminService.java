@@ -10,11 +10,9 @@ import java.util.List;
 
 public interface IAdminService {
     Page<AdminResponse> searchAndFilterAdmin(PagingRequest<SearchFilterAdminRequest> request);
-
+    AdminResponse addAdmin(AdminRequest request);
     List<AdminResponse> searchedAndFilteredAdminNoPaging(SearchFilterAdminRequest request);
-
     AdminResponse getAdminById(int id);
-
     boolean updateAdmin (AdminRequest adminRequest);
 
 }

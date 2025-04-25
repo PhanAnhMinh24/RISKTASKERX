@@ -8,10 +8,10 @@ import com.wbsrisktaskerx.wbsrisktaskerx.common.constants.FillConstants;
 import com.wbsrisktaskerx.wbsrisktaskerx.common.constants.CommonConstants;
 import com.wbsrisktaskerx.wbsrisktaskerx.common.constants.StringConstants;
 import com.wbsrisktaskerx.wbsrisktaskerx.entity.QAdmin;
+import com.wbsrisktaskerx.wbsrisktaskerx.mapper.AdminMapper;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.PagingRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.SearchFilterAdminRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.AdminResponse;
-import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.QAdminResponse;
 import com.wbsrisktaskerx.wbsrisktaskerx.utils.PageService;
 import io.micrometer.common.util.StringUtils;
 import org.apache.commons.lang3.ObjectUtils;
@@ -23,6 +23,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Component
 public class AdminJpaQueryRepository {
@@ -63,23 +64,15 @@ public class AdminJpaQueryRepository {
                 .map(order -> order.isDescending() ? Order.DESC : Order.ASC)
                 .orElse(Order.ASC);
 
-        List<AdminResponse> content = jpaQueryFactory.select(
-                        new QAdminResponse(
-                                admin.id,
-                                admin.fullName,
-                                admin.email,
-                                admin.phoneNumber,
-                                admin.role,
-                                admin.departmentName,
-                                admin.lastLogin,
-                                admin.isActive
-                        ))
-                .from(admin)
+        List<AdminResponse> content = jpaQueryFactory.selectFrom(admin)
                 .where(builder)
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .orderBy(new OrderSpecifier<>(direction, admin.lastLogin))
-                .fetch();
+                .fetch()
+                .stream()
+                .map(AdminMapper::adminMapper)
+                .collect(Collectors.toList());
 
         long total = Optional.ofNullable(
                 jpaQueryFactory.select(admin.id.count())
@@ -89,6 +82,7 @@ public class AdminJpaQueryRepository {
         ).orElse(0L);
         return new PageImpl<>(content, pageable, total);
     }
+
 
     public List<AdminResponse> searchedAndFilteredAdminNoPaging(SearchFilterAdminRequest filter) {
         String searchKey = filter.getSearchKey();
@@ -114,21 +108,13 @@ public class AdminJpaQueryRepository {
             builder.and(admin.isActive.in(filter.getIsActive()));
         }
 
-        return jpaQueryFactory.select(
-                        new QAdminResponse(
-                                admin.id,
-                                admin.fullName,
-                                admin.email,
-                                admin.phoneNumber,
-                                admin.role,
-                                admin.departmentName,
-                                admin.lastLogin,
-                                admin.isActive
-                        ))
-                .from(admin)
+        return jpaQueryFactory.selectFrom(admin)
                 .where(builder)
                 .orderBy(admin.lastLogin.desc())
-                .fetch();
+                .fetch()
+                .stream()
+                .map(AdminMapper::adminMapper)
+                .collect(Collectors.toList());
     }
 
 }
