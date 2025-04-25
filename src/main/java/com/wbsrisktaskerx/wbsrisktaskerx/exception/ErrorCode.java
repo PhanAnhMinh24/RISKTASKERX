@@ -48,6 +48,7 @@ public enum  ErrorCode {
     INVALID_EMAIL("invalid-email", HttpStatus.BAD_REQUEST),
     FIELD_IS_REQUIRED("This-field-is-required", HttpStatus.BAD_REQUEST),
 
+    LICENSE_PLATE_EXISTS("license-plate-exists", HttpStatus.BAD_REQUEST),
     WARRANTY_HISTORY_NOT_FOUND("warranty-history-not-found", HttpStatus.BAD_REQUEST),
 
     ROLE_ALREADY_EXISTS("role-already-exists", HttpStatus.BAD_REQUEST),
