@@ -10,6 +10,8 @@ import com.wbsrisktaskerx.wbsrisktaskerx.common.constants.StringConstants;
 import com.wbsrisktaskerx.wbsrisktaskerx.entity.QRole;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.PagingRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.SearchFilterRoleRequest;
+import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.PermissionResponse;
+import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.QPermissionResponse;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.QRoleResponse;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.RoleResponse;
 import com.wbsrisktaskerx.wbsrisktaskerx.utils.PageService;
@@ -24,7 +26,9 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.Optional;
 
+import static com.wbsrisktaskerx.wbsrisktaskerx.entity.QPermission.permission;
 import static com.wbsrisktaskerx.wbsrisktaskerx.entity.QRole.role;
+import static com.wbsrisktaskerx.wbsrisktaskerx.entity.QRolePermission.rolePermission;
 
 @Component
 public class RoleJpaQueryRepository {
@@ -75,6 +79,21 @@ public class RoleJpaQueryRepository {
                 .limit(pageable.getPageSize())
                 .orderBy(new OrderSpecifier<>(direction, role.updateAt))
                 .fetch();
+
+        for (RoleResponse roleResponse : content) {
+            List<PermissionResponse> permissions = jpaQueryFactory.select(
+                            new QPermissionResponse(
+                                    permission.id,
+                                    permission.key,
+                                    permission.name
+                            ))
+                    .from(rolePermission)
+                    .join(rolePermission.permission, permission)
+                    .where(rolePermission.role.id.eq(roleResponse.getId()))
+                    .fetch();
+
+            roleResponse.setPermissions(permissions);
+        }
 
         long total = Optional.ofNullable(
                 jpaQueryFactory.select(role.id.count())
