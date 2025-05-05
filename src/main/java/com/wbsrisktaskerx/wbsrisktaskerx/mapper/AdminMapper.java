@@ -1,7 +1,7 @@
 package com.wbsrisktaskerx.wbsrisktaskerx.mapper;
 
-import com.wbsrisktaskerx.wbsrisktaskerx.common.constants.PasswordConstants;
 import com.wbsrisktaskerx.wbsrisktaskerx.entity.Admin;
+import com.wbsrisktaskerx.wbsrisktaskerx.entity.Role;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.AdminRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.SignupRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.AdminResponse;
@@ -26,7 +26,7 @@ public class AdminMapper {
                 .build();
     }
 
-    public static Admin adminMapperByAdminRequest(AdminRequest request, String password) {
+    public static Admin adminMapperByAdminRequest(AdminRequest request, String password, Role role) {
         return Admin.builder()
                 .fullName(request.getName())
                 .email(request.getEmail())
@@ -34,7 +34,7 @@ public class AdminMapper {
                 .password(new BCryptPasswordEncoder().encode(password))
                 .isActive(false)
                 .departmentName(request.getDepartmentName())
-                .role(request.getRole())
+                .role(role)
                 .dateOfBirth(request.getDateOfBirth())
                 .build();
     }

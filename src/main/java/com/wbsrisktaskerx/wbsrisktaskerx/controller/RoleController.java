@@ -6,12 +6,15 @@ import com.wbsrisktaskerx.wbsrisktaskerx.pojo.PagingRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.ActiveRoleRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.RoleRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.SearchFilterRoleRequest;
+import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.ActiveRoleResponse;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.RoleResponse;
 import com.wbsrisktaskerx.wbsrisktaskerx.service.role.IRoleService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping(EndpointConstants.ROLES)
@@ -20,6 +23,12 @@ public class RoleController {
 
     public RoleController(IRoleService roleService) {
         this.roleService = roleService;
+    }
+
+    @GetMapping(EndpointConstants.ACTIVE_ROLES)
+    public ResponseEntity<ApiResult<List<ActiveRoleResponse>>> getAllActiveRoles() {
+        List<ActiveRoleResponse> responses = roleService.getAllActiveRole();
+        return ResponseEntity.ok(ApiResult.success(responses));
     }
 
     @PostMapping

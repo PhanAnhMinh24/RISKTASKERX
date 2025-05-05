@@ -1,7 +1,7 @@
 package com.wbsrisktaskerx.wbsrisktaskerx.pojo.request;
 
-import com.wbsrisktaskerx.wbsrisktaskerx.entity.Role;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.data.DepartmentName;
+import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.ActiveRoleResponse;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -15,7 +15,7 @@ import java.time.OffsetDateTime;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class AdminRequest {
     Integer id;
-    Role role;
+    ActiveRoleResponse role;
     DepartmentName departmentName;
     String name;
     String phoneNumber;

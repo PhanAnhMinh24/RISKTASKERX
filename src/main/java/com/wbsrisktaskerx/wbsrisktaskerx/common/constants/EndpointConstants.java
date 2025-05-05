@@ -35,6 +35,7 @@ public class EndpointConstants {
 
     //Roles
     public static final String ROLES = "/roles";
+    public static final String ACTIVE_ROLES = "/active";
 
     //Permission
     public static final String PERMISSION = "/permissions";

@@ -10,6 +10,7 @@ import com.wbsrisktaskerx.wbsrisktaskerx.pojo.PagingRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.ActiveRoleRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.RoleRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.SearchFilterRoleRequest;
+import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.ActiveRoleResponse;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.PermissionResponse;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.RoleResponse;
 import com.wbsrisktaskerx.wbsrisktaskerx.repository.*;
@@ -40,6 +41,17 @@ public class RoleService implements IRoleService {
         this.roleJpaQueryRepository = roleJpaQueryRepository;
         this.permissionService = permissionService;
         this.adminRepository = adminRepository;
+    }
+
+    @Override
+    public List<ActiveRoleResponse> getAllActiveRole() {
+        List<Role> activeRoles = roleRepository.findByIsActiveTrue();
+        if(activeRoles.isEmpty()) {
+            throw new AppException(ErrorCode.ROLE_NOT_FOUND);
+        }
+        return activeRoles.stream()
+                .map(r -> new ActiveRoleResponse(r.getId(), r.getName()))
+                .toList();
     }
 
     @Override
