@@ -1,7 +1,6 @@
 package com.wbsrisktaskerx.wbsrisktaskerx.pojo.response;
 
 import com.querydsl.core.annotations.QueryProjection;
-import com.wbsrisktaskerx.wbsrisktaskerx.entity.Role;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.data.DepartmentName;
 import lombok.*;
 import lombok.experimental.FieldDefaults;

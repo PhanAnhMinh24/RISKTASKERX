@@ -1,7 +1,6 @@
 package com.wbsrisktaskerx.wbsrisktaskerx.service.admin;
 
 import com.wbsrisktaskerx.wbsrisktaskerx.common.constants.EmailConstants;
-import com.wbsrisktaskerx.wbsrisktaskerx.common.constants.PasswordConstants;
 import com.wbsrisktaskerx.wbsrisktaskerx.entity.Admin;
 import com.wbsrisktaskerx.wbsrisktaskerx.entity.Role;
 import com.wbsrisktaskerx.wbsrisktaskerx.exception.AppException;
@@ -10,6 +9,7 @@ import com.wbsrisktaskerx.wbsrisktaskerx.mapper.AdminMapper;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.PagingRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.AdminRequest;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.request.SearchFilterAdminRequest;
+import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.ActiveRoleResponse;
 import com.wbsrisktaskerx.wbsrisktaskerx.pojo.response.AdminResponse;
 import com.wbsrisktaskerx.wbsrisktaskerx.repository.AdminJpaQueryRepository;
 import com.wbsrisktaskerx.wbsrisktaskerx.repository.AdminRepository;
@@ -20,7 +20,6 @@ import com.wbsrisktaskerx.wbsrisktaskerx.utils.MaskUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
-import java.security.SecureRandom;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,16 +27,16 @@ import java.util.Optional;
 public class AdminService implements IAdminService {
 
     private final AdminRepository adminRepository;
-    private final RoleRepository roleRepository;
     private final AdminJpaQueryRepository adminJpaQueryRepository;
     private final RoleService roleService;
+    private final RoleRepository roleRepository;
 
-    public AdminService(AdminRepository adminRepository,RoleRepository roleRepository, AdminJpaQueryRepository adminJpaQueryRepository,
-                        RoleService roleService) {
+    public AdminService(AdminRepository adminRepository, AdminJpaQueryRepository adminJpaQueryRepository,
+                        RoleService roleService, RoleRepository roleRepository) {
         this.adminRepository = adminRepository;
-        this.roleRepository = roleRepository;
         this.adminJpaQueryRepository = adminJpaQueryRepository;
         this.roleService = roleService;
+        this.roleRepository = roleRepository;
     }
 
     @Override
@@ -47,20 +46,33 @@ public class AdminService implements IAdminService {
         } else if (adminRepository.existsByPhoneNumber(request.getPhoneNumber())) {
             throw new AppException(ErrorCode.PHONE_NUMBER_EXISTED);
         } else if (String.valueOf(request.getRole()).isEmpty() ||
-                    String.valueOf(request.getDepartmentName()).isEmpty() ||
-                    request.getName().isEmpty() ||
-                    request.getPhoneNumber().isEmpty() ||
-                    request.getEmail().isEmpty() ||
-                    request.getDateOfBirth() == null) {
-                throw new AppException(ErrorCode.FIELD_IS_REQUIRED);
+                String.valueOf(request.getDepartmentName()).isEmpty() ||
+                request.getName().isEmpty() ||
+                request.getPhoneNumber().isEmpty() ||
+                request.getEmail().isEmpty() ||
+                request.getDateOfBirth() == null) {
+            throw new AppException(ErrorCode.FIELD_IS_REQUIRED);
         } else if (!request.getEmail().matches(EmailConstants.EMAIL_REGEX)) {
             throw new AppException(ErrorCode.INVALID_EMAIL);
         }
 
+        List<ActiveRoleResponse> activeRoles = roleService.getAllActiveRole();
+
+        ActiveRoleResponse activeRole = activeRoles.stream()
+                .filter(r -> r.getId().equals(request.getRole().getId()))
+                .findFirst()
+                .orElseThrow(() -> new AppException(ErrorCode.INVALID_ROLE_NAME));
+
+        Role roleEntity = roleRepository.findById(activeRole.getId())
+                .orElseThrow(() -> new AppException(ErrorCode.INVALID_ROLE_NAME));
+
         String password = AdminEmailServiceImpl.getTemporaryPassword();
-        adminRepository.save(AdminMapper.adminMapperByAdminRequest(request, password));
-        return AdminMapper.adminMapper(AdminMapper.adminMapperByAdminRequest(request, password));
+
+        Admin admin = AdminMapper.adminMapperByAdminRequest(request, password, roleEntity);
+        admin.setRole(roleEntity);
+        return AdminMapper.adminMapper(adminRepository.save(admin));
     }
+
 
     @Override
     public Page<AdminResponse> searchAndFilterAdmin(PagingRequest<SearchFilterAdminRequest> request) {
@@ -100,13 +112,17 @@ public class AdminService implements IAdminService {
     public boolean updateAdmin(AdminRequest adminRequest) {
         Admin admin = findAdminById(adminRequest.getId());
 
-        Integer roleId = Optional.ofNullable(adminRequest.getRole())
-                .map(Role::getId)
-                .orElseThrow(() -> new AppException(ErrorCode.ROLE_ID_REQUIRED));
+        List<ActiveRoleResponse> activeRoles = roleService.getAllActiveRole();
 
-        Role role = roleService.findById(roleId);
+        ActiveRoleResponse activeRole = activeRoles.stream()
+                        .filter(r -> r.getId().equals(adminRequest.getRole().getId()))
+                                .findFirst()
+                                .orElseThrow(() -> new AppException(ErrorCode.INVALID_ROLE_NAME));
 
-        admin.setRole(role);
+        Role roleEntity = roleRepository.findById(activeRole.getId())
+                        .orElseThrow(() -> new AppException(ErrorCode.INVALID_ROLE_NAME));
+
+        admin.setRole(roleEntity);
         admin.setDepartmentName(adminRequest.getDepartmentName());
         admin.setFullName(adminRequest.getName());
         admin.setPhoneNumber(adminRequest.getPhoneNumber());
